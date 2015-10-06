@@ -47,7 +47,7 @@ void putpixel(SDL_Surface *image, unsigned x, unsigned y, Uint32 pixel) {
 Uint32 getpixel(SDL_Surface *image, unsigned x, unsigned y) {
     Uint8 *p = pixelref(image, x, y);
     if(p==NULL)
-        return 0;
+        return *(Uint32 *)pixelref(image,0,0);
   switch(image->format->BytesPerPixel) {
     case 1:
       return *p;
