@@ -110,21 +110,16 @@ void Binarize(SDL_Surface *surface)
 }
 
 SDL_Surface integralImage(SDL_Surface *image) {
+    SDL_Surface *outImage = SDL_CreateRGBSurface(0, image->w, image->h, 32, 0, 0, 0, 0);
+    ToGray(outImage);
+    Binarize(outImage);
     Uint32 pixel = getpixel(image,0,0);
-    SDL_Surface *outImage = NULL;
+    putpixel(outImage,0,0,pixel);
     for(int i = 0; i < image->w; i++)
     {
-        for(int j = 0; i < image->h; j++)
-        {
-            putpixel(outImage,i,j,0);
-        }
-    }
-    putpixel(outImage,0,0,pixel);
-    for(int i = 1; i < image->w; i++)
-    {
-        for(int j = 1; j < image->h; j++)
-        {
-           pixel = getpixel(image,i,j) + getpixel(outImage,i,j-1)+getpixel(image,i-1,j)-getpixel(outImage,i-1,j-1);
+        for(int j = 0; j < image->h; j++)
+    	{
+           pixel = getpixel(image,i,j) + getpixel(outImage,i,j-1) + getpixel(image,i-1,j) - getpixel(outImage,i-1,j-1);
            putpixel(outImage,i,j,pixel);
         }
     }
