@@ -115,6 +115,14 @@ SDL_Surface integralImage(SDL_Surface *image) {
     Binarize(outImage);
     Uint32 pixel = getpixel(image,0,0);
     putpixel(outImage,0,0,pixel);
+    for(int i = 0; i < image->w; i++){
+        pixel = getpixel(image,i,1);
+        putpixel(outImage,i,1,pixel);
+    }
+    for(int i = 0; i < image->h; i++){
+        pixel = getpixel(image,1,i);
+        putpixel(outImage,1,i,pixel);
+    }  
     for(int i = 0; i < image->w; i++)
     {
         for(int j = 0; j < image->h; j++)
