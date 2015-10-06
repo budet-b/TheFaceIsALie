@@ -24,6 +24,7 @@ Database:DB.c
 main: ${OBJ}
 
 clean:
+	rm -f main
 	rm -f *~ *.o
 	rm -f rf inter
 	rm -f rf test
