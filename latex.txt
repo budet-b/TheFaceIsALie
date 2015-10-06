@@ -10,6 +10,7 @@ Création d'un Uint sur 8 bits qui s'appelle p (*p) qui récupère un pixel
 
 ligne de test
 ligne 2
+ligne 3
 To_gray:
 Prend l'image en paramètre, on créer 3 variables r,g,b à mettre à 0.
 Deux boucles pour i et j afin de parcourir toute l'image.
