@@ -7,7 +7,7 @@ Création d'un Uint sur 8 bits qui s'appelle p (*p) qui récupère un pixel
 3eme cas : On check selon les bits de poids fort et de poids faible selon les processeurs ! Ce cas fait l'extension des bits pour avoir du 32 bits.
 4eme cas: On retourne le Uint32 *p
 
-
+fdp de roux
 ligne de test
 ligne 2
 ligne 3
