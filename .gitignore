@@ -4,4 +4,4 @@
 *.tar.gz
 *.tar.bz2
 *.tgz
-*.DS_Storez
+.DS_Store
