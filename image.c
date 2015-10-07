@@ -140,3 +140,36 @@ SDL_Surface integralImage(SDL_Surface *image) {
     SDL_UnlockSurface(image);
     return *outImage;
 }
+
+
+// MATRIX SECTION
+
+int** build_matrix_image(SDL_Surface *image) {
+   int** matrix; 
+   matrix = malloc(image->w * sizeof(int*));
+   for(int i =0;i<image->w;i++) {
+      matrix[i] = malloc(image->h * sizeof(int *));
+     }
+  return matrix;
+}
+
+int** matrix_integralImageL(int** mat, SDL_Surface *image){
+   for(int i = 1; i < image->w; i++){
+      printf("%d\n",i); 
+      mat[i][0] = getpixel(image,i,0) + mat[i-1][0];
+   }   
+}
+
+
+int** matrix_integralImageL(int** mat, SDL_Surface *image){
+        for(int i = 1; i < image->w; i++){
+        printf("%d\n",i);
+                       mat[i][0] = getpixel(image,i,0) + mat[i-1][0];
+                          } 
+}
+
+int** matrix_integralImage(SDL_Surface *image){
+    int** matrix = build_matrix_image(image);
+}
+
+
