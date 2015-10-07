@@ -46,8 +46,6 @@ void putpixel(SDL_Surface *image, unsigned x, unsigned y, Uint32 pixel) {
 
 Uint32 getpixel(SDL_Surface *image, unsigned x, unsigned y) {
     Uint8 *p = pixelref(image, x, y);
-    if(p==NULL)
-        return *(Uint32 *)pixelref(image,0,0);
   switch(image->format->BytesPerPixel) {
     case 1:
       return *p;
@@ -117,21 +115,28 @@ SDL_Surface integralImage(SDL_Surface *image) {
     Binarize(outImage);
     Uint32 pixel = getpixel(image,0,0);
     putpixel(outImage,0,0,pixel);
-    /*for(int i = 0; i < image->w; i++){
-        pixel = getpixel(image,i,1)+getpixel(outImage,i-1,1);
-        putpixel(outImage,i,1,pixel);
+    SDL_LockSurface(image);
+    SDL_LockSurface(outImage);
+    for(int i = 1; i < image->w; i++){
+        printf("%d\n",i); 
+        pixel = getpixel(image,i,0)+getpixel(outImage,i-1,0);
+        putpixel(outImage,i,0,pixel);
     }
-    for(int i = 0; i < image->h; i++){
-        pixel = getpixel(image,1,i);
-        putpixel(outImage,1,i,pixel);
-    }*/ 
-    for(int i = 0; i < image->w; i++)
+    for(int i = 1; i < image->h; i++){
+        printf("%d\n",i);
+        pixel = getpixel(image,0,i)+getpixel(outImage,0,i-1);
+        putpixel(outImage,0,i,pixel);
+    } 
+    for(int i = 1; i < image->w; i++)
     {
-        for(int j = 0; j < image->h; j++)
+        for(int j = 1; j < image->h; j++)
     	{
+            printf("%d,%d\n",i,j);
            pixel = getpixel(image,i,j) + getpixel(outImage,i,j-1) + getpixel(image,i-1,j) - getpixel(outImage,i-1,j-1);
            putpixel(outImage,i,j,pixel);
         }
     }
+    SDL_UnlockSurface(outImage);
+    SDL_UnlockSurface(image);
     return *outImage;
 }
