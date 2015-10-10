@@ -51,7 +51,7 @@ Uint32 getpixel(SDL_Surface *image, unsigned x, unsigned y) {
       return *p;
     case 2:
       return *(Uint16 *)p;
-    case 3: //Compatibility for processor types (BIG_ENDIAN for PowerPC/ARM ... | LIL_ENDIAN for x86/x64 ...)
+    case 3: //Compatibility for processor types (BIG_ENDIAN for PowerPC/ARM ... | LIL_ENDIAN for x86-64 ...)
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) 
         return p[0] << 16 | p[1] << 8 | p[2];
       else
