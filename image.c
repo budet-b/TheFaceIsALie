@@ -75,6 +75,8 @@ void ToGray(SDL_Surface *image) {
             SDL_GetRGB(pixel, image->format, &r, &g, &b);
             r = r * 0.3 + g * 0.53 + b * 0.11;
             graypixel = SDL_MapRGB(image->format, r, r, r);
+           // printf("%d\n",graypixel);
+           // printf(" r = %d\n",r);
             putpixel(image, i, j, graypixel);
         }
     }
@@ -103,6 +105,7 @@ void Binarize(SDL_Surface *surface)
         r = 0;
       }
       pink = SDL_MapRGB(surface->format,r,r,r);
+     // printf("%d\n",pink);
       putpixel(surface,i,j,pink);
     }
   }
@@ -144,6 +147,15 @@ SDL_Surface integralImage(SDL_Surface *image) {
 
 // MATRIX SECTION
 
+void display_matrix(SDL_Surface* image, int** mat) {
+    for(int i = 0; i < image->w; i++){
+        for(int j = 0; j < image->h; j++) {
+            printf("| %d |", mat[i][j]);
+        }
+        printf("\n");
+    }
+    
+}
 int** build_matrix_image(SDL_Surface *image) {
    int** matrix; 
    matrix = malloc(image->w * sizeof(int*));
@@ -156,8 +168,13 @@ int** build_matrix_image(SDL_Surface *image) {
 
 int** matrix_integralImageL(int** mat, SDL_Surface *image){
     for(int i = 1; i < image->w; i++){
-        printf("%d\n",i); 
-        mat[i][0] = getpixel(image,i,0) + mat[i-1][0];
+        Uint8 r=0;
+        Uint8 g=0;
+        Uint8 b=0;
+        Uint32 pixel = getpixel(image,i,0);
+        SDL_GetRGB(pixel, image ->format, &r, &g, &b);
+        mat[i][0] = r + mat[i-1][0];
+        //printf("%d\n",mat[i][0]);
     }   
     return mat;
 }
@@ -165,8 +182,13 @@ int** matrix_integralImageL(int** mat, SDL_Surface *image){
 
 int** matrix_integralImageC(int** mat, SDL_Surface *image){
     for(int i = 1; i < image->h; i++){
-        printf("%d\n",i);
-        mat[0][i] = getpixel(image,0,i) + mat[0][i-1];
+        Uint8 r=0;
+        Uint8 g=0;
+        Uint8 b=0;
+        Uint32 pixel = getpixel(image,0,i);
+        SDL_GetRGB(pixel, image ->format, &r, &g, &b);
+        mat[0][i] = r + mat[0][i-1];
+        //printf("%d\n",mat[0][i]);
     } 
     return mat;
 }
@@ -175,8 +197,12 @@ int** matrix_integralImageC(int** mat, SDL_Surface *image){
 int** matrix_integralImageT(int** mat, SDL_Surface *image){
     for(int i = 1; i < image->w; i++){
         for(int j = 1; j < image->h; j++) {
-            printf("%d,%d\n",i,j);
-            mat[i][j] = getpixel(image,i,j) + mat[i-1][j] + mat[i][j-1] - mat[i-1][j-1];
+            Uint8 r=0;
+            Uint8 g=0;
+            Uint8 b=0;
+            Uint32 pixel = getpixel(image,i,j);
+            SDL_GetRGB(pixel, image ->format, &r, &g, &b);
+            mat[i][j] = r + mat[i-1][j] + mat[i][j-1] - mat[i-1][j-1];
         }
     } 
     return mat;
@@ -185,7 +211,7 @@ int** matrix_integralImageT(int** mat, SDL_Surface *image){
 int** matrix_integralImage(SDL_Surface *image){
     SDL_LockSurface(image);
     int** matrix = build_matrix_image(image);
-    matrix[0][0] = getpixel(image,0,0);
+    matrix[0][0] = 255;
     matrix_integralImageL(matrix,image);
     matrix_integralImageC(matrix,image);
     matrix_integralImageT(matrix,image);
