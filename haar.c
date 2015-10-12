@@ -40,6 +40,12 @@ int feature1(int x,int y,int x2,int y2,int** mat) {
     return (a - b);
 }
 
+/*int feature2(int x, int y, int x2, int y2, int** mat) {
+    int a = calcul_area(x, y,  
+    int b = calcul_area
+    return (a - b);
+}*/
+
 int haarProcess(int** integralImage, int x, int y, int w, int feature) { //tabulate
         switch (feature) {
             case 1:
@@ -92,5 +98,8 @@ void processImage(SDL_Surface *image) {
         printf("MULT, %d\n",f);
         current_size *= 1.25;
     }
+    
+    for(int derp = 0; derp <f; derp++)
+        printf("%d\n", haarOutputTab[derp].value);
     free(haarOutputTab);
 }
