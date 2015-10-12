@@ -16,6 +16,6 @@ int main(int argc, char* argv[]) {
     //int** integralMatrix = matrix_integralImage(image);
     printf("ONSTART\n");
     processImage(image);
-	//SDL_SaveBMP(image, "./ToGray.bmp");
+	SDL_SaveBMP(image, "./ToGray.bmp");
 	return 0;
 }
