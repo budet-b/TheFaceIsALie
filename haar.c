@@ -59,34 +59,36 @@ void processImage(SDL_Surface *image) {
     //int current_size2 = 24;
     int f = 0;
     int value;
-    haarRecord *haarOutput;
-    haarOutput = malloc((image->h*image->w)*5*(sizeof(struct haarRecord)));
+    haarRecord *haarOutputTab;
+    haarOutputTab = malloc((image->h*image->w)*20*(sizeof(struct haarRecord)));
    // display_matrix(image, integralImage);
     while((current_size < image->h) && (current_size < image->w)) {
         //printf("%d\n",current_size);
-        for(int i = current_size; i < image->w-1 ; i++) {
-            for(int j = current_size; j < image->h-1 ; j++) {
+        for(int i = current_size; i < image->w ; i++) {
+            for(int j = current_size; j < image->h ; j++) {
                 for(int n = 1; n < 2; n++ ) {
                     //printf("%d,%d,%d\n", i, j, current_size);
-                    printf("call");
-                    value = haarProcess(integralImage , i, j, current_size, 1);
-                    printf("called");
+                    value = haarProcess(integralImage , i, j, current_size, n);
                     //printf("%d\n",value);
-                    if(value > 0)
+                    if(value > 200000000)
                     {
-                        haarOutput[f].value = value;
-                        haarOutput[f].haar = n;
-                        haarOutput[f].i = i;
-                        haarOutput[f].j = j;
-                        haarOutput[f].w = current_size;
-                        haarOutput[f].h = current_size;
-                        //printf("record %d done\n", f);
+                        haarRecord haarOutput;
+                        malloc(sizeof(struct haarRecord));
+                        haarOutput.value = value;
+                        haarOutput.haar = n;
+                        haarOutput.i = i;
+                        haarOutput.j = j;
+                        haarOutput.w = current_size;
+                        haarOutput.h = current_size;
+                        //printf("Record %d done\n", f);
+                        haarOutputTab[f] = haarOutput;
+                        free(haarOutput);
                         f = f + 1;
                     }
                 }
             }
         }
-        printf("MULT, %d\n",current_size);
+        printf("MULT, %d\n",f);
         current_size *= 1.25;
     }
     free(haarOutput);
