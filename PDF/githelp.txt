@@ -1,0 +1,10 @@
+
+
+git pull upstream master
+git pull origin master
+(au choix)
+
+
+git add xxxxx
+git commit -m "yyyyy"
+git push upstream

@@ -46,8 +46,6 @@ void putpixel(SDL_Surface *image, unsigned x, unsigned y, Uint32 pixel) {
 
 Uint32 getpixel(SDL_Surface *image, unsigned x, unsigned y) {
     Uint8 *p = pixelref(image, x, y);
-    if(p==NULL)
-        return *(Uint32 *)pixelref(image,0,0);
   switch(image->format->BytesPerPixel) {
     case 1:
       return *p;
@@ -77,6 +75,8 @@ void ToGray(SDL_Surface *image) {
             SDL_GetRGB(pixel, image->format, &r, &g, &b);
             r = r * 0.3 + g * 0.53 + b * 0.11;
             graypixel = SDL_MapRGB(image->format, r, r, r);
+           // printf("%d\n",graypixel);
+           // printf(" r = %d\n",r);
             putpixel(image, i, j, graypixel);
         }
     }
@@ -105,6 +105,7 @@ void Binarize(SDL_Surface *surface)
         r = 0;
       }
       pink = SDL_MapRGB(surface->format,r,r,r);
+     // printf("%d\n",pink);
       putpixel(surface,i,j,pink);
     }
   }
@@ -117,21 +118,103 @@ SDL_Surface integralImage(SDL_Surface *image) {
     Binarize(outImage);
     Uint32 pixel = getpixel(image,0,0);
     putpixel(outImage,0,0,pixel);
-    /*for(int i = 0; i < image->w; i++){
-        pixel = getpixel(image,i,1)+getpixel(outImage,i-1,1);
-        putpixel(outImage,i,1,pixel);
+    SDL_LockSurface(image);
+    SDL_LockSurface(outImage);
+    for(int i = 1; i < image->w; i++){
+        printf("%d\n",i); 
+        pixel = getpixel(image,i,0)+getpixel(outImage,i-1,0);
+        putpixel(outImage,i,0,pixel);
     }
-    for(int i = 0; i < image->h; i++){
-        pixel = getpixel(image,1,i);
-        putpixel(outImage,1,i,pixel);
-    }*/ 
-    for(int i = 0; i < image->w; i++)
+    for(int i = 1; i < image->h; i++){
+        printf("%d\n",i);
+        pixel = getpixel(image,0,i)+getpixel(outImage,0,i-1);
+        putpixel(outImage,0,i,pixel);
+    } 
+    for(int i = 1; i < image->w; i++)
     {
-        for(int j = 0; j < image->h; j++)
+        for(int j = 1; j < image->h; j++)
     	{
+            printf("%d,%d\n",i,j);
            pixel = getpixel(image,i,j) + getpixel(outImage,i,j-1) + getpixel(image,i-1,j) - getpixel(outImage,i-1,j-1);
            putpixel(outImage,i,j,pixel);
         }
     }
+    SDL_UnlockSurface(outImage);
+    SDL_UnlockSurface(image);
     return *outImage;
+}
+
+
+// MATRIX SECTION
+
+void display_matrix(SDL_Surface* image, int** mat) {
+    for(int i = 0; i < image->w; i++){
+        for(int j = 0; j < image->h; j++) {
+            printf("| %d |", mat[i][j]);
+        }
+        printf("\n");
+    }
+    
+}
+int** build_matrix_image(SDL_Surface *image) {
+   int** matrix; 
+   matrix = malloc(image->w * sizeof(int*));
+   for(int i = 0; i<image->w; i++) {
+      matrix[i] = malloc(image->h * sizeof(int *));
+     }
+  return matrix;
+}
+
+
+int** matrix_integralImageL(int** mat, SDL_Surface *image){
+    for(int i = 1; i < image->w; i++){
+        Uint8 r=0;
+        Uint8 g=0;
+        Uint8 b=0;
+        Uint32 pixel = getpixel(image,i,0);
+        SDL_GetRGB(pixel, image ->format, &r, &g, &b);
+        mat[i][0] = r + mat[i-1][0];
+        //printf("%d\n",mat[i][0]);
+    }   
+    return mat;
+}
+
+
+int** matrix_integralImageC(int** mat, SDL_Surface *image){
+    for(int i = 1; i < image->h; i++){
+        Uint8 r=0;
+        Uint8 g=0;
+        Uint8 b=0;
+        Uint32 pixel = getpixel(image,0,i);
+        SDL_GetRGB(pixel, image ->format, &r, &g, &b);
+        mat[0][i] = r + mat[0][i-1];
+        //printf("%d\n",mat[0][i]);
+    } 
+    return mat;
+}
+
+
+int** matrix_integralImageT(int** mat, SDL_Surface *image){
+    for(int i = 1; i < image->w; i++){
+        for(int j = 1; j < image->h; j++) {
+            Uint8 r=0;
+            Uint8 g=0;
+            Uint8 b=0;
+            Uint32 pixel = getpixel(image,i,j);
+            SDL_GetRGB(pixel, image ->format, &r, &g, &b);
+            mat[i][j] = r + mat[i-1][j] + mat[i][j-1] - mat[i-1][j-1];
+        }
+    } 
+    return mat;
+}
+
+int** matrix_integralImage(SDL_Surface *image){
+    SDL_LockSurface(image);
+    int** matrix = build_matrix_image(image);
+    matrix[0][0] = 255;
+    matrix_integralImageL(matrix,image);
+    matrix_integralImageC(matrix,image);
+    matrix_integralImageT(matrix,image);
+    SDL_UnlockSurface(image);
+    return matrix;
 }
