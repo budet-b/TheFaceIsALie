@@ -1,0 +1,6 @@
+Name : Kais Bennaceur
+Login : bennac_k
+SPE A2 2019
+
+Run Main file with "TestImage.jpg" to display a sample image.
+First displayed image is colored. The program waits for a key to display the gray colored image. A third key press will make you abort the program.
