@@ -5,7 +5,7 @@
 //  Created by TheFaceIsALie on 10/10/2015.
 //
 //
-#include "image.h"
+#include "image.c"
 
 struct haarRecord
 {
