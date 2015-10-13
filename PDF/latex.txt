@@ -1,0 +1,51 @@
+get_pixel : 
+Fonction qui prend une image et coordonnées x,y.
+Création d'un Uint sur 8 bits qui s'appelle p (*p) qui récupère un pixel 
+4 cas possibles : 
+1er cas : on retourne p car il n'y a que une seule info (r g ou b) 
+2eme cas : on retourne Uint16*p pour être sur 32 bits.
+3eme cas : On check selon les bits de poids fort et de poids faible selon les processeurs ! Ce cas fait l'extension des bits pour avoir du 32 bits.
+4eme cas: On retourne le Uint32 *p
+
+
+sale arabe fdp de roux
+ligne de test
+ligne 2
+ligne 3
+To_gray:
+Prend l'image en paramètre, on créer 3 variables r,g,b à mettre à 0.
+Deux boucles pour i et j afin de parcourir toute l'image.
+On récupère chaque pixel de l'image grâce à notre fonction get_pixel.
+Parcours par colonne !!!
+On multiplie les r,g,b pour avoir les nuances grises :
+r = r*0.3
+g = g*0.59
+b = b*0.11
+
+PutPixel:
+Prend en paramètre l'image, prend les coordonnées du pixel
+On a quelque chose comme 0xAARRGGBB (alpha,red,green,blue) lorsqu'on rajoute ce 0xFF dans :
+ p[0] = (pixel >> 16) & OxFF
+ ici ">>" décale p[0] de 4 octets vers la droite ! et le "OxFF" garde seulement les 8 bits de poids faibles.
+
+IntegralImage : 
+Prend en paramètre l'image
+Variable image "OutImage", image qui sera renvoyé
+On créer un Uint32 qui s'appelle pixel pour récupérer (grâce a Getpixel) aux coordonnées 0,0
+2 boucles for pour "putpixel" afin d'initialiser outImage à 0.
+On met le premier pixel manuellement sinon il sera toujours à 0,0.
+2 boucles for, le pixel outimage est à getpixel(image i,j) + getpixel(outImage,i,j-1)+getpixel(image,i-1,j)-getpixel(outImage,i-1,j-1)
+dans cette boucle on putpixel le pixel créer juste au dessus
+On sort de la boucle, on retourne outImage.
+
+haar.c :
+A partir de l'image integrale ( la bouilli de pixel ) on cherche les pattern. Pour cela on créé une struct Haar qui contient: le type de patter reconnu ( y'en a 5 ), la position du pattern, la taille du patern et le résultat du calcul du pattern.
+On va prendre des carrés de 24*24 ensuite faire les pattern du genre
+____________
+|      XXXXX|
+|      XXXXX|
+|      XXXXX|
+|      XXXXX|   
+|      XXXXX|
+|______XXXXX|
+À partir de cela on va faire la difference entre le cote gauche et le coté droit, si le résulat est supérieur à 0, on l'enregistre dans la structure Haar sinon on fait rien. On fait cela pour chaque type de pattern, pour tous les carrés de l'image de cette taille et pour des rectangles de taille différentes.
