@@ -84,7 +84,7 @@ void processImage(SDL_Surface *image) {
                         haarOutput->j = j;
                         haarOutput->w = current_size;
                         haarOutput->h = current_size;
-                        //printf("Record %d done\n", f);
+                        printf("Record %d done\n", f);
                         haarOutputTab[f] = *haarOutput;
                         free(haarOutput);
                         f = f + 1;
