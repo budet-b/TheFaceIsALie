@@ -5,20 +5,7 @@
 //  Created by TheFaceIsALie on 10/10/2015.
 //
 //
-
-<<<<<<< HEAD
 #include "image.h"
-
-struct haarRecord {
-    int haar;
-    unsigned long i , j;
-    int value;
-};
-
-=======
-#include "image.c"
-
-
 
 struct haarRecord
 {
@@ -45,8 +32,8 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
 }
 
 int feature1(int x,int y,int x2,int y2,int** mat) {
-    int a = calcul_area(x,y,x2,((y - y2)/2),mat);
-    int b = calcul_area(((x - x2) / 2),y,x2,y2,mat);
+    int a = calcul_area(x,y,x2,((y - y2-1)/2),mat);
+    int b = calcul_area(((x - x2-1) / 2),y,x2,y2,mat);
     return (a - b);
 }
 
@@ -113,4 +100,3 @@ void processImage(SDL_Surface *image) {
         printf("%d\n", haarOutputTab[derp].value);
     free(haarOutputTab);
 }
->>>>>>> 712144ca877c91bc3de042fce2abfb966177e87d
