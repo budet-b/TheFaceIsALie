@@ -37,3 +37,5 @@ On met le premier pixel manuellement sinon il sera toujours à 0,0.
 2 boucles for, le pixel outimage est à getpixel(image i,j) + getpixel(outImage,i,j-1)+getpixel(image,i-1,j)-getpixel(outImage,i-1,j-1)
 dans cette boucle on putpixel le pixel créer juste au dessus
 On sort de la boucle, on retourne outImage.
+
+BALISES AIDE ASM : [ASM][PROJ][STP][BONJOUR]
