@@ -5,10 +5,7 @@
 //  Created by TheFaceIsALie on 10/10/2015.
 //
 //
-
 #include "image.c"
-
-
 
 struct haarRecord
 {
@@ -34,9 +31,9 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
     return (a + d - b - c);
 }
 
-int feature1(int x,int y,int x2,int y2,int** mat) {
-    int a = calcul_area(x,y,x2,((y - y2)/2),mat);
-    int b = calcul_area(((x - x2) / 2),y,x2,y2,mat);
+int feature1(int x,int y, int w, int h, int** mat) {
+    int a = calcul_area(x, y, x - h, y - (w / 2), mat);
+    int b = calcul_area(x, y - (w / 2), x - h, y - w, mat);
     return (a - b);
 }
 
@@ -46,13 +43,13 @@ int feature1(int x,int y,int x2,int y2,int** mat) {
     return (a - b);
 }*/
 
-int haarProcess(int** integralImage, int x, int y, int w, int feature) { //tabulate
+int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { //tabulate
         switch (feature) {
             case 1:
                 //printf("x=%d, y=%d, w=%d", x, y, w);
-                return feature1(x, y, x - w, y - w, integralImage);
+                return feature1(x, y, w, h, integralImage);
                 break;
-                
+
             default:
                 return 0;
                 break;
@@ -62,7 +59,7 @@ int haarProcess(int** integralImage, int x, int y, int w, int feature) { //tabul
 void processImage(SDL_Surface *image) {
     int** integralImage = matrix_integralImage(image);
     int current_size = 24;
-    //int current_size2 = 24;
+    int current_size2 = 24;
     int f = 0;
     int value;
     haarRecord *haarOutputTab;
@@ -73,10 +70,10 @@ void processImage(SDL_Surface *image) {
     while((current_size < image->h) && (current_size < image->w)) {
         //printf("%d\n",current_size);
         for(int i = current_size; i < image->w ; i++) {
-            for(int j = current_size; j < image->h ; j++) {
+            for(int j = current_size2; j < image->h ; j++) {
                 for(int n = 1; n < 2; n++ ) {
                     //printf("%d,%d,%d\n", i, j, current_size);
-                    value = haarProcess(integralImage , i, j, current_size, n);
+                    value = haarProcess(integralImage , i, j, current_size, current_size2, n);
                     //printf("%d\n",value);
                     if(value > 0)
                     {
@@ -86,7 +83,7 @@ void processImage(SDL_Surface *image) {
                         haarOutput->i = i;
                         haarOutput->j = j;
                         haarOutput->w = current_size;
-                        haarOutput->h = current_size;
+                        haarOutput->h = current_size2;
                         //printf("Record %d done\n", f);
                         haarOutputTab[f] = *haarOutput;
                         free(haarOutput);
@@ -95,11 +92,12 @@ void processImage(SDL_Surface *image) {
                 }
             }
         }
-        printf("MULT, %d\n",f);
+        //printf("MULT, %d\n",f);
         current_size *= 1.25;
+        current_size2 *= 1.25;
     }
     
-    for(int derp = 0; derp <f; derp++)
-        printf("%d\n", haarOutputTab[derp].value);
+    /*for(int derp = 0; derp <f; derp++)
+        printf("%d\n", haarOutputTab[derp].value);*/
     free(haarOutputTab);
 }
