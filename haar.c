@@ -31,9 +31,9 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
     return (a + d - b - c);
 }
 
-int feature1(int x,int y,int x2,int y2,int** mat) {
-    int a = calcul_area(x,x2,y,y2,mat);
-    int b = calcul_area(x, x2, j +w, j+2w - 1,mat);
+int feature1(int x,int y, int w, int h, int** mat) {
+    int a = calcul_area(x, y, x-h, y - (w / 2), mat);
+    int b = calcul_area(x, y - (w / 2), x - h, y - h, mat);
     return (a - b);
 }
 
@@ -47,7 +47,7 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { 
         switch (feature) {
             case 1:
                 //printf("x=%d, y=%d, w=%d", x, y, w);
-                return feature1(x, y, x + h - 1, y + w - 1, integralImage);
+                return feature1(x, y, w, h, integralImage);
                 break;
 
             default:
@@ -84,7 +84,7 @@ void processImage(SDL_Surface *image) {
                         haarOutput->j = j;
                         haarOutput->w = current_size;
                         haarOutput->h = current_size2;
-                        printf("Record %d done\n", f);
+                        //printf("Record %d done\n", f);
                         haarOutputTab[f] = *haarOutput;
                         free(haarOutput);
                         f = f + 1;
@@ -92,11 +92,12 @@ void processImage(SDL_Surface *image) {
                 }
             }
         }
-        printf("MULT, %d\n",f);
+        //printf("MULT, %d\n",f);
         current_size *= 1.25;
+        current_size2 *= 1.25;
     }
     
-    for(int derp = 0; derp <f; derp++)
-        printf("%d\n", haarOutputTab[derp].value);
+    /*for(int derp = 0; derp <f; derp++)
+        printf("%d\n", haarOutputTab[derp].value);*/
     free(haarOutputTab);
 }
