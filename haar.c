@@ -32,8 +32,8 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
 }
 
 int feature1(int x,int y, int w, int h, int** mat) {
-    int a = calcul_area(x, y, x-h, y - (w / 2), mat);
-    int b = calcul_area(x, y - (w / 2), x - h, y - h, mat);
+    int a = calcul_area(x, y, x - h, y - (w / 2), mat);
+    int b = calcul_area(x, y - (w / 2), x - h, y - w, mat);
     return (a - b);
 }
 
