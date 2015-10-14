@@ -30,24 +30,62 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
     //printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
     return (a + d - b - c);
 }
-
+//Rectangle : Noir à gauche, blanc droite
 int feature1(int x,int y, int w, int h, int** mat) {
     int a = calcul_area(x, y, x - h, y - (w / 2), mat);
     int b = calcul_area(x, y - (w / 2), x - h, y - w, mat);
     return (a - b);
 }
-
-/*int feature2(int x, int y, int x2, int y2, int** mat) {
-    int a = calcul_area(x, y,  
-    int b = calcul_area
+//Rectangle : Noir en bas, blanc en haut
+int feature2(int x, int y, int w, int h, int** mat) {
+    int a = calcul_area(x, y, x-(h/2), y-w, mat);
+    int b = calcul_area(x-(h/2), y, x-h, y-w, mat);
     return (a - b);
-}*/
+}
+//Rectangle : Noir au mileu, blanc des deux autres cotés VERTICAL
+int feature3(int x, int y, int w, int h, int** mat) {
+    int a = calcul_area(x, y, x-h, y-(w/3),mat);
+    int b = calcul_area(x, y-((2*w)/3), x-h, y-w, mat);
+    int c = calcul_area(x, y-(w/3), x-h, y-((2*w)/3), mat);
+    return (c - a - b);
+}
+//Rectangle : Noir au mileu, blanc des deux autres cotés HORIZONTAL
+int feature4(int x, int y, int w, int h, int** mat) {
+    int a = calcul_area(x, y, x-(h/3), y-w,mat);
+    int b = calcul_area(x-(h/3), y, x-((2*h)/3), y-w, mat);
+    int c = calcul_area(x-((2*h)/3), y, x-h, y-w, mat);
+    return (b - a -c);
+}
+
+int feature5(int x, int y, int w, int h, int** mat) {
+    int a = calcul_area(x, y, (x-h)/2, y - (w/2),mat);
+    int b = calcul_area(x, y - (w/2), x - (h/2), y - w, mat);
+    int c = calcul_area(x - (h/2), y, x - h, y - (w/2), mat);
+    int d = calcul_area(x - (h/2), y - (w/2), x - h, y - w ,mat);
+    return (b + c - a - d);
+}
 
 int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { //tabulate
         switch (feature) {
             case 1:
                 //printf("x=%d, y=%d, w=%d", x, y, w);
                 return feature1(x, y, w, h, integralImage);
+                break;
+            
+            case 2:
+                return feature2(x, y, w, h, integralImage);
+                break;
+                
+            case 3:
+                return feature3(x, y, w, h, integralImage);
+                break;
+                
+            case 4:
+                return feature4(x, y, w, h, integralImage);
+                break;
+                
+            case 5:
+                return feature5(x , y , w, h, integralImage);
                 break;
 
             default:
@@ -71,7 +109,7 @@ void processImage(SDL_Surface *image) {
         //printf("%d\n",current_size);
         for(int i = current_size; i < image->w ; i++) {
             for(int j = current_size2; j < image->h ; j++) {
-                for(int n = 1; n < 2; n++ ) {
+                for(int n = 1; n < 6; n++ ) {
                     //printf("%d,%d,%d\n", i, j, current_size);
                     value = haarProcess(integralImage , i, j, current_size, current_size2, n);
                     //printf("%d\n",value);
@@ -92,7 +130,7 @@ void processImage(SDL_Surface *image) {
                 }
             }
         }
-        //printf("MULT, %d\n",f);
+       // printf("MULT, %d\n",f);
         current_size *= 1.25;
         current_size2 *= 1.25;
     }
