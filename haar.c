@@ -96,9 +96,9 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { 
 //struct haarRecord*
 void processImage(SDL_Surface *image) {
     int** integralImage = matrix_integralImage(image);
-    int current_size = 0;
-    int current_size2 = 0;
-    int current_sizeT = 0;
+    int current_size = 1;
+    int current_size2 = 1;
+    int current_sizeT = 1;
     int current_size2T = 1;
     int derp = 0;
     int f = 0;
@@ -108,10 +108,10 @@ void processImage(SDL_Surface *image) {
     
     haarOutputTab = malloc((image->h*image->w)*500*(sizeof(struct haarRecord)));
    // display_matrix(image, integralImage);
-    while((current_size < image->h) && (current_size2 < image->w)) {
+    while((current_size < 24) && (current_size2 < 24)) {
         printf("%d,%d\n",current_size,current_size2);
-        for(int i = current_size; i < image->w; i++) {
-            for(int j = current_size2; j < image->h; j++) {
+        for(int i = current_size; i < 24; i++) {
+            for(int j = current_size2; j < 24; j++) {
                 for(int n = 1; n<=5; n++ ) {
                     //printf("%d,%d,%d\n", i, j, current_size);
                     value = haarProcess(integralImage , i, j, current_size, current_size2, n);
