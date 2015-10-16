@@ -53,3 +53,5 @@ ____________
 =======
 BALISES AIDE ASM : [ASM][PROJ][STP][BONJOUR]
 >>>>>>> 0fe8975f39d6d13017f60715e6992723e0d0361b
+
+162036 => nombre de haar features nécessaires pour un 24*24

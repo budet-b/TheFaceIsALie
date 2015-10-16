@@ -34,7 +34,6 @@ int main(int argc, char* argv[]) {
             printf("ça marche : %s Ligne : %d\n",result ,line);
         }
     }
-
     fclose(name);
     return 0;
 }
