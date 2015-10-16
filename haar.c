@@ -96,9 +96,9 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { 
 //struct haarRecord*
 void processImage(SDL_Surface *image) {
     int** integralImage = matrix_integralImage(image);
-    int current_size = 1;
-    int current_size2 = 1;
-    int current_sizeT = 1;
+    int current_size = 0;
+    int current_size2 = 0;
+    int current_sizeT = 0;
     int current_size2T = 1;
     int derp = 0;
     int f = 0;
