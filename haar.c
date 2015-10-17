@@ -28,37 +28,36 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
     //i-1;j
     int d = mat[x2][y2];
     //i-1;j-1
-    printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
     return (a + d - b - c);
 }
 //Rectangle : Noir à gauche, blanc droite
-int feature1(int x,int y, int w, int h, int** mat) {
+int feature1(int x,int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x - h, y - (w / 2), mat);
     int b = calcul_area(x, y - (w / 2), x - h, y - w, mat);
     return (a - b);
 }
 //Rectangle : Noir en bas, blanc en haut
-int feature2(int x, int y, int w, int h, int** mat) {
+int feature2(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x-(h/2), y-w, mat);
     int b = calcul_area(x-(h/2), y, x-h, y-w, mat);
     return (a - b);
 }
 //Rectangle : Noir au mileu, blanc des deux autres cotés VERTICAL
-int feature3(int x, int y, int w, int h, int** mat) {
+int feature3(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x-h, y-(w/3),mat);
     int b = calcul_area(x, y-((2*w)/3), x-h, y-w, mat);
     int c = calcul_area(x, y-(w/3), x-h, y-((2*w)/3), mat);
     return (c - a - b);
 }
 //Rectangle : Noir au mileu, blanc des deux autres cotés HORIZONTAL
-int feature4(int x, int y, int w, int h, int** mat) {
+int feature4(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x-(h/3), y-w,mat);
     int b = calcul_area(x-(h/3), y, x-((2*h)/3), y-w, mat);
     int c = calcul_area(x-((2*h)/3), y, x-h, y-w, mat);
     return (b - a -c);
 }
 
-int feature5(int x, int y, int w, int h, int** mat) {
+int feature5(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, (x-h)/2, y - (w/2),mat);
     int b = calcul_area(x, y - (w/2), x - (h/2), y - w, mat);
     int c = calcul_area(x - (h/2), y, x - h, y - (w/2), mat);
@@ -164,7 +163,7 @@ void DERPIDERP(SDL_Surface *image) {
 	const int frameSize = 24;
 	const int features = 5;
 	// All five feature types:
-	const int feature[5][2] = {{2,1}, {1,2}, {3,1}, {1,3}, {2,2}};
+    const int feature[5][2] = {{1,2}, {2,1}, {3,1}, {1,3}, {2,2}};
 	int** integralImage = matrix_integralImage(image);
 
 	int f = 0;
@@ -181,15 +180,15 @@ void DERPIDERP(SDL_Surface *image) {
     	// Each position:
         //(int width = sizeX; width < x; width+=sizeX)
         //(int height = sizeY; height < y; height+=sizeY) 
-    	for (int width = sizeX; width <= frameSize; width+=sizeX){
-        	for (int height = sizeY; height <= frameSize; height+=sizeY){
-                //printf("\tsize: %dx%d\n", width, height);
+        for (int width = sizeX; width <= 24; width+=sizeX){
+        	for (int height = sizeY; height <= 24; height+=sizeY){
+                printf("\tfeature %d, size: %dx%d\n", i, width, height);
             	// Each size fitting within the frameSize:
-            	for (int x = width; x < 24; x++) {
-                	for (int y = height; y < 24; y++) {
+            	for (int x = width - 1; x < 24; x++) {
+                	for (int y = height - 1; y < 24; y++) {
 		            	printf("pos: %d,%d\n", x, y);
                         count++;
-						value = haarProcess(integralImage , x, y, width, height, i+1);
+						value = haarProcess(integralImage , x, y, width - 1, height - 1, i+1);
 						//printf("%d\n",value);
 						if(value > 0) {
 							haarOutput = malloc(sizeof(struct haarRecord));
