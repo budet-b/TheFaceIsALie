@@ -38,4 +38,20 @@ On met le premier pixel manuellement sinon il sera toujours à 0,0.
 dans cette boucle on putpixel le pixel créer juste au dessus
 On sort de la boucle, on retourne outImage.
 
+<<<<<<< HEAD
+haar.c :
+A partir de l'image integrale ( la bouilli de pixel ) on cherche les pattern. Pour cela on créé une struct Haar qui contient: le type de patter reconnu ( y'en a 5 ), la position du pattern, la taille du patern et le résultat du calcul du pattern.
+On va prendre des carrés de 24*24 ensuite faire les pattern du genre
+____________
+|      XXXXX|
+|      XXXXX|
+|      XXXXX|
+|      XXXXX|   
+|      XXXXX|
+|______XXXXX|
+À partir de cela on va faire la difference entre le cote gauche et le coté droit, si le résulat est supérieur à 0, on l'enregistre dans la structure Haar sinon on fait rien. On fait cela pour chaque type de pattern, pour tous les carrés de l'image de cette taille et pour des rectangles de taille différentes.
+=======
 BALISES AIDE ASM : [ASM][PROJ][STP][BONJOUR]
+>>>>>>> 0fe8975f39d6d13017f60715e6992723e0d0361b
+
+162036 => nombre de haar features nécessaires pour un 24*24
