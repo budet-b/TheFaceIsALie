@@ -19,6 +19,7 @@ typedef struct haarRecord haarRecord;
 
 
 int calcul_area(int x,int y,int x2,int y2,int** mat) {
+    printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
     int a = mat[x][y];
     //i,j
     int b = mat[x][y2];
@@ -27,7 +28,7 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
     //i-1;j
     int d = mat[x2][y2];
     //i-1;j-1
-    //printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
+    printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
     return (a + d - b - c);
 }
 //Rectangle : Noir à gauche, blanc droite
@@ -156,4 +157,58 @@ void processImage(SDL_Surface *image) {
         printf("%d\n", haarOutputTab[derp].value);*/
     free(haarOutputTab);
     
+}
+
+
+void DERPIDERP(SDL_Surface *image) {
+	const int frameSize = 24;
+	const int features = 5;
+	// All five feature types:
+	const int feature[5][2] = {{2,1}, {1,2}, {3,1}, {1,3}, {2,2}};
+	int** integralImage = matrix_integralImage(image);
+
+	int f = 0;
+	int value;
+	haarRecord *haarOutputTab;
+	haarRecord *haarOutput = NULL; 
+	haarOutputTab = malloc((image->h*image->w)*500*(sizeof(struct haarRecord)));
+
+	int count = 0;
+	// Each feature:
+	for (int i = 0; i < features; i++) {
+    	int sizeX = feature[i][0];
+    	int sizeY = feature[i][1];
+    	// Each position:
+        //(int width = sizeX; width < x; width+=sizeX)
+        //(int height = sizeY; height < y; height+=sizeY) 
+    	for (int width = sizeX; width <= frameSize; width+=sizeX){
+        	for (int height = sizeY; height <= frameSize; height+=sizeY){
+                //printf("\tsize: %dx%d\n", width, height);
+            	// Each size fitting within the frameSize:
+            	for (int x = width; x < 24; x++) {
+                	for (int y = height; y < 24; y++) {
+		            	printf("pos: %d,%d\n", x, y);
+                        count++;
+						value = haarProcess(integralImage , x, y, width, height, i+1);
+						//printf("%d\n",value);
+						if(value > 0) {
+							haarOutput = malloc(sizeof(struct haarRecord));
+							haarOutput->value = value;
+							haarOutput->haar = i + 1;
+							haarOutput->i = x;
+							haarOutput->j = y;
+							haarOutput->w = width;
+							haarOutput->h = height;
+							//printf("Record %d done\n", f);
+							haarOutputTab[f] = *haarOutput;
+							free(haarOutput);
+							f = f + 1;
+						}
+                	}
+            	}
+            }
+    	}
+	}
+    printf("%d",count);
+    free(haarOutputTab);
 }
