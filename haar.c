@@ -19,7 +19,7 @@ typedef struct haarRecord haarRecord;
 
 
 int calcul_area(int x,int y,int x2,int y2,int** mat) {
-    printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
+    //printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
     int a = mat[x][y];
     //i,j
     int b = mat[x][y2];
@@ -93,7 +93,7 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { 
                 break;
         }
 }
-//struct haarRecord*
+/*
 void processImage(SDL_Surface *image) {
     int** integralImage = matrix_integralImage(image);
     int current_size = 1;
@@ -143,26 +143,26 @@ void processImage(SDL_Surface *image) {
         else {
             ++current_size;
         }
-        /*if(current_size == 23 && current_size2 == 23) {
+        if(current_size == 23 && current_size2 == 23) {
             current_size = current_sizeT;
             current_size2 = current_size2T;
             ++current_sizeT;
             ++current_size2T;
-        }*/
+        }
         
     }
     
-    /*for(int derp = 0; derp <f; derp++)
-        printf("%d\n", haarOutputTab[derp].value);*/
+    for(int derp = 0; derp <f; derp++)
+        printf("%d\n", haarOutputTab[derp].value);
     free(haarOutputTab);
     
 }
+*/
 
-
-void DERPIDERP(SDL_Surface *image) {
+void processImage(SDL_Surface *image) {
 	const int frameSize = 24;
 	const int features = 5;
-	// All five feature types:
+	//All five feature types:
     const int feature[5][2] = {{1,2}, {2,1}, {3,1}, {1,3}, {2,2}};
 	int** integralImage = matrix_integralImage(image);
 
@@ -173,22 +173,21 @@ void DERPIDERP(SDL_Surface *image) {
 	haarOutputTab = malloc((image->h*image->w)*500*(sizeof(struct haarRecord)));
 
 	int count = 0;
-	// Each feature:
+	//Each feature:
 	for (int i = 0; i < features; i++) {
     	int sizeX = feature[i][0];
     	int sizeY = feature[i][1];
-    	// Each position:
-        //(int width = sizeX; width < x; width+=sizeX)
-        //(int height = sizeY; height < y; height+=sizeY) 
-        for (int width = sizeX; width <= 24; width+=sizeX){
-        	for (int height = sizeY; height <= 24; height+=sizeY){
+    	
+        //Each detection zone within framesize posible
+        for (int width = sizeX - 1; width < frameSize; width+=sizeX){
+        	for (int height = sizeY - 1; height < frameSize; height+=sizeY){
                 printf("\tfeature %d, size: %dx%d\n", i, width, height);
-            	// Each size fitting within the frameSize:
-            	for (int x = width - 1; x < 24; x++) {
-                	for (int y = height - 1; y < 24; y++) {
-		            	printf("pos: %d,%d\n", x, y);
+            	//Each position fiting in framesize with surrent detection zone
+            	for (int x = width; x < frameSize; x++) {
+                	for (int y = height; y < frameSize; y++) {
+		            	//printf("pos: %d,%d\n", x, y);
                         count++;
-						value = haarProcess(integralImage , x, y, width - 1, height - 1, i+1);
+						value = haarProcess(integralImage , x, y, width, height, i+1);
 						//printf("%d\n",value);
 						if(value > 0) {
 							haarOutput = malloc(sizeof(struct haarRecord));
@@ -198,7 +197,7 @@ void DERPIDERP(SDL_Surface *image) {
 							haarOutput->j = y;
 							haarOutput->w = width;
 							haarOutput->h = height;
-							//printf("Record %d done\n", f);
+							printf("Record %d done\n", f);
 							haarOutputTab[f] = *haarOutput;
 							free(haarOutput);
 							f = f + 1;

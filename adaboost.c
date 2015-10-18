@@ -82,16 +82,21 @@ void decisionStump (haarRecord *haarTab, int n, int visage, int threshold, int t
             MarginTemp = haarTab[j+1] - haarTab[j];
         }
     }
+    int[4] decisionStump = {threshold, toggle, error, Margin};
+    return decisionStump;
 }
 
 int[] bestStump (haarRecord *haarTab, int nbFeatures, int visage){
     int bestError = 2;
     int threshold,toggle,error,margin;
+    int[4] currentDecisionStump;
+    int[4] bestDecisionStump = {0, 0, 2, 0}
     for (int f = 0; O < nbFeatures; f++) {
-        decisionStump(haarTab, nbFeatures, visage, &threshold, &toggle, &error, &margin);
+        currentDecisionStump = decisionStump(haarTab, nbFeatures, visage, &threshold, &toggle, &error, &margin);
+         if ((errorTemp < bestDecisionStump[3]) || ((errorTemp == bestDecisionStump[3])) && (MarginTemp > bestDecisionStump[4]))
+            bestDecisionStump = currentDecisionStump;
     }
-    int[4] bonjour = {threshold, toggle, error, margin}
-    return bonjour;
+    return bestDecisionStump;
 }
 
 //Numbers of images < nb training Round
@@ -99,8 +104,8 @@ void adaboost (char* trainingExample[], int* checksum, int trainingRound){
     int weight = 1;
     int nbFeatures;
     int error;
-    int[4] bonjour;
+    int[4] currentDecisionStump;
     for (int i = 0; i < trainingRound; i++) {
-        bonjour = bestStump(processImage(load_image(trainingExample[i]), &nbFeatures),&nbFeatures, checksum[i]);
+        currentDecisionStump = bestStump(processImage(load_image(trainingExample[i]), &nbFeatures),&nbFeatures, checksum[i]);
     }
 }
