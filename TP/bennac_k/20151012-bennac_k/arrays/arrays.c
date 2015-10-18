@@ -10,26 +10,22 @@ void print_array(int *begin, int *end){
 
 
 int* binsearch(int x, int *begin, int *end){
-    int *mid = 0;
-    while (end >= begin) {
-       mid = begin + ((end - begin) / 2);
-       if (*mid > x)
-           end = mid--;
-       else if (*mid < x)
-           begin = mid++;
-       else
-           return mid;
-    }
-   return end;
+    if(end - begin < 1)
+		return begin;
+	int *mid = begin + ((end-begin)/2);
+	if(*mid < x)
+		return binsearch(x,(mid+1),end);
+	else
+		return binsearch(x,begin,mid);
 }
 
 
 int sorted_insert(int x, int *begin, int *end){
-    int* pos = binsearch(x,begin,end);
+    int *pos = binsearch(x,begin,end);
     if ((pos < end) && (*pos == x) )
         return 0;
     if (pos < end)
-        end = memmove(end,pos,1);*/
+        end = memmove(pos+1,pos,(end-pos)*sizeof(int));
     *pos = x;
     return 1;
 }
@@ -49,9 +45,7 @@ int *max(int *a, int *b){
 }
 
 int *choose_pivot(int *begin, int *end) {
-    int *mid = begin + (end - begin)/2;
-    int *result = (max(min(begin,end), min(max(begin,end), mid)));
-    return result;
+   return (end - begin) / 2 + begin;
 }
 
 
@@ -67,7 +61,7 @@ int* partition(int *begin, int *end, int *pivot) {
     int pval = *pivot;
     swap(pivot,end-1);
     pivot = begin;
-    for(;begin<end-2;begin++) {
+    for(;begin<end-1;begin++) {
         if(*begin < pval) {
             swap(pivot, begin);
             pivot++;
@@ -79,8 +73,9 @@ int* partition(int *begin, int *end, int *pivot) {
 
 
 void quick_sort(int *begin, int *end) {
+    int *pivot = NULL;
     if (end-begin > 1) {
-        int *pivot = choose_pivot(begin,end);
+        pivot = choose_pivot(begin,end);
         pivot = partition(begin,end,pivot);
         quick_sort(begin,pivot);
         quick_sort(pivot+1, end);

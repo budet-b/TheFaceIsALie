@@ -36,7 +36,7 @@ int* binsearch(int x, int *begin, int *end) {
  * otherwise.
  * We assume that there is enough memory for an insertion. */
 int sorted_insert(int x, int *begin, int *end){
-    int pos = binsearc(x,begin,end);
+    int pos = binsearch(x,begin,end);
     if (pos<begin && (pos == x)) {
         return 1;
     }
