@@ -22,15 +22,27 @@ int main(int argc, char* argv[]) {
         fprintf(name, "\n");
     }
 
-    if( strcmp(argv[1], "read") == 0) {
+    if(strcmp(argv[1], "read") == 0) {
         while((ch = fgetc(name)) != EOF)
             printf("%c", (char)ch);
     }
 
-    if( strcmp(argv[1], "search") == 0) {
+    if(strcmp(argv[1], "search") == 0) {
+        char *input = argv[2];
+        int begin = 0;
         while((fgets(h, 100, name) != NULL) && result == NULL) {
+            for(int i = 0; strcmp(&h[i],&input[i]) == 0;i++) {
+                printf("Test %d",i);
+                if(strcmp(&h[i]," ") == 0) {   
+                    begin = i;
+                    break;
+                }
+            }
             line++;
-            result = strstr(h, argv[2]);
+            size_t len = strlen(h);
+            /*for(int i = begin; i < (int)len; i++)
+              result[i] = h[i];*/
+            strcpy(result,h);
             printf("ça marche : %s Ligne : %d\n",result ,line);
         }
     }
