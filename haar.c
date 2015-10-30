@@ -192,7 +192,7 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
                         count++;
 						value = haarProcess(integralImage , x, y, width, height, i+1);
 						//printf("%d\n",value);
-						if(value > 0) {
+						//if(value > 0) {
 							haarOutput = malloc(sizeof(struct haarRecord));
 							haarOutput->value = value;
 							haarOutput->haar = i + 1;
@@ -204,7 +204,7 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
 							haarOutputTab[f] = *haarOutput;
 							free(haarOutput);
 							f = f + 1;
-						}
+						//}
                 	}
             	}
             }

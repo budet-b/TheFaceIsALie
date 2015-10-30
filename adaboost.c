@@ -25,8 +25,42 @@ int max(haarRecord* haarTab, int nbFeatures) {
     return maxHaarTab;
 }
 
+int sumBig(haarRecord* haarTab, int nbFeatures,int threshold, int check) {
+    int sum = 0;
+    for(int i = 0; i < nbFeatures; i++) {
+        if (check == 1) {
+            if(haarTab[i].value > 0 && haarTab[i].value > threshold)
+                sum = sum + haarTab[i].value;
+        }
+        else {
+            if(haarTab[i].value < 0 && haarTab[i].value > threshold)
+                sum = sum + haarTab[i].value;
+        }
+    }
+    return sum;
+}
 
-int* decisionStump (haarRecord *haarTab, int nbFeatures, int visage){
+int sumSmall(haarRecord* haarTab, int threshold, int nbFeatures, int check) {
+    int sum = 0;
+    for(int i = 0; i < nbFeatures; i++) {
+        if (check == 1) {
+            if(haarTab[i].value > 0 && haarTab[i].value < threshold)
+                sum = sum + haarTab[i].value;
+        }
+        else {
+            if(haarTab[i].value < 0 && haarTab[i].value < threshold)
+                sum = sum + haarTab[i].value;
+        }
+    }
+    return sum;
+}
+
+void allocate(int* tab) {
+    tab = malloc(4 * sizeof(int));
+}
+
+
+int* decisionStump (haarRecord haarFeature, haarRecord *haarTab, int nbFeatures, int visage){
     
     //margin init
     int Margin = 0;
@@ -45,10 +79,12 @@ int* decisionStump (haarRecord *haarTab, int nbFeatures, int visage){
     int toggleTemp;
 
     //weights init
-    int WPosBig = sumBig(haarTab, 1); //int 1 or -1, 1 = pos; -1 = neg
-    int WNegBig = sumBig(haarTab, -1);
-    int WPosSmall = sumSmall(haarTab, 1);
-    int WNegSmall = sumSmall(haarTab, -1);
+    //int 1 or -1, 1 = pos; -1 = neg
+
+    int WPosBig = sumBig(haarTab, haarFeature.value, nbFeatures, 1);
+    int WNegBig = sumBig(haarTab, haarFeature.value, nbFeatures, -1);
+    int WPosSmall = sumSmall(haarTab, haarFeature.value, nbFeatures, 1);
+    int WNegSmall = sumSmall(haarTab, haarFeature.value, nbFeatures, -1);
     
     //var init
     int j = 0;
@@ -100,17 +136,18 @@ int* decisionStump (haarRecord *haarTab, int nbFeatures, int visage){
             MarginTemp = haarTab[j+1].value - haarTab[j].value;
         }
     }
-    int decisionStump[4] = {threshold, toggle, error, Margin};
-    return *decisionStump;
+    int *decisionStump;
+    allocate(decisionStump);
+    decisionStump[4] = {threshold, toggle, error, Margin};
+    return decisionStump;
 }
 
 int* bestStump (haarRecord *haarTab, int nbFeatures, int visage){
-    int bestError = 2;
     //threshold,toggle,error,margin;
     int currentDS[4];
     int bestDS[4] = {0, 0, 2, 0};
     for (int f = 0; f < nbFeatures; f++) {
-        *currentDS = *decisionStump(haarTab, nbFeatures, visage);
+        *currentDS = *decisionStump(haarTab[f], haarTab, nbFeatures, visage);
          if ((currentDS[2] < bestDS[2]) || ((currentDS[2] == bestDS[2]) && (currentDS[3] > bestDS[3])))
             *bestDS = *currentDS;
     }
@@ -124,6 +161,6 @@ void adaboost (char* trainingExample[], int* visage, int trainingRound){
     int error;
     int currentDS[4];
     for (int i = 0; i < trainingRound; i++) {
-        *currentDS = bestStump(processImage(load_image(trainingExample[i]), &nbFeatures),&nbFeatures, visage[i]);
+        *currentDS = bestStump(processImage(load_image(trainingExample[i]), &nbFeatures),nbFeatures, visage[i]);
     }
 }

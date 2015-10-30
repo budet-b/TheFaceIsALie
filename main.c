@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "haar.c"
+//#include "haar.c"
+#include "adaboost.c"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
@@ -57,7 +58,8 @@ int main(int argc, char* argv[]) {
     Binarize(image);
 	display_image(image);
     printf("ONSTART\n");
-    processImage(image);
+    int len;
+    processImage(image, &len);
     SDL_SaveBMP(image, "./ToGray.bmp");
     return 0;
 }
