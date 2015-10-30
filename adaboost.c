@@ -7,23 +7,41 @@
 //
 //#include "image.h"
 //#include <math.h>
-//#include "adaboost.h"
+#include "haar.c"
 
-void decisionStump (haarRecord *haarTab, int n, int visage, int threshold, int toggle, int error, int Margin){
+int min(haarRecord* haarTab, int nbFeatures) {
+    int minHaarTab = 0;
+    for(int i = 0; i < nbFeatures; i++)
+        if(haarTab[i].value > minHaarTab)
+            minHaarTab = haarTab[i].value;
+    return minHaarTab;
+}
+
+int max(haarRecord* haarTab, int nbFeatures) {
+    int maxHaarTab = 0;
+    for(int i = 0; i < nbFeatures; i++)
+        if(haarTab[i].value < maxHaarTab)
+            maxHaarTab = haarTab[i].value;
+    return maxHaarTab;
+}
+
+
+int* decisionStump (haarRecord *haarTab, int nbFeatures, int visage){
     
     //margin init
-    Margin = 0;
+    int Margin = 0;
     int MarginTemp = Margin;
     
     //threshold init
-    threshold = min(haarTab);
+    int threshold = min(haarTab, nbFeatures);
     int thresholdTemp = threshold;
     
     //error init
-    error = 2;
+    int error = 2;
     int errorTemp;
     
     //toggle init
+    int toggle;
     int toggleTemp;
 
     //weights init
@@ -54,7 +72,7 @@ void decisionStump (haarRecord *haarTab, int n, int visage, int threshold, int t
             Margin = MarginTemp;
             threshold = thresholdTemp;
         }
-        if (j == n) {
+        if (j == nbFeatures) {
             break;
         }
         while (1) {
@@ -66,46 +84,46 @@ void decisionStump (haarRecord *haarTab, int n, int visage, int threshold, int t
                 WPosSmall = WPosSmall + haarTab[j].weight;
                 WPosBig = WPosBig - haarTab[j].weight;
             }
-            if (j == n) {
+            if (j == nbFeatures) {
                 break;
             }
             else {
                 j++;
             }
         }
-        if (j == n) {
-            thresholdTemp = max(haarTab)+1;
+        if (j == nbFeatures) {
+            thresholdTemp = max(haarTab, nbFeatures)+1;
             MarginTemp = 0;
         }
         else {
-            thresholdTemp = (haarTab[j] + haarTab[j+1]) / 2;
-            MarginTemp = haarTab[j+1] - haarTab[j];
+            thresholdTemp = (haarTab[j].value + haarTab[j+1].value) / 2;
+            MarginTemp = haarTab[j+1].value - haarTab[j].value;
         }
     }
-    int[4] decisionStump = {threshold, toggle, error, Margin};
-    return decisionStump;
+    int decisionStump[4] = {threshold, toggle, error, Margin};
+    return *decisionStump;
 }
 
-int[] bestStump (haarRecord *haarTab, int nbFeatures, int visage){
+int* bestStump (haarRecord *haarTab, int nbFeatures, int visage){
     int bestError = 2;
-    int threshold,toggle,error,margin;
-    int[4] currentDecisionStump;
-    int[4] bestDecisionStump = {0, 0, 2, 0}
-    for (int f = 0; O < nbFeatures; f++) {
-        currentDecisionStump = decisionStump(haarTab, nbFeatures, visage, &threshold, &toggle, &error, &margin);
-         if ((errorTemp < bestDecisionStump[3]) || ((errorTemp == bestDecisionStump[3])) && (MarginTemp > bestDecisionStump[4]))
-            bestDecisionStump = currentDecisionStump;
+    //threshold,toggle,error,margin;
+    int currentDS[4];
+    int bestDS[4] = {0, 0, 2, 0};
+    for (int f = 0; f < nbFeatures; f++) {
+        *currentDS = *decisionStump(haarTab, nbFeatures, visage);
+         if ((currentDS[2] < bestDS[2]) || ((currentDS[2] == bestDS[2]) && (currentDS[3] > bestDS[3])))
+            *bestDS = *currentDS;
     }
-    return bestDecisionStump;
+    return *bestDS;
 }
 
 //Numbers of images < nb training Round
-void adaboost (char* trainingExample[], int* checksum, int trainingRound){
+void adaboost (char* trainingExample[], int* visage, int trainingRound){
     int weight = 1;
     int nbFeatures;
     int error;
-    int[4] currentDecisionStump;
+    int currentDS[4];
     for (int i = 0; i < trainingRound; i++) {
-        currentDecisionStump = bestStump(processImage(load_image(trainingExample[i]), &nbFeatures),&nbFeatures, checksum[i]);
+        *currentDS = bestStump(processImage(load_image(trainingExample[i]), &nbFeatures),&nbFeatures, visage[i]);
     }
 }

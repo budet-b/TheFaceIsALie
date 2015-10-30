@@ -13,6 +13,7 @@ struct haarRecord
     unsigned long i , j;
     int w,h;
     int value;
+    int weight;
 };
 
 typedef struct haarRecord haarRecord;
@@ -159,7 +160,9 @@ void processImage(SDL_Surface *image) {
 }
 */
 
-void processImage(SDL_Surface *image) {
+haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
+    const int imageW = image->w;
+    const int imageH = image->h;
 	const int frameSize = 24;
 	const int features = 5;
 	//All five feature types:
@@ -181,10 +184,10 @@ void processImage(SDL_Surface *image) {
         //Each detection zone within framesize posible
         for (int width = sizeX - 1; width < frameSize; width+=sizeX){
         	for (int height = sizeY - 1; height < frameSize; height+=sizeY){
-                printf("\tfeature %d, size: %dx%d\n", i, width, height);
-            	//Each position fiting in framesize with surrent detection zone
-            	for (int x = width; x < frameSize; x++) {
-                	for (int y = height; y < frameSize; y++) {
+                //printf("\tfeature %d, size: %dx%d\n", i, width, height);
+            	//Each position fiting in framesize with current detection zone
+            	for (int x = width; x < imageW; x++) {
+                	for (int y = height; y < imageH; y++) {
 		            	//printf("pos: %d,%d\n", x, y);
                         count++;
 						value = haarProcess(integralImage , x, y, width, height, i+1);
@@ -197,7 +200,7 @@ void processImage(SDL_Surface *image) {
 							haarOutput->j = y;
 							haarOutput->w = width;
 							haarOutput->h = height;
-							printf("Record %d done\n", f);
+							//printf("Record %d done\n", f);
 							haarOutputTab[f] = *haarOutput;
 							free(haarOutput);
 							f = f + 1;
@@ -208,5 +211,6 @@ void processImage(SDL_Surface *image) {
     	}
 	}
     printf("%d",count);
-    free(haarOutputTab);
+    *NbFeatures = f;
+    return(haarOutputTab);
 }
