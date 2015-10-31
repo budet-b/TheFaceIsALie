@@ -3,8 +3,8 @@
  
 int main() {
   // a simple static string
-  char s[] = "abcdefghijklmnopqrstuvwxyz";
-  for (size_t i = 0; i < sizeof (s); i++)
-    printf("s[%2zu] = 0x%02x - '%c'\n", i, s[i], s[i]);
+  char a[] = "abcdefghijklmnopqrstuvwxyz";
+  for (size_t i = 0; i < sizeof (a); i++)
+      printf("s[%2zu] = 0x%02x - '%c'\n", i, a[i], a[i]);
   return 0;
 }

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-//#include "haar.c"
-#include "adaboost.c"
+#include "haar.c"
+//#include "adaboost.c"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
@@ -46,6 +46,11 @@ SDL_Surface* display_image(SDL_Surface *img) {
   return screen;
 }
 
+void display_haar(haarRecord* tab, int nbFeature) {
+    for(int i = 0; i < nbFeature; i++) {
+        printf("| %d |\n", tab[i].value);
+    }
+}
 
 int main(int argc, char* argv[]) {
 	printf("THE FACE IS A LIE\n");
@@ -59,7 +64,9 @@ int main(int argc, char* argv[]) {
 	display_image(image);
     printf("ONSTART\n");
     int len;
-    processImage(image, &len);
+    haarRecord* haarOutput;
+    haarOutput = processImage(image, &len);
+    display_haar(haarOutput, len);
     SDL_SaveBMP(image, "./ToGray.bmp");
     return 0;
 }

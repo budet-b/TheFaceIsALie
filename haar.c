@@ -94,71 +94,57 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { 
                 break;
         }
 }
-/*
-void processImage(SDL_Surface *image) {
-    int** integralImage = matrix_integralImage(image);
-    int current_size = 1;
-    int current_size2 = 1;
-    int current_sizeT = 1;
-    int current_size2T = 1;
-    int derp = 0;
-    int f = 0;
-    int value;
-    haarRecord *haarOutputTab;
-    haarRecord *haarOutput = NULL;
-    
-    haarOutputTab = malloc((image->h*image->w)*500*(sizeof(struct haarRecord)));
-   // display_matrix(image, integralImage);
-    while((current_size < 24) && (current_size2 < 24)) {
-        printf("%d,%d\n",current_size,current_size2);
-        for(int i = current_size; i < 24; i++) {
-            for(int j = current_size2; j < 24; j++) {
-                for(int n = 1; n<=5; n++ ) {
-                    //printf("%d,%d,%d\n", i, j, current_size);
-                    value = haarProcess(integralImage , i, j, current_size, current_size2, n);
-                    derp = derp + 1;
-                    //printf("%d\n",value);
-                    if(value > 0)
-                    {
-                        haarOutput = malloc(sizeof(struct haarRecord));
-                        haarOutput->value = value;
-                        haarOutput->haar = n;
-                        haarOutput->i = i;
-                        haarOutput->j = j;
-                        haarOutput->w = current_size;
-                        haarOutput->h = current_size2;
-                        //printf("Record %d done\n", f);
-                        haarOutputTab[f] = *haarOutput;
-                        free(haarOutput);
-                        f = f + 1;
-                    }
-                }
-            }
-        }
-        printf("CHANGE SIZE, %d\n",derp);
-        if(current_size == 23) {
-            ++current_size2;
-            current_size = current_sizeT + 1;
-            current_sizeT++;
-        }
-        else {
-            ++current_size;
-        }
-        if(current_size == 23 && current_size2 == 23) {
-            current_size = current_sizeT;
-            current_size2 = current_size2T;
-            ++current_sizeT;
-            ++current_size2T;
-        }
-        
-    }
-    
-    for(int derp = 0; derp <f; derp++)
-        printf("%d\n", haarOutputTab[derp].value);
-    free(haarOutputTab);
-    
+
+
+// SORT
+
+/* A typical recursive implementation of quick sort */
+
+/* This function takes last element as pivot, places the pivot element at its
+ correct position in sorted array, and places all smaller (smaller than pivot)
+ to left of pivot and all greater elements to right of pivot */
+
+void swap (haarRecord* a, haarRecord* b)
+{
+    haarRecord temp = *a;
+    *a = *b;
+    *b = temp;
 }
-*/
+
+int partition (haarRecord* tab, int l, int h)
+{
+    int x = tab[h].value;
+    int i = (l - 1);
+    
+    for (int j = l; j <= h- 1; j++)
+    {
+        if (tab[j].value <= x)
+        {
+            i++;
+            swap (&tab[i], &tab[j]);
+        }
+    }
+    swap (&tab[i + 1], &tab[h]);
+    return (i + 1);
+}
+
+/* A[] --> Array to be sorted, l --> Starting index, h --> Ending index */
+void quickSort(haarRecord* tab, int l, int h)
+{
+    if (l < h)
+    {
+        int p = partition(tab, l, h); /* Partitioning index */
+        quickSort(tab, l, p - 1);
+        quickSort(tab, p + 1, h);
+    }
+}
+
+void sort(haarRecord* tab, int NbFeatures) {
+    int l = 0;
+    int h = NbFeatures - 1;
+    quickSort(tab, l, h);
+}
+
 
 haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
     const int imageW = image->w;
@@ -192,25 +178,26 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
                         count++;
 						value = haarProcess(integralImage , x, y, width, height, i+1);
 						//printf("%d\n",value);
-						//if(value > 0) {
-							haarOutput = malloc(sizeof(struct haarRecord));
-							haarOutput->value = value;
-							haarOutput->haar = i + 1;
-							haarOutput->i = x;
-							haarOutput->j = y;
-							haarOutput->w = width;
-							haarOutput->h = height;
-							//printf("Record %d done\n", f);
-							haarOutputTab[f] = *haarOutput;
-							free(haarOutput);
-							f = f + 1;
-						//}
+                        if( value > 0) {
+                        haarOutput = malloc(sizeof(struct haarRecord));
+                        haarOutput->value = value;
+                        haarOutput->haar = i + 1;
+                        haarOutput->i = x;
+                        haarOutput->j = y;
+                        haarOutput->w = width;
+                        haarOutput->h = height;
+                        //printf("Record %d done\n", f);
+                        haarOutputTab[f] = *haarOutput;
+                        free(haarOutput);
+                        f = f + 1;
+                        }
                 	}
             	}
             }
     	}
 	}
-    printf("%d",count);
+    printf("count: %d",count);
     *NbFeatures = f;
-    return(haarOutputTab);
+    sort(haarOutputTab, *NbFeatures);
+    return haarOutputTab;
 }
