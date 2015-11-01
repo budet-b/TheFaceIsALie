@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
     int len;
     haarRecord* haarOutput;
     haarOutput = processImage(image, &len);
-    display_haar(haarOutput, len);
+    //display_haar(haarOutput, len);
     SDL_SaveBMP(image, "./ToGray.bmp");
     return 0;
 }

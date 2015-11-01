@@ -16,7 +16,6 @@
 #include "image.h"
 
 int calcul_area(int x,int y,int x2,int y2,int** mat) {
-    //printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
     int a = mat[x][y];
     //i,j
     int b = mat[x][y2];
@@ -91,13 +90,7 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) {
 }
 
 
-// SORT
 
-/* A typical recursive implementation of quick sort */
-
-/* This function takes last element as pivot, places the pivot element at its
- correct position in sorted array, and places all smaller (smaller than pivot)
- to left of pivot and all greater elements to right of pivot */
 
 void swap (haarRecord* a, haarRecord* b)
 {
@@ -123,12 +116,12 @@ int partition (haarRecord* tab, int l, int h)
     return (i + 1);
 }
 
-/* A[] --> Array to be sorted, l --> Starting index, h --> Ending index */
+
 void quickSort(haarRecord* tab, int l, int h)
 {
     if (l < h)
     {
-        int p = partition(tab, l, h); /* Partitioning index */
+        int p = partition(tab, l, h);
         quickSort(tab, l, p - 1);
         quickSort(tab, p + 1, h);
     }
@@ -165,14 +158,11 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
         //Each detection zone within framesize posible
         for (int width = sizeX - 1; width < frameSize; width+=sizeX){
         	for (int height = sizeY - 1; height < frameSize; height+=sizeY){
-                //printf("\tfeature %d, size: %dx%d\n", i, width, height);
             	//Each position fiting in framesize with current detection zone
             	for (int x = width; x < imageW; x++) {
                 	for (int y = height; y < imageH; y++) {
-		            	//printf("pos: %d,%d\n", x, y);
                         count++;
 						value = haarProcess(integralImage , x, y, width, height, i+1);
-						//printf("%d\n",value);
                         if( value > 0) {
                         haarOutput = malloc(sizeof(struct haarRecord));
                         haarOutput->value = value;
@@ -181,9 +171,7 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
                         haarOutput->j = y;
                         haarOutput->w = width;
                         haarOutput->h = height;
-                        //printf("Record %d done\n", f);
                         haarOutputTab[f] = *haarOutput;
-                        free(haarOutput);
                         f = f + 1;
                         }
                 	}
