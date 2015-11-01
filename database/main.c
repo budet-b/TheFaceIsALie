@@ -12,6 +12,7 @@ int main(int argc, char* argv[]) {
     char *result = NULL;
     int line = 0;
 
+
     if(argc < 2)
         errx(2, "Insuffisant argument");
     if(strcmp(argv[1], "add") == 0) {
@@ -31,19 +32,30 @@ int main(int argc, char* argv[]) {
         char *input = argv[2];
         int begin = 0;
         while((fgets(h, 100, name) != NULL) && result == NULL) {
-            for(int i = 0; strcmp(&h[i],&input[i]) == 0;i++) {
+            /*for(int i = 0; strcmp(&h[i],&input[i]) == 0;i++) {
                 printf("Test %d",i);
                 if(strcmp(&h[i]," ") == 0) {   
-                    begin = i;
+                    begin = i++;
                     break;
                 }
-            }
+            }*/
+
+            //fscanf(name,"%[^\n]",h);
+
             line++;
-            size_t len = strlen(h);
-            /*for(int i = begin; i < (int)len; i++)
-              result[i] = h[i];*/
-            strcpy(result,h);
-            printf("ça marche : %s Ligne : %d\n",result ,line);
+            char *space = strchr(h, ' ');
+            printf("Space :test%ctest\n",*space);
+            char *dynh = h;
+            printf("DynH : %c DynH +1 : %c\n",*dynh,*(dynh+1));
+            size_t length = space - dynh;
+            printf("Length : %zu\n", length);
+            
+            memcpy(result,dynh,length);
+            /*if(*result == *input)
+                strncpy(result, h+begin,strlen(h)-begin-1);  */                     
+            
+
+            //printf("ça marche : %s Ligne : %d\n",result ,line);
         }
     }
     fclose(name);
