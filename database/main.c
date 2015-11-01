@@ -45,20 +45,6 @@ int search(char* argv[],FILE *name) {
 }
 
 
-void delete(char* argv[],FILE *name) {
-    int line = search(argv,name);
-    FILE *temp;
-    char h[100];
-    temp = fopen("temp","w+");
-    while((fgets(h, 100, name) != NULL)) {
-        line--;
-        if (line != 1) 
-            fputs(h,temp);
-    }
-    while(fgets(h,100,temp))
-        fputs(h,name);
-    fclose(temp);
-}
 
 int main(int argc, char* argv[]) {
     FILE *name;
@@ -84,12 +70,6 @@ int main(int argc, char* argv[]) {
     if(strcmp(argv[1], "search") == 0) {
         name = fopen("name","r+");
         search(argv,name);
-        fclose(name);
-    }
-
-    if(strcmp(argv[1], "delete") == 0) {
-        name = fopen("name","r+");
-        delete(argv,name);
         fclose(name);
     }
 
