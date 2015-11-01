@@ -9,9 +9,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr,"Impossible d'ouvrir le fichier données en lecture\n");
     int ch;
     char h[100];
-    char *result = NULL;
-    int line = 0;
-
+    char result[100];
 
     if(argc < 2)
         errx(2, "Insuffisant argument");
@@ -30,32 +28,24 @@ int main(int argc, char* argv[]) {
 
     if(strcmp(argv[1], "search") == 0) {
         char *input = argv[2];
-        int begin = 0;
-        while((fgets(h, 100, name) != NULL) && result == NULL) {
-            /*for(int i = 0; strcmp(&h[i],&input[i]) == 0;i++) {
-                printf("Test %d",i);
-                if(strcmp(&h[i]," ") == 0) {   
-                    begin = i++;
-                    break;
-                }
-            }*/
-
-            //fscanf(name,"%[^\n]",h);
-
-            line++;
+        while((fgets(h, 100, name) != NULL) && result[0] == '\0') {
             char *space = strchr(h, ' ');
-            printf("Space :test%ctest\n",*space);
             char *dynh = h;
-            printf("DynH : %c DynH +1 : %c\n",*dynh,*(dynh+1));
             size_t length = space - dynh;
-            printf("Length : %zu\n", length);
+            strncpy(result,dynh,length);
             
-            memcpy(result,dynh,length);
-            /*if(*result == *input)
-                strncpy(result, h+begin,strlen(h)-begin-1);  */                     
-            
-
-            //printf("ça marche : %s Ligne : %d\n",result ,line);
+            if(strcmp(result,input)!=0)
+                memset(result, '\0',100);
+            else {
+                printf("Result : ");
+                for(space++;*space != '\0';space++)
+                    printf("%c",*space);
+                break;
+            }
+        }
+        if(result[0] == '\0') {
+            printf("Unrecognised haar feature : ");
+            printf("%s\n",argv[2]);   
         }
     }
     fclose(name);
