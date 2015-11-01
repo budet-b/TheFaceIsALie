@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "haar.c"
-//#include "adaboost.c"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <err.h>
 
+#include "image.h"
+#include "haar.h"
+//#include "adaboost.h"
 
 void wait_for_keypressed(void) {
   SDL_Event             event;

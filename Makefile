@@ -4,9 +4,8 @@ CFLAGS=-Wall -Wextra -pedantic -std=c99 -g3 -ggdb
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
 
-SRC= main.c
+SRC= image.c haar.c main.c
 OBJ= ${SRC:.c=.o}
-
 
 main: ${OBJ}
 

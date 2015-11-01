@@ -5,19 +5,15 @@
 //  Created by TheFaceIsALie on 10/10/2015.
 //
 //
-#include "image.c"
 
-struct haarRecord
-{
-    int haar;
-    unsigned long i , j;
-    int w,h;
-    int value;
-    int weight;
-};
+#include <stdlib.h>
+#include <stdio.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <err.h>
 
-typedef struct haarRecord haarRecord;
-
+#include "haar.h"
+#include "image.h"
 
 int calcul_area(int x,int y,int x2,int y2,int** mat) {
     //printf("a=%d, b=%d, c=%d, d=%d\n", x, y, x2, y2);
@@ -66,10 +62,9 @@ int feature5(int x, int y, int h, int w, int** mat) {
     return (b + c - a - d);
 }
 
-int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) { //tabulate
+int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) {
         switch (feature) {
             case 1:
-                //printf("x=%d, y=%d, w=%d", x, y, w);
                 return feature1(x, y, w, h, integralImage);
                 break;
             

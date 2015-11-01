@@ -7,7 +7,9 @@
 //
 //#include "image.h"
 //#include <math.h>
-#include "haar.c"
+#include "adaboost.h"
+#include "image.h"
+#include "haar.h"
 
 int min(haarRecord* haarTab, int nbFeatures) {
     int minHaarTab = 0;
