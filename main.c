@@ -6,7 +6,7 @@
 
 #include "image.h"
 #include "haar.h"
-//#include "adaboost.h"
+#include "adaboost.h"
 
 void wait_for_keypressed(void) {
   SDL_Event             event;

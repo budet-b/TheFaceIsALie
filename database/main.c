@@ -58,21 +58,18 @@ int main(int argc, char* argv[]) {
     if(strcmp(argv[1], "add") == 0){
         name = fopen("name","a+");
         add(argc, argv,name);
-        fclose(name);
     }
     
     if(strcmp(argv[1], "read") == 0) {
         name = fopen("name","r");
         read(name);
-        fclose(name);
     }
 
     if(strcmp(argv[1], "search") == 0) {
         name = fopen("name","r+");
         search(argv,name);
-        fclose(name);
     }
-
     fclose(name);
+
     return 0;
 }

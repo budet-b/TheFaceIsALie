@@ -6,6 +6,7 @@
 
 #include "image.h"
 #include "haar.h"
+#include "adaboost.h"
 
 
 SDL_Surface* load_image(char *path) {
@@ -16,6 +17,23 @@ SDL_Surface* load_image(char *path) {
   }
     return image;
 }
+
+SDL_Surface** load_image_array(char *path[], int nbExamples) {
+    SDL_Surface **image_array = NULL;
+    SDL_Surface *image;
+    for(int i = 0; i < nbExamples; i++)
+        image_array[i] = malloc(sizeof(SDL_Surface));
+    
+    for(int i = 0; i < nbExamples; i++) {
+        image = IMG_Load(path[i]);
+        if (!image) {
+            errx(3, "Unable to load image at : %s : %s", path[i],IMG_GetError());
+        }
+        *image_array[i] = *image;
+    }
+    return image_array;
+}
+
 
   static
 Uint8* pixelref(SDL_Surface *image, unsigned x, unsigned y) 

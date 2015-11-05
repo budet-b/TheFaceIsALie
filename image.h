@@ -2,8 +2,12 @@
 
 #ifndef _image_h_
 #define _image_h_
+#include "adaboost.h"
+#include "haar.h"
+
 
 SDL_Surface* load_image(char *path);
+SDL_Surface** load_image_array(char *path[], int nbExamples);
 
     static inline
 Uint8* pixelref(SDL_Surface *image, unsigned x, unsigned y);

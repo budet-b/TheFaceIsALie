@@ -14,6 +14,7 @@
 
 #include "haar.h"
 #include "image.h"
+#include "adaboost.h"
 
 int calcul_area(int x,int y,int x2,int y2,int** mat) {
     int a = mat[x][y];
@@ -135,6 +136,8 @@ void sort(haarRecord* tab, int NbFeatures) {
 
 
 haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
+    ToGray(image);
+    Binarize(image);
     const int imageW = image->w;
     const int imageH = image->h;
 	const int frameSize = 24;
@@ -149,7 +152,6 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
 	haarRecord *haarOutput = NULL; 
 	haarOutputTab = malloc((image->h*image->w)*500*(sizeof(struct haarRecord)));
 
-	int count = 0;
 	//Each feature:
 	for (int i = 0; i < features; i++) {
     	int sizeX = feature[i][0];
@@ -161,9 +163,7 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
             	//Each position fiting in framesize with current detection zone
             	for (int x = width; x < imageW; x++) {
                 	for (int y = height; y < imageH; y++) {
-                        count++;
 						value = haarProcess(integralImage , x, y, width, height, i+1);
-                        if( value > 0) {
                         haarOutput = malloc(sizeof(struct haarRecord));
                         haarOutput->value = value;
                         haarOutput->haar = i + 1;
@@ -173,13 +173,12 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
                         haarOutput->h = height;
                         haarOutputTab[f] = *haarOutput;
                         f = f + 1;
-                        }
                 	}
             	}
             }
     	}
 	}
-    printf("count: %d",count);
+    printf("count: %d",f);
     *NbFeatures = f;
     sort(haarOutputTab, *NbFeatures);
     return haarOutputTab;

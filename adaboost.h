@@ -1,4 +1,3 @@
-//
 //  adaboost.h
 //  
 //
@@ -8,15 +7,26 @@
 
 #ifndef adaboost_h
 #define adaboost_h
+#include "image.h"
+#include "haar.h"
 
+struct weakClassifier {
+    struct haarRecord f;
+    int threshold;
+    int parity;
+    int error;
+    int margin;
+};
+
+typedef struct weakClassifier weakClassifier;
 
 int min(haarRecord* haarTab, int nbFeatures);
 int max(haarRecord* haarTab, int nbFeatures);
-int sumBig(haarRecord* haarTab, int nbFeatures,int threshold, int check);
-int sumSmall(haarRecord* haarTab, int threshold, int nbFeatures, int check);
+int sum(int* visage, int* weights, int check, int nbFeatures);
 void allocate(int* tab);
-int* decisionStump (haarRecord haarFeature, haarRecord *haarTab, int nbFeatures, int visage);
-int* bestStump (haarRecord *haarTab, int nbFeatures, int visage);
-void adaboost (char* trainingExample[], int* visage, int trainingRound);
+haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples);
+weakClassifier* decisionStump (haarRecord *haarTab, int* visage, int* weights, int nbExamples);
+weakClassifier* bestStump (haarRecord** haarTab, int* visage, int* weights, int nbFeatures);
+void adaboost (char* trainingExample[], int* visage, int visagePos, int visageNeg, int trainingRound);
 
 #endif /* adaboost_h */
