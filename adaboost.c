@@ -17,6 +17,8 @@
 #include "adaboost.h"
 
 //TO DO : linear combination for strong classifier
+//FIX FEATURES SELECT IN BEST STUMPi
+//FIX updateWeights, compare with int* visage
 
 
 int min(haarRecord* haarTab, int nbFeatures) {
@@ -46,7 +48,7 @@ double sum(int* visage, double* weights, int check, int nbFeatures) {
 }
 
 double* weightInit(double* weights, int* visage, int nbExamplesNeg, int nbExamplesPos) {
-    weights = malloc((nbExamplesPos + nbExamplesNeg) * sizeof(weakClassifier));
+    weights = malloc((nbExamplesPos + nbExamplesNeg) * sizeof(double));
     for(int i = 0; i < (nbExamplesPos + nbExamplesNeg); i++) {
         if(visage[i] == -1)
             weights[i] = (1/(2*nbExamplesNeg));
@@ -71,6 +73,7 @@ int applyWeakClassifier(weakClassifier* DS, char* image) {
                 return -1;
         }
     }
+    free(haarTab);
 }
 
 void updateWeights(char* trainingExamples[], weakClassifier* DS, double* weights, int nbExamples) {
