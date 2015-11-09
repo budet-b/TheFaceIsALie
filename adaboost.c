@@ -10,12 +10,14 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <err.h>
+#include <math.h>
 
 #include "image.h"
 #include "haar.h"
 #include "adaboost.h"
 
-//static const int nbFeaturesT = 162336;
+//TO DO : linear combination for strong classifier
+
 
 int min(haarRecord* haarTab, int nbFeatures) {
     int minHaarTab = haarTab[0].value;
@@ -33,7 +35,7 @@ int max(haarRecord* haarTab, int nbFeatures) {
     return maxHaarTab;
 }
 
-int sum(int* visage, int* weights, int check, int nbFeatures) {
+double sum(int* visage, double* weights, int check, int nbFeatures) {
     int sum = 0;
     for(int i = 0; i < nbFeatures; i++) {
         if (check == visage[i]) {
@@ -43,12 +45,7 @@ int sum(int* visage, int* weights, int check, int nbFeatures) {
     return sum;
 }
 
-void allocate(int* tab) {
-    tab = malloc(4 * sizeof(int));
-}
-
-
-int* weightInit(int* weights, int* visage, int nbExamplesNeg, int nbExamplesPos) {
+double* weightInit(double* weights, int* visage, int nbExamplesNeg, int nbExamplesPos) {
     weights = malloc((nbExamplesPos + nbExamplesNeg) * sizeof(weakClassifier));
     for(int i = 0; i < (nbExamplesPos + nbExamplesNeg); i++) {
         if(visage[i] == -1)
@@ -59,33 +56,62 @@ int* weightInit(int* weights, int* visage, int nbExamplesNeg, int nbExamplesPos)
     return weights;
 }
 
+int compareHaar(haarRecord haarTab, weakClassifier DS) {
+    return(haarTab.w == DS.f.w && haarTab.h == DS.f.h && haarTab.i == DS.f.i && haarTab.j == DS.f.j && haarTab.haar == DS.f.haar);
+}
+
+int applyWeakClassifier(weakClassifier* DS, char* image) {
+    int nbFeatures;
+    haarRecord* haarTab = processImage(load_image(image), &nbFeatures);
+    for(int i = 0; ; i++){
+        if(compareHaar(haarTab[i], *DS)) { 
+            if(DS->toggle == 1 && haarTab[i].value > DS->threshold) 
+                return DS->toggle;
+            else
+                return -1;
+        }
+    }
+}
+
+void updateWeights(char* trainingExamples[], weakClassifier* DS, double* weights, int nbExamples) {
+    int visage;
+    for(int i = 0; i < nbExamples; i++) {
+        visage = applyWeakClassifier(DS,trainingExamples[i]);
+        if(visage == -1)
+            weights[i] = (weights[i]/2) * (1/DS->error);
+        else
+            weights[i] = (weights[i]/2) * (1/(1 - DS->error));
+    }
+}
+
 haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
     SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
     haarRecord** haarTmp = NULL;
     haarRecord** haarOutput = NULL;
     haarOutput = malloc(162336*sizeof(void*));
-    for(int i = 0; i < 4000; i++)
-        haarOutput[i] = malloc(4000*sizeof(haarRecord));
+    for(int i = 0; i < nbExamples; i++)
+        haarOutput[i] = malloc(nbExamples*sizeof(haarRecord));
 
     int nbFeatures; // not necessary, always 162336
 
     for(int i = 0; i < nbExamples; i++)//get haarTab for each image 
         haarTmp[i] = processImage(image_array[i], &nbFeatures);
-
+    
+    
     for(int i = 0; i < 162336; i++) { // MEMORY EATER
         for(int j = 0; j < nbExamples; j++) {
             haarOutput[i][j] = haarTmp[j][i];
         }
     }
-
     for(int i = 0; i < 162336; i++)
         sort(haarOutput[i], 162336); // sort each row, also 2nd MEMORY EATER
+    
     free(haarTmp);
     return haarOutput;
 }
 
 
-weakClassifier* decisionStump (haarRecord *haarTab, int* visage, int* weights, int nbExamples){
+weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights, int nbExamples){
 
     //temp = current
     //notemp = previous
@@ -99,23 +125,23 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, int* weights, i
     int thresholdTemp = threshold;
     
     //error init
-    int error = 2; // Arbitrary upper bound
-    int errorTemp;
+    double error = 2; // Arbitrary upper bound
+    double errorTemp;
     
     //toggle init
     int toggle;
     int toggleTemp;
 
     //sumWeights init
-    int WPosBig = sum(visage, weights, nbExamples, 1);
-    int WNegBig = sum(visage, weights, nbExamples, -1);
-    int WPosSmall = 0;
-    int WNegSmall = 0;
+    double WPosBig = sum(visage, weights, nbExamples, 1);
+    double WNegBig = sum(visage, weights, nbExamples, -1);
+    double WPosSmall = 0;
+    double WNegSmall = 0;
     
     //var init
     int j = 0;
-    int errorPos;
-    int errorNeg;
+    double errorPos;
+    double errorNeg;
     
     while (1) {
         errorPos = WPosSmall + WNegBig;
@@ -164,24 +190,24 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, int* weights, i
     }
     weakClassifier* bestWeak = NULL;
     bestWeak->threshold = threshold;
-    bestWeak->parity = toggle;
+    bestWeak->toggle = toggle;
     bestWeak->error = error;
     bestWeak->margin = margin;
     return bestWeak;
 }
 
-weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, int* weights, int nbExamples){
+weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, double* weights, int nbExamples){
     weakClassifier* currentDS;
     weakClassifier* bestDS = NULL;
     bestDS->threshold = 0;
-    bestDS->parity = 0;
+    bestDS->toggle = 0;
     bestDS->error = 2;
     bestDS->margin = 0;
     for (int f = 0; f < 162336; f++) {
         currentDS = decisionStump(haarFeatures[f], visage, weights, nbExamples);
         currentDS->f = *haarFeatures[f];
          if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin)))
-            *bestDS = *currentDS;
+            bestDS = currentDS;
     }
     return bestDS;
 }
@@ -189,12 +215,21 @@ weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, int* weights,
 //Numbers of images < nb training Round
 void adaboost (char* trainingExamples[], int* visage, int visagePos, int visageNeg, int trainingRound){
     int nbExamples = visagePos + visageNeg;
-    int* weights = NULL;
+    double* weights = NULL;
+    double alpha;
     struct haarRecord** haarFeatures;
     struct weakClassifier *currentDS = NULL;
     weightInit(weights, visage, visagePos, visageNeg);
     haarFeatures = processMultipleImages(trainingExamples, nbExamples);
+
     for (int i = 0; i < trainingRound; i++) {
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
+        if(currentDS->error == 0 && i == 0)
+            return currentDS;
+        else {
+            alpha = (1/2)*log((1 - currentDS->error)/currentDS->error);
+            updateweights(trainingExamples, currentDS, weights, nbExamples); 
+        }
     }
+
 }

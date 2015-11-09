@@ -9,7 +9,7 @@ struct haarRecord
     unsigned long i , j;
     int w,h;
     int value;
-    int weight;
+    double weight;
 };
 
 typedef struct haarRecord haarRecord;
