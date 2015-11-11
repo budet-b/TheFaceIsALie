@@ -89,13 +89,13 @@ void updateWeights(char* trainingExamples[], weakClassifier* DS,int* visage, dou
 
 haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
     SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
-    haarRecord** haarTmp = NULL;
-    haarRecord** haarOutput = NULL;
+    haarRecord** haarTmp = malloc(nbExamples*sizeof(void*));
+    haarRecord** haarOutput = malloc(nbExamples*sizeof(void*));
     haarOutput = malloc(162336*sizeof(void*));
     for(int i = 0; i < nbExamples; i++){
         printf("mallocing examples %d\n",i);
-        haarOutput[i] = malloc(nbExamples*sizeof(haarRecord));
-        haarTmp[i] = malloc(nbExamples*sizeof(haarRecord));
+        haarOutput[i] = malloc(162336*sizeof(haarRecord));
+        haarTmp[i] = malloc(162336*sizeof(haarRecord));
 
     }
 

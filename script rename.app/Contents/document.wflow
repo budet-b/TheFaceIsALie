@@ -159,12 +159,10 @@
 						<string>3</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>449.000000:278.000000</string>
+				<string>449.000000:226.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Ask for Finder Items.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -281,12 +279,10 @@
 						<string>1</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>449.000000:381.000000</string>
+				<string>449.000000:329.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Copy Finder Items.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -757,12 +753,10 @@
 						<string>9</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>449.000000:596.000000</string>
+				<string>449.000000:544.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Rename Finder Items.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -910,12 +904,10 @@
 						<string>3</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>449.000000:753.000000</string>
+				<string>449.000000:701.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Scale Images.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -991,8 +983,6 @@
 				</array>
 				<key>OutputUUID</key>
 				<string>A402B221-A918-4222-A588-6A3AAD1F1C38</string>
-				<key>StartAction</key>
-				<false/>
 				<key>UUID</key>
 				<string>8BBACBAF-CFB3-47C5-9652-2B0A000C0182</string>
 				<key>UnlocalizedApplications</key>
@@ -1015,12 +1005,10 @@
 						<string>0</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>449.000000:857.000000</string>
+				<string>449.000000:805.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Change Type of Images.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -1030,33 +1018,33 @@
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>0110C202-448D-46CF-80CF-FFBC781D9730</key>
+		<key>3E4238BF-E806-44BC-95A2-E7EB1BFC4F4C</key>
+		<dict>
+			<key>from</key>
+			<string>42C00A3B-F455-462C-A9E3-877267EA72D1 - 42C00A3B-F455-462C-A9E3-877267EA72D1</string>
+			<key>to</key>
+			<string>CBFA6EAB-0843-4777-A2BC-6D0E0C8D6A23 - CBFA6EAB-0843-4777-A2BC-6D0E0C8D6A23</string>
+		</dict>
+		<key>77CFEE84-3554-4361-90D1-BABE55DA327F</key>
 		<dict>
 			<key>from</key>
 			<string>BB3B3413-70F9-4FAD-BB34-DC5CDB6898A0 - BB3B3413-70F9-4FAD-BB34-DC5CDB6898A0</string>
 			<key>to</key>
 			<string>94CADDCD-C1D2-4924-8711-C829DED65FA4 - 94CADDCD-C1D2-4924-8711-C829DED65FA4</string>
 		</dict>
-		<key>3DBCBE0C-DF91-43C5-82B6-169EF2E20061</key>
-		<dict>
-			<key>from</key>
-			<string>94CADDCD-C1D2-4924-8711-C829DED65FA4 - 94CADDCD-C1D2-4924-8711-C829DED65FA4</string>
-			<key>to</key>
-			<string>42C00A3B-F455-462C-A9E3-877267EA72D1 - 42C00A3B-F455-462C-A9E3-877267EA72D1</string>
-		</dict>
-		<key>940A8A09-DFEF-42F4-8360-20AF07AA2D3C</key>
+		<key>A24E1039-4E16-4D94-8E56-1A6A2414B988</key>
 		<dict>
 			<key>from</key>
 			<string>CBFA6EAB-0843-4777-A2BC-6D0E0C8D6A23 - CBFA6EAB-0843-4777-A2BC-6D0E0C8D6A23</string>
 			<key>to</key>
 			<string>8BBACBAF-CFB3-47C5-9652-2B0A000C0182 - 8BBACBAF-CFB3-47C5-9652-2B0A000C0182</string>
 		</dict>
-		<key>F2A13461-6591-4623-97FB-DEB1E0F09F21</key>
+		<key>B56BE00B-40B6-4150-ACA8-82F02C7C4846</key>
 		<dict>
 			<key>from</key>
-			<string>42C00A3B-F455-462C-A9E3-877267EA72D1 - 42C00A3B-F455-462C-A9E3-877267EA72D1</string>
+			<string>94CADDCD-C1D2-4924-8711-C829DED65FA4 - 94CADDCD-C1D2-4924-8711-C829DED65FA4</string>
 			<key>to</key>
-			<string>CBFA6EAB-0843-4777-A2BC-6D0E0C8D6A23 - CBFA6EAB-0843-4777-A2BC-6D0E0C8D6A23</string>
+			<string>42C00A3B-F455-462C-A9E3-877267EA72D1 - 42C00A3B-F455-462C-A9E3-877267EA72D1</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
