@@ -19,11 +19,12 @@ SDL_Surface* load_image(char *path) {
 }
 
 SDL_Surface** load_image_array(char *path[], int nbExamples) {
-    SDL_Surface **image_array = NULL;
+    SDL_Surface **image_array = malloc(sizeof(SDL_Surface));
     SDL_Surface *image;
-    for(int i = 0; i < nbExamples; i++)
-        image_array[i] = malloc(sizeof(SDL_Surface));
-    
+    for(int i = 0; i < nbExamples; i++){
+        printf("mallocing %s\n",path[i]);
+        image_array[i] = malloc(sizeof(void*));
+    }
     for(int i = 0; i < nbExamples; i++) {
         image = IMG_Load(path[i]);
         if (!image) {

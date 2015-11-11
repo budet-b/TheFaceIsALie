@@ -150,7 +150,7 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
 	int value;
 	haarRecord *haarOutputTab;
 	haarRecord *haarOutput = NULL; 
-	haarOutputTab = malloc((image->h*image->w)*500*(sizeof(struct haarRecord)));
+	haarOutputTab = malloc(162336*(sizeof(struct haarRecord)));
 
 	//Each feature:
 	for (int i = 0; i < features; i++) {
@@ -180,6 +180,6 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
 	}
     printf("count: %d",f);
     *NbFeatures = f;
-    sort(haarOutputTab, *NbFeatures);
+   //sort(haarOutputTab, *NbFeatures);
     return haarOutputTab;
 }

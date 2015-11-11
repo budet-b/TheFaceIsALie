@@ -55,20 +55,25 @@ void display_haar(haarRecord* tab, int nbFeature) {
 }
 
 int main(int argc, char* argv[]) {
+    char* result[] = { "./Images/DB/Resize/test00.png", "./Images/DB/Resize/test01.png", "./Images/DB/Resize/test02.png","./Images/DB/Resize/test03.png", "./Images/DB/Resize/test04.png" };
+    int visage[5] = { 1, 1, 1, -1, -1};
 	printf("THE FACE IS A LIE\n");
-	if (argc < 2)
+	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);
 	SDL_Surface* image = load_image(argv[1]);
 	display_image(image);
 	ToGray(image);
 	display_image(image);
     Binarize(image);
-	display_image(image);
+	display_image(image); */
     printf("ONSTART\n");
-    int len;
-    haarRecord* haarOutput;
-    haarOutput = processImage(image, &len);
+    strongClassifier* yolo;
+    yolo = adaboost(result, visage, 3, 2, 10);
+    
+    //int len;
+    //haarRecord* haarOutput;
+    //haarOutput = processImage(image, &len);
     //display_haar(haarOutput, len);
-    SDL_SaveBMP(image, "./ToGray.bmp");
+    //SDL_SaveBMP(image, "./ToGray.bmp");
     return 0;
 }

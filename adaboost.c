@@ -48,6 +48,7 @@ double sum(int* visage, double* weights, int check, int nbFeatures) {
 double* weightInit(double* weights, int* visage, int nbExamplesNeg, int nbExamplesPos) {
     weights = malloc((nbExamplesPos + nbExamplesNeg) * sizeof(double));
     for(int i = 0; i < (nbExamplesPos + nbExamplesNeg); i++) {
+        printf("assigning weight to example %d\n",i);
         if(visage[i] == -1)
             weights[i] = (1/(2*nbExamplesNeg));
         else
@@ -77,6 +78,7 @@ int applyWeakClassifier(weakClassifier* DS, char* image) {
 void updateWeights(char* trainingExamples[], weakClassifier* DS,int* visage, double* weights, int nbExamples) {
     int checksum;
     for(int i = 0; i < nbExamples; i++) {
+        printf("applying weak classifier to example %d\n",i);
         checksum = applyWeakClassifier(DS,trainingExamples[i]);
         if(checksum != visage[i])
             weights[i] = (weights[i]/2) * (1/DS->error);
@@ -90,23 +92,29 @@ haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
     haarRecord** haarTmp = NULL;
     haarRecord** haarOutput = NULL;
     haarOutput = malloc(162336*sizeof(void*));
-    for(int i = 0; i < nbExamples; i++)
+    for(int i = 0; i < nbExamples; i++){
+        printf("mallocing examples %d\n",i);
         haarOutput[i] = malloc(nbExamples*sizeof(haarRecord));
+        haarTmp[i] = malloc(nbExamples*sizeof(haarRecord));
+
+    }
 
     int nbFeatures; // not necessary, always 162336
 
-    for(int i = 0; i < nbExamples; i++)//get haarTab for each image 
+    for(int i = 0; i < nbExamples; i++){//get haarTab for each image
+        printf("getting haarfeatures for image %d\n",i);
         haarTmp[i] = processImage(image_array[i], &nbFeatures);
-    
-    
+    }
     for(int i = 0; i < 162336; i++) { // MEMORY EATER
         for(int j = 0; j < nbExamples; j++) {
+            printf("reversing %d,%d\n",i,j);
             haarOutput[i][j] = haarTmp[j][i];
         }
     }
-    for(int i = 0; i < 162336; i++)
+    for(int i = 0; i < 162336; i++){
+        printf("sorting row %d\n",i);
         sort(haarOutput[i], 162336); // sort each row, also 2nd MEMORY EATER
-    
+    }
     free(haarTmp);
     return haarOutput;
 }
@@ -229,9 +237,12 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     haarFeatures = processMultipleImages(trainingExamples, nbExamples);
 
     for (int i = 0; i < trainingRound; i++) {
+        printf("round %d\n",i);
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
+        printf("processing alpha\n");
         alpha = (1/2)*log((1 - currentDS->error)/currentDS->error);
         updateWeights(trainingExamples, currentDS, visage, weights, nbExamples);
+        printf("adding weak classifier\n");
         result[i].alpha = alpha;
         result[i].classifier = *currentDS;
     }
