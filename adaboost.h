@@ -19,6 +19,12 @@ struct weakClassifier {
     double alpha;
 };
 
+struct strongClassifier {
+    double alpha;
+    struct weakClassifier classifier;
+};
+
+typedef struct strongClassifier strongClassifier;
 typedef struct weakClassifier weakClassifier;
 
 int min(haarRecord* haarTab, int nbFeatures);
@@ -28,6 +34,6 @@ void allocate(int* tab);
 haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples);
 weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights, int nbExamples);
 weakClassifier* bestStump (haarRecord** haarTab, int* visage, double* weights, int nbFeatures);
-void adaboost (char* trainingExample[], int* visage, int visagePos, int visageNeg, int trainingRound);
+strongClassifier* adaboost (char* trainingExample[], int* visage, int visagePos, int visageNeg, int trainingRound);
 
 #endif /* adaboost_h */

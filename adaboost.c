@@ -17,8 +17,6 @@
 #include "adaboost.h"
 
 //TO DO : linear combination for strong classifier
-//FIX FEATURES SELECT IN BEST STUMPi
-//FIX updateWeights, compare with int* visage
 
 
 int min(haarRecord* haarTab, int nbFeatures) {
@@ -76,11 +74,11 @@ int applyWeakClassifier(weakClassifier* DS, char* image) {
     free(haarTab);
 }
 
-void updateWeights(char* trainingExamples[], weakClassifier* DS, double* weights, int nbExamples) {
-    int visage;
+void updateWeights(char* trainingExamples[], weakClassifier* DS,int* visage, double* weights, int nbExamples) {
+    int checksum;
     for(int i = 0; i < nbExamples; i++) {
-        visage = applyWeakClassifier(DS,trainingExamples[i]);
-        if(visage == -1)
+        checksum = applyWeakClassifier(DS,trainingExamples[i]);
+        if(checksum != visage[i])
             weights[i] = (weights[i]/2) * (1/DS->error);
         else
             weights[i] = (weights[i]/2) * (1/(1 - DS->error));
@@ -118,6 +116,8 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
 
     //temp = current
     //notemp = previous
+    
+    haarRecord haarTmp;
     
     //margin init
     int margin = 0;
@@ -164,6 +164,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
             threshold = thresholdTemp;
         }
         if (j == nbExamples) {
+            haarTmp = haarTab[j];
             break;
         }
         while (1) {
@@ -192,6 +193,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
         }
     }
     weakClassifier* bestWeak = NULL;
+    bestWeak->f = haarTmp;
     bestWeak->threshold = threshold;
     bestWeak->toggle = toggle;
     bestWeak->error = error;
@@ -208,7 +210,6 @@ weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, double* weigh
     bestDS->margin = 0;
     for (int f = 0; f < 162336; f++) {
         currentDS = decisionStump(haarFeatures[f], visage, weights, nbExamples);
-        currentDS->f = *haarFeatures[f];
          if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin)))
             bestDS = currentDS;
     }
@@ -216,7 +217,9 @@ weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, double* weigh
 }
 
 //Numbers of images < nb training Round
-void adaboost (char* trainingExamples[], int* visage, int visagePos, int visageNeg, int trainingRound){
+strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos, int visageNeg, int trainingRound){
+    strongClassifier* result = NULL;
+    result = malloc(trainingRound * sizeof(strongClassifier));
     int nbExamples = visagePos + visageNeg;
     double* weights = NULL;
     double alpha;
@@ -227,12 +230,10 @@ void adaboost (char* trainingExamples[], int* visage, int visagePos, int visageN
 
     for (int i = 0; i < trainingRound; i++) {
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
-        if(currentDS->error == 0 && i == 0)
-            return currentDS;
-        else {
-            alpha = (1/2)*log((1 - currentDS->error)/currentDS->error);
-            updateweights(trainingExamples, currentDS, weights, nbExamples); 
-        }
+        alpha = (1/2)*log((1 - currentDS->error)/currentDS->error);
+        updateWeights(trainingExamples, currentDS, visage, weights, nbExamples);
+        result[i].alpha = alpha;
+        result[i].classifier = *currentDS;
     }
-
+    return result;
 }
