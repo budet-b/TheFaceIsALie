@@ -90,11 +90,11 @@ void updateWeights(char* trainingExamples[], weakClassifier* DS,int* visage, dou
 haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
     SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
     haarRecord** haarTmp = malloc(nbExamples*sizeof(void*));
-    haarRecord** haarOutput = malloc(nbExamples*sizeof(void*));
+    haarRecord** haarOutput = malloc(162336*sizeof(void*));
     haarOutput = malloc(162336*sizeof(void*));
     for(int i = 0; i < nbExamples; i++){
         printf("mallocing examples %d\n",i);
-        haarOutput[i] = malloc(162336*sizeof(haarRecord));
+        haarOutput[i] = malloc(nbExamples*sizeof(haarRecord));
         haarTmp[i] = malloc(162336*sizeof(haarRecord));
 
     }
@@ -105,10 +105,10 @@ haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
         printf("getting haarfeatures for image %d\n",i);
         haarTmp[i] = processImage(image_array[i], &nbFeatures);
     }
-    for(int i = 0; i < 162336; i++) { // MEMORY EATER
-        for(int j = 0; j < nbExamples; j++) {
-            printf("reversing %d,%d\n",i,j);
-            haarOutput[i][j] = haarTmp[j][i];
+    for(int i = 0; i < nbExamples; i++) { // MEMORY EATER
+        for(int j = 0; j < 162336; j++) {
+            printf("reversing %d,%d <- %d,%d\n",j,i,i,j);
+            haarOutput[j][i] = haarTmp[i][j];
         }
     }
     for(int i = 0; i < 162336; i++){
