@@ -30,7 +30,7 @@ SDL_Surface** load_image_array(char *path[], int nbExamples) {
         if (!image) {
             errx(3, "Unable to load image at : %s : %s", path[i],IMG_GetError());
         }
-        *image_array[i] = *image;
+        image_array[i] = image;
     }
     return image_array;
 }
