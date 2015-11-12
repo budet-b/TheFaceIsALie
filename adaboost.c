@@ -150,6 +150,25 @@ haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
     return haarOutput;
 }
 
+void write(strongClassifier *strongTab, int nbClassifier) {
+    FILE* data;
+    if((data = fopen("data.bin", "wb")) == NULL)
+        errx(2, "Couldn't open data.bin");
+    fwrite(strongTab, sizeof(struct strongClassifier) * nbClassifier, 1, data);
+    fclose(data);
+}
+
+void read() {
+    FILE* data;
+    if((data = fopen("data.bin", "wb")) == NULL)
+        errx(2, "Couldn't open data.bin");
+    
+    strongClassifier *strongTab;
+    strongTab = malloc(200 * sizeof(struct strongClassifier));
+    
+    fread(strongTab, 200 * sizeof(struct strongClassifier), 1, data);
+    fclose(data);
+}
 
 weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights, int nbExamples){
 
@@ -286,5 +305,6 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].alpha = alpha;
         result[i].classifier = *currentDS;
     }
+    write(result, trainingRound);
     return result;
 }
