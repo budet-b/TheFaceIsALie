@@ -80,7 +80,7 @@ int applyWeakClassifier(weakClassifier* DS, char* image) {
     haarRecord* haarTab = processImage(load_image(image), &nbFeatures);
     for(int i = 0; ; i++){
         if(compareHaar(haarTab[i], *DS)) {
-            printf("Comparison %d > %d\n",haarTab[i], DS->threshold);
+            printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
             if(haarTab[i].value > DS->threshold) 
                 return DS->toggle;
             else
