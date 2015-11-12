@@ -3,10 +3,13 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <err.h>
+#include <string.h>
 
 #include "image.h"
 #include "haar.h"
 #include "adaboost.h"
+
+enum { MAXLINES = 5000 };
 
 void wait_for_keypressed(void) {
   SDL_Event             event;
@@ -55,8 +58,29 @@ void display_haar(haarRecord* tab, int nbFeature) {
 }
 
 int main(int argc, char* argv[]) {
-    char* result[] = { "./Images/DB/Resize/test00.png", "./Images/DB/Resize/test01.png", "./Images/DB/Resize/test02.png","./Images/DB/Resize/test03.png", "./Images/DB/Resize/test04.png" };
-    int visage[5] = { 1, 1, 1, -1, -1};
+    int i = 0;
+    char lines[MAXLINES][BUFSIZ];
+    FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
+    
+    if (fp == 0)
+    {
+        fprintf(stderr, "failed to open DBtexte\n");
+        exit(1);
+    }
+    
+    while (i < MAXLINES && fgets(lines[i], sizeof(lines[0]), fp))
+    {
+        lines[i][strlen(lines[i])] = '\0';
+        i = i + 1;
+    }
+    i = 0;
+    while(strcmp(lines[i],"\0"))
+        i++;
+    printf("%d\n",i);
+    for (size_t j = 0; j<(size_t)i; j++) {
+        printf("%s\n",lines[j]);
+    }
+    fclose(fp);
 	printf("THE FACE IS A LIE\n");
 	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);
@@ -68,7 +92,7 @@ int main(int argc, char* argv[]) {
 	display_image(image); */
     printf("ONSTART\n");
     strongClassifier* yolo;
-    yolo = adaboost(result, visage, 3, 2, 10);
+    //yolo = adaboost(lines, visage, 3, 2, 10);
     
     //int len;
     //haarRecord* haarOutput;
