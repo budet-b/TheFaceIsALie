@@ -324,5 +324,6 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     }
     write(result, trainingRound);
     read(trainingRound);
+    free(result);
     return result;
 }
