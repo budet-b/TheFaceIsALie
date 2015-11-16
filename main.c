@@ -57,34 +57,50 @@ void display_haar(haarRecord* tab, int nbFeature) {
     }
 }
 
+int* faces(int valid, int invalid, size_t size) {
+    static int visage[MAXLINES];
+    for(int i = 0; i < valid; i++)
+        visage[i] = 1;
+    for(int i = valid; i < invalid; i++)
+        visage[i] = -1;
+    return visage;
+}
+
 int main(int argc, char* argv[]) {
     int i = 0;
     char lines[MAXLINES][BUFSIZ];
-    FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
+    char* result[MAXLINES];
+    char* path[MAXLINES];
     
-    if (fp == 0)
-    {
+    FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
+
+    if (fp == 0) {
         fprintf(stderr, "failed to open DBtexte\n");
         exit(1);
     }
     
-    while (i < MAXLINES && fgets(lines[i], sizeof(lines[0]), fp))
-    {
-        lines[i][strlen(lines[i])] = '\0';
+    while (i < MAXLINES && fgets(lines[i], sizeof(lines[0]), fp)) {
+        lines[i][strlen(lines[i])-1] = '\0';
         i = i + 1;
     }
+
     i = 0;
     while(strcmp(lines[i],"\0"))
         i++;
-    printf("%d\n",i);
+    char *folder = "./Images/125/";
     for (size_t j = 0; j<(size_t)i; j++) {
-        printf("%s\n",lines[j]);
+        char *temp = lines[j];
+        char *temp2 = (char *) malloc(1 + strlen(folder)+ strlen(temp));
+        strcat(temp2,folder);
+        strcat(temp2,temp);
+        path[j] = temp2;
+        printf("%s\n",path[j]);
     }
     fclose(fp);
-    char* result[] = { "./Images/DB/Resize/test00.png", "./Images/DB/Resize/test01.png", "./Images/DB/Resize/test02.png","./Images/DB/Resize/test03.png", "./Images/DB/Resize/test04.png", "./Images/DB/Resize/1.png", "./Images/DB/Resize/2.png", "./Images/DB/Resize/3.png", "./Images/DB/Resize/4.png", "./Images/DB/Resize/5.png", "./Images/DB/Resize/6.png", "./Images/DB/Resize/7.png" };
-    int visage[12] = { 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1};
-
-	printf("THE FACE IS A LIE\n");
+    int *visage = faces((i/2),i,i);
+    for (size_t j = 0; j<(size_t)i; j++) 
+        printf("%d ",visage[j]);
+    printf("\nTHE FACE IS A LIE\n");
 	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);
 	SDL_Surface* image = load_image(argv[1]);
@@ -95,8 +111,6 @@ int main(int argc, char* argv[]) {
 	display_image(image); */
     printf("ONSTART\n");
     strongClassifier* yolo;
-
-    //yolo = adaboost(lines, visage, 3, 2, 10);
 
     //yolo = adaboost(result, visage, 10, 2, 10);
 
