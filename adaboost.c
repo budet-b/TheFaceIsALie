@@ -104,11 +104,11 @@ void updateWeights(char* trainingExamples[], weakClassifier* DS,int* visage, dou
         printf("applying weak classifier to example %d\n",i);
         checksum = applyWeakClassifier(DS,trainingExamples[i]);
         if(checksum != visage[i]) {
-            weights[i] = 1.0/(weights[i]*weightedError);
+            weights[i] = weights[i]*1.5;
             printf("Classifier is wrong, %d : %d\n", checksum, visage[i]);
         }
         else{
-            weights[i] = 1.0/(weights[i]*(1.0 - weightedError));
+            weights[i] = weights[i]/1.5; // (1.0 - weightedError)
             printf("Classifier is right, %d : %d\n", checksum, visage[i]);
         }
     }
@@ -152,21 +152,35 @@ haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples) {
 
 void write(strongClassifier *strongTab, int nbClassifier) {
     FILE* data;
-    if((data = fopen("data.bin", "wb")) == NULL)
+    data = fopen("data.bin", "w+b");
+    if(data == NULL)
         errx(2, "Couldn't open data.bin");
-    fwrite(strongTab, sizeof(struct strongClassifier) * nbClassifier, 1, data);
+    //fwrite(strongTab, sizeof(struct strongClassifier) * nbClassifier, 1, data);
+    for(int i = 0; i < nbClassifier; i++) {
+        printf("Weak Classifier nb %d\n", i);
+        printf("\t Alpha = %f\n", strongTab[i].alpha);
+        printf("\t Threshold = %d\n", strongTab[i].classifier->threshold);
+    }
+
+    fwrite(strongTab, sizeof(struct strongClassifier), nbClassifier, data);
     fclose(data);
 }
 
-void read() {
+void read(int nbClassifier) {
     FILE* data;
-    if((data = fopen("data.bin", "wb")) == NULL)
+    data = fopen("data.bin", "w+b");
+    if(data == NULL)
         errx(2, "Couldn't open data.bin");
     
-    strongClassifier *strongTab;
-    strongTab = malloc(200 * sizeof(struct strongClassifier));
-    
-    fread(strongTab, 200 * sizeof(struct strongClassifier), 1, data);
+    strongClassifier* strongTab;
+    strongTab = malloc(nbClassifier * sizeof(struct strongClassifier));
+    fread(strongTab, sizeof(struct strongClassifier), nbClassifier, data);
+
+    for(int i = 0; i < nbClassifier; i++) {
+        printf("Weak Classifier nb %d\n", i);
+        printf("\t Alpha = %f\n", strongTab->alpha);
+        printf("\t Threshold = %d\n", strongTab->classifier->threshold);
+    }
     fclose(data);
 }
 
@@ -298,13 +312,15 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
         printf("processing alpha\n");
         weightedError = calWeightedError(trainingExamples, weights, visage, currentDS, nbExamples);
-        alpha = (1/2)*log((1 - currentDS->error)/currentDS->error);
+        printf("Weighted Error %f\n", weightedError);
+        alpha = 0.5*log((1.0 - weightedError)/weightedError);
         updateWeights(trainingExamples, currentDS, visage, weights, nbExamples, weightedError);
         weights = normalizeWeights(weights, nbExamples);
         printf("adding weak classifier\n");
         result[i].alpha = alpha;
-        result[i].classifier = *currentDS;
+        result[i].classifier = currentDS;
     }
     write(result, trainingRound);
+    read(trainingRound);
     return result;
 }

@@ -21,7 +21,7 @@ struct weakClassifier {
 
 struct strongClassifier {
     double alpha;
-    struct weakClassifier classifier;
+    struct weakClassifier* classifier;
 };
 
 typedef struct strongClassifier strongClassifier;

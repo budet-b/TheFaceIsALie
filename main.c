@@ -81,6 +81,9 @@ int main(int argc, char* argv[]) {
         printf("%s\n",lines[j]);
     }
     fclose(fp);
+    char* result[] = { "./Images/DB/Resize/test00.png", "./Images/DB/Resize/test01.png", "./Images/DB/Resize/test02.png","./Images/DB/Resize/test03.png", "./Images/DB/Resize/test04.png", "./Images/DB/Resize/1.png", "./Images/DB/Resize/2.png", "./Images/DB/Resize/3.png", "./Images/DB/Resize/4.png", "./Images/DB/Resize/5.png", "./Images/DB/Resize/6.png", "./Images/DB/Resize/7.png" };
+    int visage[12] = { 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1};
+
 	printf("THE FACE IS A LIE\n");
 	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);
@@ -92,7 +95,11 @@ int main(int argc, char* argv[]) {
 	display_image(image); */
     printf("ONSTART\n");
     strongClassifier* yolo;
+
     //yolo = adaboost(lines, visage, 3, 2, 10);
+
+    //yolo = adaboost(result, visage, 10, 2, 10);
+
     
     //int len;
     //haarRecord* haarOutput;
