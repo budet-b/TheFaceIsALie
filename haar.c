@@ -31,27 +31,27 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
 int feature1(int x,int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x - h, y - (w / 2), mat);
     int b = calcul_area(x, y - (w / 2), x - h, y - w, mat);
-    return (a - b);
+    return (b - a); // a - b
 }
 //Rectangle : Noir en bas, blanc en haut
 int feature2(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x-(h/2), y-w, mat);
     int b = calcul_area(x-(h/2), y, x-h, y-w, mat);
-    return (a - b);
+    return (b - a);
 }
 //Rectangle : Noir au mileu, blanc des deux autres cotés VERTICAL
 int feature3(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x-h, y-(w/3),mat);
     int b = calcul_area(x, y-((2*w)/3), x-h, y-w, mat);
     int c = calcul_area(x, y-(w/3), x-h, y-((2*w)/3), mat);
-    return (c - a - b);
+    return (a + b - c); // c - a - b
 }
 //Rectangle : Noir au mileu, blanc des deux autres cotés HORIZONTAL
 int feature4(int x, int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x-(h/3), y-w,mat);
     int b = calcul_area(x-(h/3), y, x-((2*h)/3), y-w, mat);
     int c = calcul_area(x-((2*h)/3), y, x-h, y-w, mat);
-    return (b - a -c);
+    return (a + c - b); // b - a -c
 }
 
 int feature5(int x, int y, int h, int w, int** mat) {
@@ -59,7 +59,7 @@ int feature5(int x, int y, int h, int w, int** mat) {
     int b = calcul_area(x, y - (w/2), x - (h/2), y - w, mat);
     int c = calcul_area(x - (h/2), y, x - h, y - (w/2), mat);
     int d = calcul_area(x - (h/2), y - (w/2), x - h, y - w ,mat);
-    return (b + c - a - d);
+    return (a + d - b -c); // b + c - a - d
 }
 
 int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) {
