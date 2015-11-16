@@ -289,6 +289,7 @@ weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, double* weigh
         //printf("CurrentDS:\n\t error: %d \n\t threshold: %d \n", currentDS->error, currentDS->threshold);
          if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin)))
             bestDS = currentDS;
+         free(currentDS);
     }
     return bestDS;
 }
@@ -319,6 +320,7 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         printf("adding weak classifier\n");
         result[i].alpha = alpha;
         result[i].classifier = currentDS;
+        free(currentDS);
     }
     write(result, trainingRound);
     read(trainingRound);
