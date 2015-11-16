@@ -33,7 +33,7 @@ double sum(int* visage, double* weights, int check, int nbFeatures);
 void allocate(int* tab);
 haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples, int check);
 weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights, int nbExamples);
-weakClassifier bestStump (haarRecord** haarTab, int* visage, double* weights, int nbFeatures);
+weakClassifier* bestStump (haarRecord** haarTab, int* visage, double* weights, int nbFeatures);
 strongClassifier* adaboost (char* trainingExample[], int* visage, int visagePos, int visageNeg, int trainingRound);
 
 #endif /* adaboost_h */

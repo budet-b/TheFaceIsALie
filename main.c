@@ -94,12 +94,10 @@ int main(int argc, char* argv[]) {
         strcat(temp2,folder);
         strcat(temp2,temp);
         path[j] = temp2;
-        printf("%s\n",path[j]);
+        //printf("%s\n",path[j]);
     }
     fclose(fp);
-    int *visage = faces((i/2),i,i);
-    for (size_t j = 0; j<(size_t)i; j++) 
-        printf("%d ",visage[j]);
+    int *visage = faces(i-1,i,i);
     printf("\nTHE FACE IS A LIE\n");
 	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);
@@ -112,7 +110,7 @@ int main(int argc, char* argv[]) {
     printf("ONSTART\n");
     strongClassifier* yolo;
 
-    //yolo = adaboost(result, visage, 10, 2, 10);
+    yolo = adaboost(path, visage, 124, 1, 10);
 
     
     //int len;
