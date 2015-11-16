@@ -77,7 +77,8 @@ int compareHaar(haarRecord haarTab, weakClassifier DS) {
 
 int applyWeakClassifier(weakClassifier* DS, haarRecord* haarTab) {
     int nbFeatures;
-    for(int i = 0; ; i++){
+    //haarRecord* haarTab = processImage(load_image(image), &nbFeatures);
+    for(int i = 0; i < 162336; i++){
         if(compareHaar(haarTab[i], *DS)) {
             printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
             if(haarTab[i].value > DS->threshold) 
@@ -89,19 +90,19 @@ int applyWeakClassifier(weakClassifier* DS, haarRecord* haarTab) {
     free(haarTab);
 }
 
-double calWeightedError(haarRecord** haar1, double* weights, int* visage, weakClassifier* DS, int nbExamples) {
+double calWeightedError(haarRecord** haarNM, double* weights, int* visage, weakClassifier* DS, int nbExamples) {
     double weightedError = 0;
     for(int i = 0; i < nbExamples; i++) {
-        if(applyWeakClassifier(DS, haar1[i]) != visage[i])
+        if(applyWeakClassifier(DS, haarNM[i]) != visage[i])
             weightedError += weights[i];
     }
     return weightedError;
 }
-void updateWeights(haarRecord** haar1, weakClassifier* DS,int* visage, double* weights, int nbExamples, double weightedError) {
+void updateWeights(haarRecord** haarNM, weakClassifier* DS,int* visage, double* weights, int nbExamples, double weightedError) {
     int checksum;
     for(int i = 0; i < nbExamples; i++) {
         printf("applying weak classifier to example %d\n",i);
-        checksum = applyWeakClassifier(DS,haar1[i]);
+        checksum = applyWeakClassifier(DS,haarNM[i]);
         if(checksum != visage[i]) {
             weights[i] = weights[i]*1.5;
             printf("Classifier is wrong, %d : %d\n", checksum, visage[i]);
@@ -118,12 +119,12 @@ void display_weights(double* weights, int* visage, int nbExamples) {
         printf("weights: %f, visage: %d\n",weights[i], visage[i]); 
 }
 
-haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples, haarRecord** haar1) {
+haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples, int check) {
     SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
-    haar1 = malloc(nbExamples*sizeof(void*));
+    haarRecord** haarTmp = malloc(nbExamples*sizeof(void*));
     haarRecord** haarOutput = malloc(162336*sizeof(void*));
     for(int i = 0; i < nbExamples; i++){
-        haar1[i] = malloc(162336*sizeof(haarRecord));
+        haarTmp[i] = malloc(162336*sizeof(haarRecord));
     }
     for(int i = 0; i < 162336; i++) {
         haarOutput[i] = malloc(nbExamples*sizeof(haarRecord));
@@ -133,21 +134,25 @@ haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples, haa
 
     for(int i = 0; i < nbExamples; i++){//get haarTab for each image
         printf("getting haarfeatures for image %d\n",i);
-        haar1[i] = processImage(image_array[i], &nbFeatures);
+        haarTmp[i] = processImage(image_array[i], &nbFeatures);
+    }
+    if(check){
+        free(haarOutput);
+        for(int i = 0; i < nbExamples; i++)
+            sort(haarTmp[i], 162336);
+        return haarTmp;
     }
     for(int i = 0; i < nbExamples; i++) { // MEMORY EATER
         for(int j = 0; j < 162336; j++) {
             //printf("reversing %d,%d <- %d,%d\n",j,i,i,j);
-            haarOutput[j][i] = haar1[i][j];
+            haarOutput[j][i] = haarTmp[i][j];
         }
     }
-
-    for(int i = 0; i < nbExamples; i++)
-        sort(haar1[i], 162336);
     for(int i = 0; i < 162336; i++){
         //printf("sorting row %d\n",i);
         sort(haarOutput[i], nbExamples); // sort each row, also 2nd MEMORY EATER
     }
+    free(haarTmp);
     return haarOutput;
 }
 
@@ -305,20 +310,21 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     double alpha;
     double weightedError;
     struct haarRecord** haarFeatures;
-    struct haarRecord** haar1 = NULL;
+    struct haarRecord** haarNM;
     struct weakClassifier *currentDS = NULL;
     weights = weightInit(weights, visage, visagePos, visageNeg);
-    haarFeatures = processMultipleImages(trainingExamples, nbExamples, haar1);
+    haarFeatures = processMultipleImages(trainingExamples, nbExamples, 0);
+    haarNM = processMultipleImages(trainingExamples, nbExamples, 1);
 
     for (int i = 0; i < trainingRound; i++) {
         display_weights(weights, visage, nbExamples);
         printf("round %d\n",i);
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
         printf("processing alpha\n");
-        weightedError = calWeightedError(haar1, weights, visage, currentDS, nbExamples);
+        weightedError = calWeightedError(haarNM, weights, visage, currentDS, nbExamples);
         printf("Weighted Error %f\n", weightedError);
         alpha = 0.5*log((1.0 - weightedError)/weightedError);
-        updateWeights(haar1, currentDS, visage, weights, nbExamples, weightedError);
+        updateWeights(haarNM, currentDS, visage, weights, nbExamples, weightedError);
         weights = normalizeWeights(weights, nbExamples);
         printf("adding weak classifier\n");
         result[i].alpha = alpha;
