@@ -79,7 +79,6 @@ int compareHaar(haarRecord haarTab, weakClassifier DS) {
 
 int applyWeakClassifier(weakClassifier* DS, haarRecord* haarTab) {
     int nbFeatures;
-    //haarRecord* haarTab = processImage(load_image(image), &nbFeatures);
     for(int i = 0; i < 162336; i++){
         if(compareHaar(haarTab[i], *DS)) {
             printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
@@ -336,6 +335,8 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].classifier = currentDS;
         free(currentDS);
     }
+    free(haarFeatures);
+    free(haarNM);
     write(result, trainingRound);
     read(trainingRound);
     free(result);
