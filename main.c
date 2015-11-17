@@ -57,7 +57,7 @@ void display_haar(haarRecord* tab, int nbFeature) {
     }
 }
 
-int* faces(int valid, int invalid, size_t size) {
+int* faces(int valid, int invalid) {
     static int visage[MAXLINES];
     for(int i = 0; i < valid; i++)
         visage[i] = 1;
@@ -67,11 +67,12 @@ int* faces(int valid, int invalid, size_t size) {
 }
 
 int main(int argc, char* argv[]) {
+    printf("derp\n");
     int i = 0;
     char lines[MAXLINES][BUFSIZ];
-    char* result[MAXLINES];
     char* path[MAXLINES];
     
+    printf("derp\n");
     FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
 
     if (fp == 0) {
@@ -79,12 +80,14 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     
+    printf("derp\n");
     while (i < MAXLINES && fgets(lines[i], sizeof(lines[0]), fp)) {
         lines[i][strlen(lines[i])-1] = '\0';
         i = i + 1;
     }
 
     i = 0;
+    printf("derp\n");
     while(strcmp(lines[i],"\0"))
         i++;
     char *folder = "./Images/125/";
@@ -97,7 +100,7 @@ int main(int argc, char* argv[]) {
         //printf("%s\n",path[j]);
     }
     fclose(fp);
-    int *visage = faces(i-1,i,i);
+    int *visage = faces(i-1,i);
     printf("\nTHE FACE IS A LIE\n");
 	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);

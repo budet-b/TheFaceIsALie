@@ -90,6 +90,7 @@ int applyWeakClassifier(weakClassifier* DS, haarRecord* haarTab) {
         }
     }
     free(haarTab);
+    return 1;
 }
 
 double calWeightedError(haarRecord** haarNM, double* weights, int* visage, weakClassifier* DS, int nbExamples) {
@@ -100,7 +101,7 @@ double calWeightedError(haarRecord** haarNM, double* weights, int* visage, weakC
     }
     return weightedError;
 }
-void updateWeights(haarRecord** haarNM, weakClassifier* DS,int* visage, double* weights, int nbExamples, double weightedError) {
+void updateWeights(haarRecord** haarNM, weakClassifier* DS,int* visage, double* weights, int nbExamples) {
     int checksum;
     for(int i = 0; i < nbExamples; i++) {
         printf("applying weak classifier to example %d\n",i);
@@ -328,15 +329,15 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         weightedError = calWeightedError(haarNM, weights, visage, currentDS, nbExamples);
         printf("Weighted Error %f\n", weightedError);
         alpha = 0.5*log((1.0 - weightedError)/weightedError);
-        updateWeights(haarNM, currentDS, visage, weights, nbExamples, weightedError);
+        updateWeights(haarNM, currentDS, visage, weights, nbExamples);
         weights = normalizeWeights(weights, nbExamples);
         printf("adding weak classifier\n");
         result[i].alpha = alpha;
         result[i].classifier = currentDS;
         free(currentDS);
     }
-    write(result, trainingRound);
-    read(trainingRound);
-    free(result);
+    //write(result, trainingRound);
+    //read(trainingRound);
+    //free(result);
     return result;
 }
