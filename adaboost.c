@@ -321,8 +321,8 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     haarNM = processMultipleImages(trainingExamples, nbExamples, 1);
 
     for (int i = 0; i < trainingRound; i++) {
-        printf("size of haarFeatures: %d\n", sizeof(haarFeatures));
-        printf("size of haarNM: %d\n", sizeof(haarNM));
+        printf("size of haarFeatures: %lu\n", sizeof(haarFeatures));
+        printf("size of haarNM: %lu\n", sizeof(haarNM));
         display_weights(weights, visage, nbExamples);
         printf("round %d\n",i);
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
