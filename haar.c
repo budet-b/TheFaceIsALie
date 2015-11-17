@@ -181,5 +181,6 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures) {
     printf("count: %d\n",f);
     *NbFeatures = f;
    //sort(haarOutputTab, *NbFeatures);
+    free(image);
     return haarOutputTab;
 }
