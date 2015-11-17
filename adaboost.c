@@ -294,6 +294,8 @@ weakClassifier* bestStump (haarRecord** haarFeatures, int* visage, double* weigh
     bestDS->margin = 0;
     for (int f = 0; f < 162336; f++) {
         //printf("Working on feature %d\n",f);
+        printf("size of haarFeatures: %lu\n", sizeof(haarFeatures[f]));
+        //printf("size of haarNM: %lu\n", sizeof(haarNM));
         currentDS = decisionStump(haarFeatures[f], visage, weights, nbExamples);
         //printf("CurrentDS:\n\t error: %d \n\t threshold: %d \n", currentDS->error, currentDS->threshold);
         if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin))) {
@@ -321,18 +323,18 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     haarNM = processMultipleImages(trainingExamples, nbExamples, 1);
 
     for (int i = 0; i < trainingRound; i++) {
-        printf("size of haarFeatures: %lu\n", sizeof(haarFeatures));
-        printf("size of haarNM: %lu\n", sizeof(haarNM));
-        display_weights(weights, visage, nbExamples);
-        printf("round %d\n",i);
+        printf("ROUNDsize of haarFeatures: %lu\n", sizeof(haarFeatures));
+        printf("ROUNDsize of haarNM: %lu\n", sizeof(haarNM));
+        //display_weights(weights, visage, nbExamples);
+        //printf("round %d\n",i);
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
-        printf("processing alpha\n");
+        //printf("processing alpha\n");
         weightedError = calWeightedError(haarNM, weights, visage, currentDS, nbExamples);
-        printf("Weighted Error %f\n", weightedError);
+        //printf("Weighted Error %f\n", weightedError);
         alpha = 0.5*log((1.0 - weightedError)/weightedError);
         updateWeights(haarNM, currentDS, visage, weights, nbExamples);
         weights = normalizeWeights(weights, nbExamples);
-        printf("adding weak classifier\n");
+        //printf("adding weak classifier\n");
         result[i].alpha = alpha;
         result[i].classifier = currentDS;
         free(currentDS);
