@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
 	display_image(image); */
     printf("ONSTART\n");
     strongClassifier* yolo;
-
+    printf("yolo adaboost");
     yolo = adaboost(path, visage, 124, 1, 10);
 
     
