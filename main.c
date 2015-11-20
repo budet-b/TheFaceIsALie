@@ -137,9 +137,8 @@ int main(int argc, char* argv[]) {
 	display_image(image); */
     printf("ONSTART\n");
     strongClassifier* yolo;
-
-    //yolo = adaboost(path, visage, 124, 1, 200);
-
+    printf("yolo adaboost");
+    yolo = adaboost(path, visage, 124, 1, 25);
     
     //int len;
     //haarRecord* haarOutput;

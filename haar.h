@@ -2,14 +2,13 @@
 
 #ifndef _haar_h_
 #define _haar_h_
-
+/Users/Benjamin_Budet/Library/Saved Searches/.DockTags/Rouge.tag6.savedSearch
 struct haarRecord
 {
     int haar;
     unsigned long i , j;
     int w,h;
     int value;
-    double weight;
 };
 
 typedef struct haarRecord haarRecord;
@@ -24,7 +23,7 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature);
 void swap (haarRecord* a, haarRecord* b);
 int partition (haarRecord* tab, int l, int h);
 void sort(haarRecord* tab, int NbFeatures);
-haarRecord* processImage(SDL_Surface *image, int* NbFeatures);
+haarRecord* processImage(SDL_Surface *image, int* NbFeatures, haarRecord* haarOutputTab);
 
 #endif
 

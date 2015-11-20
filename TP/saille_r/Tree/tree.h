@@ -87,5 +87,5 @@ int queue_is_empty(struct queue *q) { return q == NULL; }
  
 void queue_push(struct queue **q, void *p);
 void* queue_pop(struct queue **q);
- 
+
 # endif /* S3_PRACTICAL_20151109_TREE_H_ */
