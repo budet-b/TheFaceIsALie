@@ -162,7 +162,6 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures, haarRecord* haarOu
             	for (int x = width; x < imageW; x++) {
                 	for (int y = height; y < imageH; y++) {
 						value = haarProcess(integralImage , x, y, width, height, i+1);
-                        //haarOutput = malloc(sizeof(struct haarRecord));
                         haarOutput.value = value;
                         haarOutput.haar = i + 1;
                         haarOutput.i = x;
