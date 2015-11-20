@@ -4,6 +4,7 @@
 #include <SDL/SDL_image.h>
 #include <err.h>
 #include <string.h>
+#include <time.h>
 
 #include "image.h"
 #include "haar.h"
@@ -51,11 +52,13 @@ SDL_Surface* display_image(SDL_Surface *img) {
   return screen;
 }
 
+
 void display_haar(haarRecord* tab, int nbFeature) {
     for(int i = 0; i < nbFeature; i++) {
         printf("| %d |\n", tab[i].value);
     }
 }
+
 
 int* faces(int valid, int invalid) {
     static int visage[MAXLINES];
@@ -66,41 +69,63 @@ int* faces(int valid, int invalid) {
     return visage;
 }
 
-int main(int argc, char* argv[]) {
-    printf("derp\n");
+
+void files(int *visage, char* path[], char *path) {
+
     int i = 0;
     char lines[MAXLINES][BUFSIZ];
-    char* path[MAXLINES];
-    
-    printf("derp\n");
+
     FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
 
     if (fp == 0) {
         fprintf(stderr, "failed to open DBtexte\n");
         exit(1);
     }
-    
-    printf("derp\n");
+
     while (i < MAXLINES && fgets(lines[i], sizeof(lines[0]), fp)) {
         lines[i][strlen(lines[i])-1] = '\0';
         i = i + 1;
     }
 
     i = 0;
-    printf("derp\n");
     while(strcmp(lines[i],"\0"))
         i++;
-    char *folder = "./Images/125/";
+
+    char *folder = path;
+
     for (size_t j = 0; j<(size_t)i; j++) {
         char *temp = lines[j];
         char *temp2 = (char *) malloc(1 + strlen(folder)+ strlen(temp));
         strcat(temp2,folder);
         strcat(temp2,temp);
         path[j] = temp2;
-        //printf("%s\n",path[j]);
     }
     fclose(fp);
-    int *visage = faces(i-1,i);
+    visage = faces(i-1,i);
+}
+
+void randFace(int *visage, char* pathFace[], char* pathNotFace[],int size) {
+    srand(time(NULL));
+    for(int i = 0;i<size;i++) {
+        int r = rand() % 2;
+        if(r==1 && pathFace[i] != '\0') {
+            visage[i] = 1            
+        }
+        else
+            visage[i] = -1
+    }
+    
+}
+
+int main(int argc, char* argv[]) {
+    int *visage = malloc(MAXLINES * sizeof(int));
+    char* pathface[MAXLINES];
+    files(visage,pathface,"./Images/125/Face");
+    char* pathnotface[MAXLINES];
+    files(visage,pathnotface,"./Images/125/NotFace");
+    for(size_t i = 0;i<125;i++)
+        printf("%s\n",path[i]);
+
     printf("\nTHE FACE IS A LIE\n");
 	/*if (argc < 2)
     		errx(2, "Usage:\n%s <path>", argv[0]);
@@ -113,7 +138,7 @@ int main(int argc, char* argv[]) {
     printf("ONSTART\n");
     strongClassifier* yolo;
 
-    yolo = adaboost(path, visage, 124, 1, 10);
+    //yolo = adaboost(path, visage, 124, 1, 200);
 
     
     //int len;
