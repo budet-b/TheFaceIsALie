@@ -10,7 +10,8 @@
 #include "haar.h"
 #include "adaboost.h"
 
-enum { MAXLINES = 5000 };
+enum { MAXLINES = 5000 ,
+        SIZE = 5000 };
 
 void wait_for_keypressed(void) {
   SDL_Event             event;
@@ -70,10 +71,10 @@ int* faces(int valid, int invalid) {
 }
 
 
-void files(int *visage, char* path[], char *path) {
+void files(int *visage, char* path[], char *paths) {
 
     int i = 0;
-    char lines[MAXLINES][BUFSIZ];
+    char lines[MAXLINES][SIZE];
 
     FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
 
@@ -91,7 +92,7 @@ void files(int *visage, char* path[], char *path) {
     while(strcmp(lines[i],"\0"))
         i++;
 
-    char *folder = path;
+    char *folder = paths;
 
     for (size_t j = 0; j<(size_t)i; j++) {
         char *temp = lines[j];
@@ -104,18 +105,18 @@ void files(int *visage, char* path[], char *path) {
     visage = faces(i-1,i);
 }
 
-void randFace(int *visage, char* pathFace[], char* pathNotFace[],int size) {
+/*void randFace(int *visage, char* pathFace[], char* pathNotFace[],int size) {
     srand(time(NULL));
     for(int i = 0;i<size;i++) {
         int r = rand() % 2;
         if(r==1 && pathFace[i] != '\0') {
-            visage[i] = 1            
+            visage[i] = 1;          
         }
         else
-            visage[i] = -1
+            visage[i] = -1;
     }
     
-}
+}*/
 
 int main(int argc, char* argv[]) {
     int *visage = malloc(MAXLINES * sizeof(int));
@@ -123,8 +124,10 @@ int main(int argc, char* argv[]) {
     files(visage,pathface,"./Images/125/Face");
     char* pathnotface[MAXLINES];
     files(visage,pathnotface,"./Images/125/NotFace");
-    for(size_t i = 0;i<125;i++)
-        printf("%s\n",path[i]);
+    for(size_t i = 0;i<125;i++) {
+        printf("%s\n",pathface[i]);
+        printf("%s\n",pathnotface[i]);
+    }
 
     printf("\nTHE FACE IS A LIE\n");
 	/*if (argc < 2)
@@ -138,7 +141,7 @@ int main(int argc, char* argv[]) {
     printf("ONSTART\n");
     strongClassifier* yolo;
     printf("yolo adaboost");
-    yolo = adaboost(path, visage, 124, 1, 25);
+    //yolo = adaboost(path, visage, 124, 1, 25);
     
     //int len;
     //haarRecord* haarOutput;
