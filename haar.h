@@ -2,7 +2,7 @@
 
 #ifndef _haar_h_
 #define _haar_h_
-
+/Users/Benjamin_Budet/Library/Saved Searches/.DockTags/Rouge.tag6.savedSearch
 struct haarRecord
 {
     int haar;
