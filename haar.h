@@ -2,13 +2,12 @@
 
 #ifndef _haar_h_
 #define _haar_h_
-/Users/Benjamin_Budet/Library/Saved Searches/.DockTags/Rouge.tag6.savedSearch
 struct haarRecord
 {
-    int haar;
-    unsigned long i , j;
-    int w,h;
-    int value;
+        int haar;
+            unsigned long i , j;
+                int w,h;
+                    int value;
 };
 
 typedef struct haarRecord haarRecord;
@@ -26,4 +25,3 @@ void sort(haarRecord* tab, int NbFeatures);
 haarRecord* processImage(SDL_Surface *image, int* NbFeatures, haarRecord* haarOutputTab);
 
 #endif
-
