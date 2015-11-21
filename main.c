@@ -156,7 +156,7 @@ int main(int argc, char* argv[]) {
     printf("ONSTART\n");
     strongClassifier* yolo;
     printf("yolo adaboost");
-    //yolo = adaboost(path, visage, 124, 1, 25);
+    yolo = adaboost(finalpath, visage, 125, 125, 25);
     
     //int len;
     //haarRecord* haarOutput;

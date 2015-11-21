@@ -81,7 +81,7 @@ int applyWeakClassifier(weakClassifier* DS, haarRecord* haarTab) {
     int nbFeatures;
     for(int i = 0; i < 162336; i++){
         if(compareHaar(haarTab[i], *DS)) {
-            //printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
+            printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
             if(haarTab[i].value > DS->threshold) 
                 return DS->toggle;
             else
@@ -104,15 +104,19 @@ double calWeightedError(haarRecord** haarNM, double* weights, int* visage, weakC
 void updateWeights(haarRecord** haarNM, weakClassifier* DS,int* visage, double* weights, int nbExamples) {
     int checksum;
     for(int i = 0; i < nbExamples; i++) {
-        //printf("applying weak classifier to example %d\n",i);
+        printf("applying weak classifier to example %d\n",i);
+        printf("%d\n", haarNM[i][0].value);
         checksum = applyWeakClassifier(DS,haarNM[i]);
+        printf("derp\n");
         if(checksum != visage[i]) {
+            printf("derp1\n");
             weights[i] = weights[i]*1.5;
-            //printf("Classifier is wrong, %d : %d\n", checksum, visage[i]);
+            printf("Classifier is wrong, %d : %d\n", checksum, visage[i]);
         }
         else{
+            printf("derp2\n");
             weights[i] = weights[i]/1.5; // (1.0 - weightedError)
-            //printf("Classifier is right, %d : %d\n", checksum, visage[i]);
+            printf("Classifier is right, %d : %d\n", checksum, visage[i]);
         }
     }
 }
@@ -329,7 +333,7 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     
     
     for (int i = 0; i < trainingRound; i++) {
-        //display_weights(weights, visage, nbExamples);
+        display_weights(weights, visage, nbExamples);
         printf("round %d\n",i);
         currentDS = bestStump(haarFeatures, visage, weights, nbExamples);
         printf("processing alpha\n");
