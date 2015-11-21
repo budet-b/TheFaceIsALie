@@ -109,15 +109,18 @@ void files(int *visage, char* path[], char *paths) {
 
 void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char* finalpath[]) {
     srand(time(NULL));
+    int face = 0, notface = 0;
     for(int i = 0;i<size;i++) {
         int r = rand() % 2;
-        if(r==1 && pathFace[i] != '\0') {
+        if(r==1 && pathFace[face] != '\0'&& notface+face<size) {
             visage[i] = 1;
-            finalpath[i] = pathFace[i];
+            finalpath[i] = pathFace[face];
+            face++;
         }
-        else if (r==0 && pathNotFace[i] != '\0') {
+        else if (r==0 && pathNotFace[notface] != '\0' && notface+face<size) {
             visage[i] = -1;
-            finalpath[i] = pathNotFace[i];
+            finalpath[i] = pathNotFace[notface];
+            notface++;
         }
     }
 }
@@ -133,8 +136,8 @@ int main(int argc, char* argv[]) {
         printf("%s\n",pathnotface[i]);
     }*/
     char* finalpath[MAXLINES];
-    randFace(visage,pathface,pathnotface,125,finalpath);
-    for(size_t i = 0;i<125;i++) {
+    randFace(visage,pathface,pathnotface,250,finalpath);
+    for(size_t i = 0;i<250;i++) {
         printf("%s ",finalpath[i]);
         printf("%d\n",visage[i]);
     }
