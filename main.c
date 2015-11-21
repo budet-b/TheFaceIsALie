@@ -109,18 +109,20 @@ void files(int *visage, char* path[], char *paths) {
 
 void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char* finalpath[]) {
     srand(time(NULL));
-    int face = 0, notface = 0;
-    for(int i = 0;i<size;i++) {
+    int face = 0, notface = 0, i = 0;
+    while(i<size) {
         int r = rand() % 2;
-        if(r==1 && pathFace[face] != '\0'&& notface+face<size) {
+        if(r==1 && pathFace[face] != '\0' && face<(size/2)) {
             visage[i] = 1;
             finalpath[i] = pathFace[face];
             face++;
+            i++;
         }
-        else if (r==0 && pathNotFace[notface] != '\0' && notface+face<size) {
+        else if (r==0 && pathNotFace[notface] != '\0' && notface<(size/2)) {
             visage[i] = -1;
             finalpath[i] = pathNotFace[notface];
             notface++;
+            i++;
         }
     }
 }
