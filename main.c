@@ -9,9 +9,9 @@
 #include "image.h"
 #include "haar.h"
 #include "adaboost.h"
+#define MAXLINES 2500
 
-enum { MAXLINES = 5000 ,
-        SIZE = 5000 };
+char lines[MAXLINES][MAXLINES];
 
 void wait_for_keypressed(void) {
   SDL_Event             event;
@@ -74,11 +74,13 @@ int* faces(int valid, int invalid) {
 void files(int *visage, char* path[], char *paths) {
 
     int i = 0;
-    char lines[MAXLINES][SIZE];
-
-    FILE *fp = fopen("./Images/125/DBtexte.txt", "r");
+    char filepath[MAXLINES];
+    strcpy(filepath,paths);
+    strcat(filepath,"DBList.txt");
+    FILE *fp = fopen(filepath, "r");
 
     if (fp == 0) {
+        printf("%s\n",filepath);
         fprintf(stderr, "failed to open DBtexte\n");
         exit(1);
     }
@@ -105,28 +107,36 @@ void files(int *visage, char* path[], char *paths) {
     visage = faces(i-1,i);
 }
 
-/*void randFace(int *visage, char* pathFace[], char* pathNotFace[],int size) {
+void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char* finalpath[]) {
     srand(time(NULL));
     for(int i = 0;i<size;i++) {
         int r = rand() % 2;
         if(r==1 && pathFace[i] != '\0') {
-            visage[i] = 1;          
+            visage[i] = 1;
+            finalpath[i] = pathFace[i];
         }
-        else
+        else if (r==0 && pathNotFace[i] != '\0') {
             visage[i] = -1;
+            finalpath[i] = pathNotFace[i];
+        }
     }
-    
-}*/
+}
 
 int main(int argc, char* argv[]) {
-    int *visage = malloc(MAXLINES * sizeof(int));
+    int visage[MAXLINES];
     char* pathface[MAXLINES];
-    files(visage,pathface,"./Images/125/Face");
+    files(visage,pathface,"./Images/Face/");
     char* pathnotface[MAXLINES];
-    files(visage,pathnotface,"./Images/125/NotFace");
-    for(size_t i = 0;i<125;i++) {
+    files(visage,pathnotface,"./Images/NotFace/");
+    /*for(size_t i = 0;i<125;i++) {
         printf("%s\n",pathface[i]);
         printf("%s\n",pathnotface[i]);
+    }*/
+    char* finalpath[MAXLINES];
+    randFace(visage,pathface,pathnotface,125,finalpath);
+    for(size_t i = 0;i<125;i++) {
+        printf("%s ",finalpath[i]);
+        printf("%d\n",visage[i]);
     }
 
     printf("\nTHE FACE IS A LIE\n");
