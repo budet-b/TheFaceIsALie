@@ -134,8 +134,61 @@ void sort(haarRecord* tab, int NbFeatures) {
     quickSort(tab, l, h);
 }
 
+haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
+    ToGray(image);
+    Binarize(image);
+    const int imageW = image->w;
+    const int imageH = image->h;
+	const int frameSize = 24;
+	const int features = 5;
+	//All five feature types:
+    const int feature[5][2] = {{1,2}, {2,1}, {3,1}, {1,3}, {2,2}};
+	int** integralImage = matrix_integralImage(image);
 
-haarRecord* processImage(SDL_Surface *image, int* NbFeatures, haarRecord* haarOutputTab) {
+	int count = 0;
+	int value;
+	haarRecord haarOutput;
+
+	//Each feature:
+	for (int i = 0; i < features; i++) {
+    	int sizeX = feature[i][0];
+    	int sizeY = feature[i][1];
+    	
+        //Each detection zone within framesize posible
+        for (int width = sizeX - 1; width < frameSize; width+=sizeX){
+        	for (int height = sizeY - 1; height < frameSize; height+=sizeY){
+            	//Each position fiting in framesize with current detection zone
+            	for (int x = width; x < imageW; x++) {
+                	for (int y = height; y < imageH; y++) {
+                        if(count == nbFeature) {
+						    value = haarProcess(integralImage , x, y, width, height, i+1);
+                            haarOutput.value = value;
+                            haarOutput.haar = i + 1;
+                            haarOutput.i = x;
+                            haarOutput.j = y;
+                            haarOutput.w = width;
+                            haarOutput.h = height;
+                            free(image);
+                            for(int i = 0; i < image->w; i++)
+                                free(integralImage[i]);
+                            free(integralImage);
+                            return(haarOutput);
+                        }
+                        count = count + 1;
+                	}
+            	}
+            }
+    	}
+	}
+    free(image);
+    for(int i = 0; i < image->w; i++)
+        free(integralImage[i]);
+    free(integralImage);
+    return(haarOutput);
+}
+
+
+haarRecord* processImage(SDL_Surface *image, haarRecord* haarOutputTab) {
     ToGray(image);
     Binarize(image);
     const int imageW = image->w;
@@ -176,7 +229,6 @@ haarRecord* processImage(SDL_Surface *image, int* NbFeatures, haarRecord* haarOu
     	}
 	}
     printf("count: %d\n",f);
-    *NbFeatures = f;
    //sort(haarOutputTab, *NbFeatures);
     free(image);
     for(int i = 0; i < image->w; i++)

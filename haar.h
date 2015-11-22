@@ -22,6 +22,7 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature);
 void swap (haarRecord* a, haarRecord* b);
 int partition (haarRecord* tab, int l, int h);
 void sort(haarRecord* tab, int NbFeatures);
-haarRecord* processImage(SDL_Surface *image, int* NbFeatures, haarRecord* haarOutputTab);
+haarRecord singleFeature(SDL_Surface* image, int nbFeature);
+haarRecord* processImage(SDL_Surface* image, haarRecord* haarOutputTab);
 
 #endif

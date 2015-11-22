@@ -76,7 +76,7 @@ void files(int *visage, char* path[], char *paths) {
     int i = 0;
     char filepath[MAXLINES];
     strcpy(filepath,paths);
-    strcat(filepath,"DBList.txt");
+    strcat(filepath,"DB.txt");
     FILE *fp = fopen(filepath, "r");
 
     if (fp == 0) {
@@ -130,15 +130,15 @@ void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char*
 int main(int argc, char* argv[]) {
     int visage[MAXLINES];
     char* pathface[MAXLINES];
-    files(visage,pathface,"./Images/Face/");
+    files(visage,pathface,"./Images/BigDB/Face/");
     char* pathnotface[MAXLINES];
-    files(visage,pathnotface,"./Images/NotFace/");
+    files(visage,pathnotface,"./Images/BigDB/NotFace/");
     /*for(size_t i = 0;i<125;i++) {
         printf("%s\n",pathface[i]);
         printf("%s\n",pathnotface[i]);
     }*/
     char* finalpath[MAXLINES];
-    randFace(visage,pathface,pathnotface,250,finalpath);
+    randFace(visage,pathface,pathnotface,2000,finalpath);
     for(size_t i = 0;i<250;i++) {
         printf("%s ",finalpath[i]);
         printf("%d\n",visage[i]);
@@ -156,7 +156,7 @@ int main(int argc, char* argv[]) {
     printf("ONSTART\n");
     strongClassifier* yolo;
     printf("yolo adaboost");
-    yolo = adaboost(finalpath, visage, 125, 125, 25);
+    yolo = adaboost(finalpath, visage, 1000, 1000, 25);
     
     //int len;
     //haarRecord* haarOutput;
