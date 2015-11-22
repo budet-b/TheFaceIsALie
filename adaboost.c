@@ -173,8 +173,8 @@ haarRecord* processSingleFeature(char* trainingExamples[], int nbExamples,  int 
     for(int i = 0; i < nbExamples; i++) {
         haarFeature[i] = singleFeature(image_array[i], nbFeature);
     }
-    for(int i = 0; i < nbExamples; i++)
-        free(image_array[i]);
+    /*for(int i = 0; i < nbExamples; i++)
+        free(image_array[i]);*/
     free(image_array);
     return haarFeature;
 }
