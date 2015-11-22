@@ -303,21 +303,24 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
 }
 
 weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weights, int nbExamples){
-    weakClassifier *currentDS;
+    weakClassifier *currentDS = NULL;
     weakClassifier *bestDS = malloc(sizeof(struct weakClassifier));
     bestDS->threshold = 0;
     bestDS->toggle = 0;
     bestDS->error = 2;
     bestDS->margin = 0;
     haarRecord* haarFeature; 
-    for (int f = 0; f < 162336; f++) {
+    for (int f = 0; f < 162336; f++) { 
         printf("Working on %d\n",f);
         haarFeature = processSingleFeature(trainingExamples, nbExamples, f);
         currentDS = decisionStump(haarFeature, visage, weights, nbExamples);
-        free(haarFeature);
         if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin))) {
-            bestDS = currentDS;
+            bestDS->threshold = currentDS->error;
+            bestDS->toggle = currentDS->toggle;
+            bestDS->error = currentDS->error;
+            bestDS->margin = currentDS->margin;
         }
+        free(haarFeature);
         free(currentDS);
    }
     return bestDS;
