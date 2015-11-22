@@ -309,7 +309,7 @@ weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weight
     bestDS->toggle = 0;
     bestDS->error = 2;
     bestDS->margin = 0;
-    haarRecord* haarFeature = NULL; 
+    haarRecord* haarFeature; 
     for (int f = 0; f < 162336; f++) {
         printf("Working on %d\n",f);
         haarFeature = processSingleFeature(trainingExamples, nbExamples, f);
