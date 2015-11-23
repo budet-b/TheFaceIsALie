@@ -329,7 +329,7 @@ weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weight
         }
         free(haarFeature);
         free(currentDS);
-   }
+    }
     return bestDS;
 }
 

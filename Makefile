@@ -1,4 +1,4 @@
-CC=clang
+CC=gcc
 CPPFLAGS= `pkg-config --cflags sdl --libs gtk+-2.0`
 CFLAGS=-Wall -Wextra -pedantic -std=c99 -g3 -ggdb
 LDFLAGS=

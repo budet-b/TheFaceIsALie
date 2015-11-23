@@ -138,11 +138,11 @@ int main(int argc, char* argv[]) {
         printf("%s\n",pathnotface[i]);
     }*/
     char* finalpath[MAXLINES];
-    randFace(visage,pathface,pathnotface,2000,finalpath);
-    for(size_t i = 0;i<250;i++) {
+    randFace(visage,pathface,pathnotface,100,finalpath);
+    /*for(size_t i = 0;i<250;i++) {
         printf("%s ",finalpath[i]);
         printf("%d\n",visage[i]);
-    }
+    }*/
 
     printf("\nTHE FACE IS A LIE\n");
 	/*if (argc < 2)
@@ -156,7 +156,7 @@ int main(int argc, char* argv[]) {
     printf("ONSTART\n");
     strongClassifier* yolo;
     printf("yolo adaboost");
-    yolo = adaboost(finalpath, visage, 1000, 1000, 25);
+    yolo = adaboost(finalpath, visage, 50, 50, 25);
     
     //int len;
     //haarRecord* haarOutput;

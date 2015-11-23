@@ -179,7 +179,7 @@ haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
                             haarOutput.w = width;
                             haarOutput.h = height;
                             SDL_FreeSurface(image);
-                            for(int i = 0; i < image->w; i++)
+                            for(int i = 0; i < 24; i++)
                                 free(integralImage[i]);
                             free(integralImage);
                             return(haarOutput);
