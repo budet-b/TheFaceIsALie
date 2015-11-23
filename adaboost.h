@@ -16,7 +16,6 @@ struct weakClassifier {
     int toggle;
     double error;
     int margin;
-    double alpha;
 };
 
 struct strongClassifier {

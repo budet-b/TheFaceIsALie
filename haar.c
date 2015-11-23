@@ -25,12 +25,14 @@ int calcul_area(int x,int y,int x2,int y2,int** mat) {
     //i-1;j
     int d = mat[x2][y2];
     //i-1;j-1
+    //printf("%d + %d - %d - %d\n",a,d,b,c);
     return (a + d - b - c);
 }
 //Rectangle : Noir à gauche, blanc droite
 int feature1(int x,int y, int h, int w, int** mat) {
     int a = calcul_area(x, y, x - h, y - (w / 2), mat);
     int b = calcul_area(x, y - (w / 2), x - h, y - w, mat);
+    //printf("%d - %d\n", b, a);
     return (b - a); // a - b
 }
 //Rectangle : Noir en bas, blanc en haut
@@ -63,7 +65,8 @@ int feature5(int x, int y, int h, int w, int** mat) {
 }
 
 int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) {
-        switch (feature) {
+    //printf("feature: %d\n", feature);    
+    switch (feature) {
             case 1:
                 return feature1(x, y, w, h, integralImage);
                 break;
@@ -134,6 +137,12 @@ void sort(haarRecord* tab, int NbFeatures) {
     quickSort(tab, l, h);
 }
 
+void printIntImage(int** integralImage) {
+    for(int i = 0; i < 20; i++)
+        for(int j = 0; j < 20; j++)
+            printf("Integral Image: %d", integralImage[i][j]);
+}
+
 haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
     ToGray(image);
     Binarize(image);
@@ -144,7 +153,7 @@ haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
 	//All five feature types:
     const int feature[5][2] = {{1,2}, {2,1}, {3,1}, {1,3}, {2,2}};
 	int** integralImage = matrix_integralImage(image);
-
+    
 	int count = 0;
 	int value;
 	haarRecord haarOutput;
@@ -162,13 +171,14 @@ haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
                 	for (int y = height; y < imageH; y++) {
                         if(count == nbFeature) {
 						    value = haarProcess(integralImage , x, y, width, height, i+1);
+                            //printf("RECORDING: %d\n", value);
                             haarOutput.value = value;
                             haarOutput.haar = i + 1;
                             haarOutput.i = x;
                             haarOutput.j = y;
                             haarOutput.w = width;
                             haarOutput.h = height;
-                            free(image);
+                            SDL_FreeSurface(image);
                             for(int i = 0; i < image->w; i++)
                                 free(integralImage[i]);
                             free(integralImage);
@@ -180,10 +190,10 @@ haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
             }
     	}
 	}
-    free(image);
     for(int i = 0; i < image->w; i++)
         free(integralImage[i]);
     free(integralImage);
+    SDL_FreeSurface(image);
     return(haarOutput);
 }
 

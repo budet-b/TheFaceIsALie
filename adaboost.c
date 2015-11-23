@@ -170,11 +170,12 @@ haarRecord* processSingleFeature(char* trainingExamples[], int nbExamples,  int 
     SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
     haarRecord* haarFeature = malloc(nbExamples*sizeof(haarRecord));
     
-    for(int i = 0; i < nbExamples; i++) {
+    for(int i = 0; i < nbExamples; i++)
         haarFeature[i] = singleFeature(image_array[i], nbFeature);
-    }
+
+    sort(haarFeature, nbExamples);
     /*for(int i = 0; i < nbExamples; i++)
-        free(image_array[i]);*/
+        SDL_FreeSurface(image_array[i]);*/
     free(image_array);
     return haarFeature;
 }
@@ -259,6 +260,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
             errorTemp = errorNeg;
             toggleTemp = -1;
         }
+        printf("j: %d, errorTemp: %f, error: %f\n", j, errorTemp,error);
         if ((errorTemp < error) || ((errorTemp == error) && (marginTemp > margin ))) {
             error = errorTemp;
             toggle = toggleTemp;
@@ -280,6 +282,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
                 WPosSmall = WPosSmall + weights[j];
                 WPosBig = WPosBig - weights[j];
             }
+            printf("haartab[j]:%d et haartab[j+1]:%d\n", haarTab[j].value, haarTab[j+1].value); 
             if (j == nbExamples - 1 || haarTab[j].value != haarTab[j+1].value) { //find new valid treshold
                 break;
             }
@@ -306,7 +309,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
 }
 
 weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weights, int nbExamples){
-    weakClassifier *currentDS = NULL;
+    weakClassifier *currentDS;
     weakClassifier *bestDS = malloc(sizeof(struct weakClassifier));
     bestDS->threshold = 0;
     bestDS->toggle = 0;
@@ -318,7 +321,9 @@ weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weight
         haarFeature = processSingleFeature(trainingExamples, nbExamples, f);
         currentDS = decisionStump(haarFeature, visage, weights, nbExamples);
         if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin))) {
-            bestDS->threshold = currentDS->error;
+            printf("YOUPI LE MONDE EST BEAU");
+            bestDS->f = currentDS->f;
+            bestDS->threshold = currentDS->threshold;
             bestDS->toggle = currentDS->toggle;
             bestDS->error = currentDS->error;
             bestDS->margin = currentDS->margin;
@@ -335,10 +340,10 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     strongClassifier* result = NULL;
     result = malloc(trainingRound * sizeof(strongClassifier));
     int nbExamples = visagePos + visageNeg;
-    double* weights = NULL;
+    double* weights;
     double beta;
     double weightedError;
-    struct weakClassifier *currentDS = NULL;
+    struct weakClassifier *currentDS;
     weights = weightInit(weights, visage, visagePos, visageNeg);
     printf("init weight : OK \n");
     
@@ -356,7 +361,11 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         updateWeights(trainingExamples, currentDS, visage, weights, nbExamples, beta);
         printf("\tadding weak classifier\n");
         result[i].alpha = log(1/beta);
-        result[i].classifier = currentDS;
+        result[i].classifier->f = currentDS->f;
+        result[i].classifier->threshold = currentDS->threshold;
+        result[i].classifier->error = currentDS->error;
+        result[i].classifier->margin = currentDS->margin;
+        result[i].classifier->toggle = currentDS->toggle;
         //free(currentDS);
     }
     free(weights);
