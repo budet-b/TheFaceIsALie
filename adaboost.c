@@ -59,7 +59,6 @@ double* normalizeWeights(double* weights, int nbExamples) {
 }
 
 double* weightInit(double* weights, int* visage, int nbExamplesNeg, int nbExamplesPos) {
-    weights = malloc((nbExamplesPos + nbExamplesNeg) * sizeof(double));
     for(int i = 0; i < (nbExamplesPos + nbExamplesNeg); i++) {
         printf("assigning weight to example %d\n",i);
         if(visage[i] == -1)
@@ -282,7 +281,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
                 WPosSmall = WPosSmall + weights[j];
                 WPosBig = WPosBig - weights[j];
             }
-            printf("haartab[j]:%d et haartab[j+1]:%d\n", haarTab[j].value, haarTab[j+1].value); 
+            //printf("haartab[j]:%d et haartab[j+1]:%d\n", haarTab[j].value, haarTab[j+1].value); 
             if (j == nbExamples - 1 || haarTab[j].value != haarTab[j+1].value) { //find new valid treshold
                 break;
             }
@@ -340,7 +339,7 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     strongClassifier* result = NULL;
     result = malloc(trainingRound * sizeof(strongClassifier));
     int nbExamples = visagePos + visageNeg;
-    double* weights;
+    double* weights = malloc(nbExamples* sizeof(double));
     double beta;
     double weightedError;
     struct weakClassifier *currentDS;
