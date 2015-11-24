@@ -23,7 +23,7 @@ void swap (haarRecord* a, haarRecord* b);
 int partition (haarRecord* tab, int l, int h);
 void sort(haarRecord* tab, int NbFeatures);
 haarRecord singleFeature(int** integralImage, int nbFeature);
-haarRecord* processImage(SDL_Surface* image, haarRecord* haarOutputTab);
+haarRecord* processImage(int** integralImage, haarRecord* haarOutputTab);
 int*** getIntegralImages(char* trainingExamples[], int nbExamples);
 haarRecord getSingleFeatureOpt(haarRecord blueprint, int** integralImage);
 haarRecord* makeSingleFeature(haarRecord blueprint, int*** integralImages, int nbExamples);

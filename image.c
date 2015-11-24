@@ -10,11 +10,12 @@
 
 
 SDL_Surface* load_image(char *path) {
-     SDL_Surface  *image;
-  image = IMG_Load(path);
-  if (!image) {
-    errx(3, "Unable to load image at : %s : %s", path,IMG_GetError());
-  }
+    SDL_Surface  *image;
+    printf("%s\n", path);
+    image = IMG_Load(path);
+    if (!image) {
+        errx(3, "Unable to load image at : %s : %s", path,IMG_GetError());
+    }
     return image;
 }
 
@@ -30,7 +31,6 @@ SDL_Surface** load_image_array(char *path[], int nbExamples) {
     }
     return image_array;
 }
-
 
   static
 Uint8* pixelref(SDL_Surface *image, unsigned x, unsigned y) 
