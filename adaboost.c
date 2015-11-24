@@ -361,17 +361,11 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         updateWeights(integralImages, currentDS, visage, weights, nbExamples, beta);
         printf("\tadding weak classifier\n");
         result[i].alpha = log(1/beta);
-        printf("alpha added\n");
         result[i].classifier.f = currentDS->f;
-        printf("f added\n");
         result[i].classifier.threshold = currentDS->threshold;
-        printf("threshold added\n");
         result[i].classifier.error = currentDS->error;
-        printf("error added\n");
         result[i].classifier.margin = currentDS->margin;
-        printf("margin added\n");
         result[i].classifier.toggle = currentDS->toggle;
-        printf("toggle added\n");
     }
     free(weights);
     write(result, trainingRound);
