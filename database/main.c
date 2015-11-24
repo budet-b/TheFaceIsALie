@@ -22,13 +22,13 @@ int search(char* argv[],FILE *name) {
     line++;
     char *input = argv[2];
 
-    while((fgets(h, 100, name) != NULL) && result[0] == '\0') {
+    while(fgets(h, 100, name) != NULL) {
         char *space = strchr(h, ' ');
         char *dynh = h;
         size_t length = space - dynh;
         strncpy(result,dynh,length);
-            
-        if(strcmp(result,input)!=0)
+
+        if(strcmp(result,input)!=0) 
             memset(result, '\0',100);
         else {
             printf("Result : ");
@@ -49,8 +49,10 @@ int search(char* argv[],FILE *name) {
 int main(int argc, char* argv[]) {
     FILE *name;
     
-    if((fopen("name", "a+")) == NULL)
+    if((name = (fopen("name", "a+"))) == NULL) {
         fprintf(stderr,"Impossible d'ouvrir le fichier données en lecture\n");
+        fclose(name);
+    }
     
     if(argc < 2) 
         errx(2, "Insuffisant argument");
@@ -58,18 +60,20 @@ int main(int argc, char* argv[]) {
     if(strcmp(argv[1], "add") == 0){
         name = fopen("name","a+");
         add(argc, argv,name);
+        fclose(name);
     }
     
     if(strcmp(argv[1], "read") == 0) {
         name = fopen("name","r");
         read(name);
+        fclose(name);
     }
 
     if(strcmp(argv[1], "search") == 0) {
-        name = fopen("name","r+");
+        name = fopen("name","r");
         search(argv,name);
+        fclose(name);
     }
-    fclose(name);
-
+    
     return 0;
 }
