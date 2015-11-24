@@ -31,5 +31,6 @@ int max(haarRecord* haarTab, int nbFeatures);
 double sum(int* visage, double* weights, int check, int nbFeatures);
 void allocate(int* tab);
 strongClassifier* adaboost (char* trainingExample[], int* visage, int visagePos, int visageNeg, int trainingRound);
+void derp(char* trainingExamples[], int nbExamples);
 
 #endif /* adaboost_h */

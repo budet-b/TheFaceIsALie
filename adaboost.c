@@ -16,8 +16,7 @@
 #include "haar.h"
 #include "adaboost.h"
 
-//TO DO : recoder process image, prend un tableau en argument void, et directement écrire dans le tableau.
-
+//TO DO : opti apply weak classifier
 
 int min(haarRecord* haarTab, int nbFeatures) {
     int minHaarTab = haarTab[0].value;
@@ -81,7 +80,7 @@ int applyWeakClassifier(char* trainingExamples[], weakClassifier* DS, int load) 
     processImage(load_image(trainingExamples[load]), haarTab);
     for(int i = 0; i < 162336; i++){
         if(compareHaar(haarTab[i], *DS)) {
-            printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
+            //printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
             if(haarTab[i].value > DS->threshold) {
                 free(haarTab);
                 return 1;
@@ -165,17 +164,12 @@ haarRecord** processMultipleImages(char* trainingExamples[], int nbExamples, int
     return haarOutput;
 }
 
-haarRecord* processSingleFeature(char* trainingExamples[], int nbExamples,  int nbFeature) {
-    SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
+haarRecord* processSingleFeature(int*** integralImages, int nbExamples,  int nbFeature) {
     haarRecord* haarFeature = malloc(nbExamples*sizeof(haarRecord));
     
     for(int i = 0; i < nbExamples; i++)
-        haarFeature[i] = singleFeature(image_array[i], nbFeature);
-
+        haarFeature[i] = singleFeature(integralImages[i], nbFeature);
     sort(haarFeature, nbExamples);
-    /*for(int i = 0; i < nbExamples; i++)
-        SDL_FreeSurface(image_array[i]);*/
-    free(image_array);
     return haarFeature;
 }
 
@@ -259,7 +253,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
             errorTemp = errorNeg;
             toggleTemp = -1;
         }
-        printf("j: %d, errorTemp: %f, error: %f\n", j, errorTemp,error);
+        //printf("j: %d, errorTemp: %f, error: %f\n", j, errorTemp,error);
         if ((errorTemp < error) || ((errorTemp == error) && (marginTemp > margin ))) {
             error = errorTemp;
             toggle = toggleTemp;
@@ -307,7 +301,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
     return bestWeak;
 }
 
-weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weights, int nbExamples){
+weakClassifier* bestStump (int*** integralImages, int* visage, double* weights, int nbExamples, haarRecord* blueprint){
     weakClassifier *currentDS;
     weakClassifier *bestDS = malloc(sizeof(struct weakClassifier));
     bestDS->threshold = 0;
@@ -316,11 +310,11 @@ weakClassifier* bestStump (char* trainingExamples[], int* visage, double* weight
     bestDS->margin = 0;
     haarRecord* haarFeature; 
     for (int f = 0; f < 162336; f++) { 
-        printf("Working on %d\n",f);
-        haarFeature = processSingleFeature(trainingExamples, nbExamples, f);
+        //printf("Working on %d\n",f);
+        haarFeature = makeSingleFeature(blueprint[f], integralImages, nbExamples);
+        //haarFeature = processSingleFeature(integralImages, nbExamples, blueprint, f);
         currentDS = decisionStump(haarFeature, visage, weights, nbExamples);
         if ((currentDS->error < bestDS->error) || ((currentDS->error == bestDS->error) && (currentDS->margin > bestDS->margin))) {
-            printf("YOUPI LE MONDE EST BEAU");
             bestDS->f = currentDS->f;
             bestDS->threshold = currentDS->threshold;
             bestDS->toggle = currentDS->toggle;
@@ -344,6 +338,9 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     double weightedError;
     struct weakClassifier *currentDS;
     weights = weightInit(weights, visage, visagePos, visageNeg);
+    int*** integralImages = getIntegralImages(trainingExamples, nbExamples);
+    haarRecord* blueprint = malloc(162336 * sizeof(haarRecord));
+    processImage(load_image(trainingExamples[0]),blueprint),
     printf("init weight : OK \n");
     
     for (int i = 0; i < trainingRound; i++) {
@@ -351,7 +348,7 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         weights = normalizeWeights(weights, nbExamples);
         //display_weights(weights, visage, nbExamples);
         printf("round %d\n",i);
-        currentDS = bestStump(trainingExamples, visage, weights, nbExamples);
+        currentDS = bestStump(integralImages, visage, weights, nbExamples, blueprint);
         printf("\tprocessing alpha\n");
         weightedError = calWeightedError(trainingExamples, weights, visage, currentDS, nbExamples);
         printf("\tWeighted Error %f\n", weightedError);
@@ -372,4 +369,34 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     read(trainingRound);
     //free(result);
     return result;
+}
+
+void derp(char* trainingExamples[], int nbExamples) {
+    /*haarRecord** haarTmp = processMultipleImages(trainingExamples, nbExamples, 1);
+    haarRecord** haarOutput = processMultipleImages(trainingExamples, nbExamples, 0);
+    
+    int a;
+    scanf("%d", &a);
+
+    for(int i = 0; i < nbExamples; i++)
+        free(haarTmp[i]);
+    free(haarTmp);
+    scanf("%d", &a);
+
+    for(int i = 0; i < 162336; i++)
+        free(haarOutput[i]);
+    free(haarOutput);*/
+    
+    int a;
+    int*** integralImage = getIntegralImages(trainingExamples, nbExamples);
+    printf("Got integral Image\n");
+    scanf("%d", &a);
+    for(int i = 0; i < nbExamples; i++) {
+        for(int j = 0; j < 24; i++) {
+            printf("free %d, %d\n",i,j);
+            free(integralImage[i][j]);
+        }
+    free(integralImage[i]);
+    }
+    free(integralImage);
 }

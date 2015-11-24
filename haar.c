@@ -143,16 +143,14 @@ void printIntImage(int** integralImage) {
             printf("Integral Image: %d", integralImage[i][j]);
 }
 
-haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
-    ToGray(image);
-    Binarize(image);
-    const int imageW = image->w;
-    const int imageH = image->h;
+haarRecord singleFeature(int** integralImage, int nbFeature) {
+    const int imageW = 24;
+    const int imageH = 24;
 	const int frameSize = 24;
 	const int features = 5;
 	//All five feature types:
     const int feature[5][2] = {{1,2}, {2,1}, {3,1}, {1,3}, {2,2}};
-	int** integralImage = matrix_integralImage(image);
+	//int** integralImage = matrix_integralImage(image);
     
 	int count = 0;
 	int value;
@@ -178,10 +176,6 @@ haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
                             haarOutput.j = y;
                             haarOutput.w = width;
                             haarOutput.h = height;
-                            SDL_FreeSurface(image);
-                            for(int i = 0; i < 24; i++)
-                                free(integralImage[i]);
-                            free(integralImage);
                             return(haarOutput);
                         }
                         count = count + 1;
@@ -190,10 +184,6 @@ haarRecord singleFeature(SDL_Surface *image, int nbFeature) {
             }
     	}
 	}
-    for(int i = 0; i < image->w; i++)
-        free(integralImage[i]);
-    free(integralImage);
-    SDL_FreeSurface(image);
     return(haarOutput);
 }
 
@@ -240,9 +230,41 @@ haarRecord* processImage(SDL_Surface *image, haarRecord* haarOutputTab) {
 	}
     printf("count: %d\n",f);
    //sort(haarOutputTab, *NbFeatures);
-    free(image);
+    SDL_FreeSurface(image);
     for(int i = 0; i < image->w; i++)
         free(integralImage[i]);
     free(integralImage);
     return haarOutputTab;
+}
+
+int*** getIntegralImages(char* trainingExamples[], int nbExamples) {
+    SDL_Surface** image_array = load_image_array(trainingExamples, nbExamples);
+    int*** integralImages = malloc(nbExamples * sizeof(int*));
+
+    for(int i = 0; i < nbExamples; i++) { 
+        ToGray(image_array[i]);
+        integralImages[i] = matrix_integralImage(image_array[i]);
+        SDL_FreeSurface(image_array[i]);
+    }
+    free(image_array);
+    return integralImages;
+}
+
+haarRecord getSingleFeatureOpt(haarRecord blueprint, int** integralImage) {
+    int value = haarProcess(integralImage, blueprint.i, blueprint.j, blueprint.w, blueprint.h, blueprint.haar);
+    haarRecord haarOutput;
+    haarOutput.value = value;
+    haarOutput.i = blueprint.i;
+    haarOutput.j = blueprint.j;
+    haarOutput.w = blueprint.w;
+    haarOutput.h = blueprint.h;
+    haarOutput.haar = blueprint.haar;
+    return haarOutput;
+}
+
+haarRecord* makeSingleFeature(haarRecord blueprint,int*** integralImages, int nbExamples) {
+    haarRecord* haarOutput = malloc(nbExamples*sizeof(haarRecord));
+    for(int i = 0; i < nbExamples; i++)
+        haarOutput[i] = getSingleFeatureOpt(blueprint, integralImages[i]);
+    return haarOutput;
 }
