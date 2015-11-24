@@ -328,7 +328,6 @@ weakClassifier* bestStump (int*** integralImages, int* visage, double* weights, 
         free(haarFeature);
         free(currentDS);
     }
-    printf("%d\n",bestDS->threshold);
     return bestDS;
 }
 
