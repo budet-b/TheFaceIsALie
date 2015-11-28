@@ -13,5 +13,4 @@ clean:
 	rm -f main
 	rm -f *~ *.o
 	rm -f ToGray.bmp
-	rm -f data.bin
 
