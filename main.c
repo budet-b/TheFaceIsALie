@@ -150,13 +150,14 @@ int main(int argc, char* argv[]) {
         printf("Training Finished, Writing Classifier\n");
         writeClassifier(result,classifier);
         printf("Classifier writed\n");
+        return 0;
     }
 
     if(argc < 2)
         errx(2, "Insuffisant argument");
 
     if((database = (fopen("database", "a+"))) == NULL) {
-        fprintf(stderr,"Impossible do open file in lecture");
+        fprintf(stderr,"Impossible to open file in lecture");
         fclose(database);
     }
 
