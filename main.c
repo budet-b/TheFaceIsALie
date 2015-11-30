@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
     FILE *database = NULL;
     FILE *classifier = NULL;
     
-    if(argc < 1)
+    if(argc < 2)
         errx(2, "Insuffisant argument");
 
     if(strcmp(argv[1], "train") == 0) {
@@ -146,15 +146,12 @@ int main(int argc, char* argv[]) {
         randFace(visage,pathface,pathnotface,200,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 100, 100, 3);
+        result = adaboost(finalpath, visage, 100, 100, 8);
         printf("Training Finished, Writing Classifier\n");
-        writeClassifier(result,classifier);
+        writeClassifier(result);
         printf("Classifier writed\n");
         return 0;
     }
-
-    if(argc < 2)
-        errx(2, "Insuffisant argument");
 
     if((database = (fopen("database", "a+"))) == NULL) {
         fprintf(stderr,"Impossible to open file in lecture");
@@ -175,21 +172,24 @@ int main(int argc, char* argv[]) {
 
     if(strcmp(argv[1], "search") == 0) {
         database = fopen("database","r");
-        read(database);
+        search(argv, database);
         fclose(database);
     }
 
     if(strcmp(argv[1], "identify") == 0) {
-        /*int checksum = process(argv[2]);
+        printf("Sending Image\n");
+        double checksum = process(argv[2]);
+        printf("Processed Image: %f\n", checksum);
         if(checksum == 1) {
+            printf("Face Detected\n");
             //Face Detected + Visage identified 
         }
         else if(checksum == -1) {
             //Face Detected + No Visage identified
         }
         else {
-            // No Face
-        }*/   
+            printf("No Face Detected");
+        }   
     }
 
     return 0;

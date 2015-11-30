@@ -331,8 +331,18 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].classifier.error = currentDS->error;
         result[i].classifier.margin = currentDS->margin;
         result[i].classifier.toggle = currentDS->toggle;
+
+        if(i == trainingRound - 1) {
+            result[trainingRound].alpha = -1;
+            result[trainingRound].classifier.f = currentDS->f;
+            result[trainingRound].classifier.threshold = currentDS->threshold;
+            result[trainingRound].classifier.error = currentDS->error;
+            result[trainingRound].classifier.margin = currentDS->margin;
+            result[trainingRound].classifier.toggle = currentDS->toggle;
+        }
     }
-    result[trainingRound].alpha = (double)-1;
+    for(int i = 0; i < trainingRound + 1; i++)
+        printf("Alpha[%d] = %f\n",i,result[i].alpha);
     free(weights);
     return result;
 }
