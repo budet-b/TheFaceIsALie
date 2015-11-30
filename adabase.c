@@ -10,6 +10,48 @@
 #include "haar.h"
 #include "adaboost.h"
 
+void add(int argc,char* argv[],FILE *name){
+    if(argc < 5) 
+        errx(2, "Insuffisant argument");
+    else
+        fprintf(name,"%s %s %s\n",argv[2],argv[3],argv[4]);
+}
+void read(FILE *name) {
+    int ch;
+    while((ch = fgetc(name)) != EOF)
+        printf("%c", (char)ch);
+} 
+
+int search(char* argv[],FILE *name) {
+    char h[100];
+    char result[100];
+    int line = 0;
+    line++;
+    char *input = argv[2];
+
+    while(fgets(h, 100, name) != NULL) {
+        char *space = strchr(h, ' ');
+        char *dynh = h;
+        size_t length = space - dynh;
+        strncpy(result,dynh,length);
+
+        if(strcmp(result,input)!=0) 
+            memset(result, '\0',100);
+        else {
+            printf("Result : ");
+            for(space++;*space != '\0';space++)
+                printf("%c",*space);
+            break;
+        }
+    }
+    if(result[0] == '\0') {
+        printf("Unrecognised haar feature : ");
+        printf("%s\n",argv[2]);   
+    }
+    return line;
+}
+
+
 void writeClassifier(struct strongClassifier *strong,FILE *file) {
     file = fopen("data.bin","wt");
     struct strongClassifier str;
@@ -88,5 +130,8 @@ int main(int argc, char* argv[]) {
         str = malloc(3*sizeof(struct strongClassifier));
         readClassifier(str,file);
     }
+
+
+
     return 0;
 }

@@ -349,16 +349,15 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     for (int i = 0; i < trainingRound; i++) {
         printf("\tWeight normalize\n");
         weights = normalizeWeights(weights, nbExamples);
-        //display_weights(weights, visage, nbExamples);
-        printf("round %d\n",i);
+        printf("Round %d\n",i);
         currentDS = bestStump(integralImages, visage, weights, nbExamples, blueprint);
-        printf("\tprocessing alpha\n");
+        printf("\tProcessing alpha\n");
         weightedError = calWeightedError(integralImages, weights, visage, currentDS, nbExamples);
         printf("\tWeighted Error %f\n", weightedError);
         beta = weightedError/(1 - weightedError);
         printf("\tWeights update\n");
         updateWeights(integralImages, currentDS, visage, weights, nbExamples, beta);
-        printf("\tadding weak classifier\n");
+        printf("\tAdding weak classifier\n");
         result[i].alpha = log(1/beta);
         result[i].classifier.f = currentDS->f;
         result[i].classifier.threshold = currentDS->threshold;
@@ -369,7 +368,6 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     free(weights);
     write(result, trainingRound);
     read(trainingRound);
-    //free(result);
     return result;
 }
 
