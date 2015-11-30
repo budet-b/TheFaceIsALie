@@ -69,6 +69,7 @@ void writeClassifier(struct strongClassifier *strong) {
 }
 
 
+
 void readClassifier(struct strongClassifier *strong) {
     FILE * file = fopen("data","rt");
     struct strongClassifier str;
@@ -136,3 +137,5 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }*/
+=======
+>>>>>>> 61085a80bf3f7002caeeb94f4cd727ce86a2f172

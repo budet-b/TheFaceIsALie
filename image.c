@@ -11,7 +11,6 @@
 
 SDL_Surface* load_image(char *path) {
     SDL_Surface  *image;
-    printf("%s\n", path);
     image = IMG_Load(path);
     if (!image) {
         errx(3, "Unable to load image at : %s : %s", path,IMG_GetError());

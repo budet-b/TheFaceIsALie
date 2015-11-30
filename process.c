@@ -32,15 +32,18 @@ int applyWeakClassifierMod(haarRecord* haarTab, weakClassifier classifier) {
 }
 
 double applyClassifier(haarRecord* haarTab) {
-    strongClassifier *strong = malloc(sizeof(struct strongClassifier) * 200);
-    FILE* file = NULL;
+    struct strongClassifier *strong; 
+    strong = malloc(3 * sizeof(struct strongClassifier));
     double result = 0;
-    readClassifier(strong, file);
+    printf("Reading\n");
+    readClassifier(strong);
+    printf("Starting Applying\n");
 
-    for(int i = 0; i < 200; i++)
-        result = result + strong[i].alpha * (double)applyWeakClassifierMod
-            (haarTab,strong[i].classifier);
-    free(haarTab);
+    for(int i = 0; i < 5; i++) {
+        result = result + strong[i].alpha * (double)applyWeakClassifierMod(haarTab,strong[i].classifier);
+        printf("Reading %d\n", i);
+    }
+        free(haarTab);
     return result;
 }
 
@@ -49,13 +52,13 @@ int process(char* image) {
     haarRecord* haarTab = malloc(162336 * sizeof(struct haarRecord));
     processImage(integralImage, haarTab);
     double result = applyClassifier(haarTab);
-    
+        
+    for(int i = 0; i < 24; i++)
+        free(integralImage[i]);
+    free(integralImage);
+
     if(result > 0)
         return 1; //FACE
     else
         return 0; //NO FACE
-    
-    for(int i = 0; i < 24; i++)
-        free(integralImage[i]);
-    free(integralImage);
 }
