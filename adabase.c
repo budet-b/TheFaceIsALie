@@ -62,7 +62,7 @@ void writeClassifier(struct strongClassifier *strong) {
         str = strong[i];
         weak = str.classifier;
         haar = weak.f;
-        fprintf(file,"%d %lu %lu %d %d %d | %d %d %f %d | %f |\r\n",haar.haar,haar.i,haar.j,haar.w,haar.h,haar.value,weak.threshold, weak.toggle, weak.error, weak.margin,str.alpha);
+        fprintf(file,"1|%d|%lu|%lu|%d|%d|%d|%d|%d|%f|%d|%f|\r\n",haar.haar,haar.i,haar.j,haar.w,haar.h,haar.value,weak.threshold, weak.toggle, weak.error, weak.margin,str.alpha);
         i++;
     }
     fclose(file);
@@ -70,31 +70,75 @@ void writeClassifier(struct strongClassifier *strong) {
 
 
 
-void readClassifier(struct strongClassifier *strong) {
-    FILE * file = fopen("data","rt");
+strongClassifier* readClassifier() {
+    FILE* file = fopen("data","rt");
+    struct strongClassifier *strong =  malloc(200*sizeof(struct strongClassifier));
     struct strongClassifier str;
     struct weakClassifier weak;
     struct haarRecord haar;
     char ch[300];
+    char *token;
     int i = 0;
-    while(strong[i].alpha != -1) {
-        printf("Reading %d: %f\n", i, strong[i].alpha);
-        fgets(ch,200,file);
-        sscanf(ch,"%d %lu %lu %d %d %d | %d %d %f %d | %f |\n",&(haar.haar),&(haar.i),&(haar.j),&(haar.w),&(haar.h),&(haar.value),&(weak.threshold),&(weak.toggle),&(weak.error),&(weak.margin),&(str.alpha));
+    while(fgets(ch,300,file)!= NULL) {
+        char* chr = ch;
+        double d;
+        int arg = 0;
+        while ((token = strsep(&chr, "|")) != NULL) {
+            switch (arg) {
+            case 1 :
+                haar.haar = (int)token;
+                break;
+            case 2 : 
+                haar.i = (unsigned long)token;
+                break;
+            case 3 : 
+                haar.j = (unsigned long)token;
+                break;
+            case 4 : 
+                haar.w = (int)token;
+                break;
+            case 5 : 
+                haar.h = (int)token;
+                break;
+            case 6 : 
+                haar.value = (int)token;
+                break;
+            case 7 : 
+                weak.threshold = (int)token;
+                break;
+            case 8 : 
+                weak.toggle = (int)token;
+                break;
+            case 9 : 
+                sscanf(token, "%lf", &d);
+                weak.error = d;
+                break;
+            case 10 :
+                weak.margin = (int)token;
+                break;
+            case 11 :
+                sscanf(token, "%lf", &d);
+                str.alpha = d;
+                break;
+            default :
+                break;
+            }
+            arg++;
+        }
         weak.f = haar;
         str.classifier = weak;
         strong[i] = str;
+        printf("Reading %d: %f\n", i, strong[i].alpha);
         i++;
     }
     fclose(file);
+    return strong;
 }
 
 /*
-int main(int argc, char* argv[]) {
-    FILE *file = NULL;
-    
+int main(int argc, char* argv[]) {    
     struct haarRecord ha;
-    ha.haar = ha.w = ha.h = ha.value = 1;
+    ha.haar = ha.w = ha.h = ha.value = 0;
     ha.i = ha.j = 2;
     
     struct weakClassifier weak;
@@ -103,39 +147,62 @@ int main(int argc, char* argv[]) {
     weak.error = 2;
 
     struct strongClassifier s;
-    s.alpha = 1;
+    s.alpha = 4;
     s.classifier = weak;
 
     struct strongClassifier s2;
     s2.alpha = 3;
     s2.classifier = weak;
 
+    struct strongClassifier s4;
+    s4.alpha = 1;
+    s4.classifier = weak;
+
+    struct strongClassifier s5;
+    s5.alpha = 3;
+    s5.classifier = weak;
+
+    struct strongClassifier s6;
+    s6.alpha = 1;
+    s6.classifier = weak;
+
+    struct strongClassifier s7;
+    s7.alpha = 3;
+    s7.classifier = weak;
+
+    struct strongClassifier s8;
+    s8.alpha = -1;
+    s8.classifier = weak;
+
+
     struct strongClassifier s3;
-    s3.alpha = -1;
+    s3.alpha = 1;
     s3.classifier = weak;
 
-    struct strongClassifier *str = malloc(3*sizeof(struct strongClassifier));
+    struct strongClassifier *str = malloc(8*sizeof(struct strongClassifier));
     str[0] = s;
     str[1] = s2;
     str[2] = s3;
+    str[3] = s4;
+    str[4] = s5;
+    str[5] = s6;
+    str[6] = s7;
+    str[7] = s8;
+
+    struct strongClassifier *str1 = malloc(8*sizeof(struct strongClassifier));
+    str1[1] = s2;
+    str1[1].alpha = 54;
 
     if(argc < 2) 
         errx(2, "Insuffisant argument");
 
     if(strcmp(argv[1], "write") == 0) {
-        writeClassifier(str,file);
+        writeClassifier(str);
         free(str);
     }
     
     if(strcmp(argv[1], "read") == 0) {
-        free(str);
-        str = malloc(3*sizeof(struct strongClassifier));
-        readClassifier(str,file);
+        readClassifier();
     }
-
-
-
     return 0;
 }*/
-=======
->>>>>>> 61085a80bf3f7002caeeb94f4cd727ce86a2f172
