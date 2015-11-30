@@ -5,7 +5,7 @@
 
 
 
-
+int process(char* image);
 
 
 #endif

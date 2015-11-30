@@ -314,9 +314,9 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     printf("init weight : OK \n");
     
     for (int i = 0; i < trainingRound; i++) {
+        printf("Round %d\n",i);
         printf("\tWeight normalize\n");
         weights = normalizeWeights(weights, nbExamples);
-        printf("Round %d\n",i);
         currentDS = bestStump(integralImages, visage, weights, nbExamples, blueprint);
         printf("\tProcessing alpha\n");
         weightedError = calWeightedError(integralImages, weights, visage, currentDS, nbExamples);

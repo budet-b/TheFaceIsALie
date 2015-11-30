@@ -143,11 +143,13 @@ int main(int argc, char* argv[]) {
         char* pathnotface[MAXLINES];
         files(visage,pathnotface,"./Images/BigDB/NotFace/");
         char* finalpath[MAXLINES];
-        randFace(visage,pathface,pathnotface,4000,finalpath);
+        randFace(visage,pathface,pathnotface,200,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 2000, 2000, 25);
+        result = adaboost(finalpath, visage, 100, 100, 10);
+        printf("Training Finished, Writing Classifier\n");
         writeClassifier(result,classifier);
+        printf("Classifier writed\n");
     }
 
     if(argc < 2)
@@ -177,7 +179,7 @@ int main(int argc, char* argv[]) {
     }
 
     if(strcmp(argv[1], "identify") == 0) {
-        /*int checksum = identifyImage(argv[2]);
+        /*int checksum = process(argv[2]);
         if(checksum == 1) {
             //Face Detected + Visage identified 
         }
