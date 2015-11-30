@@ -301,7 +301,7 @@ weakClassifier* bestStump (int*** integralImages, int* visage, double* weights, 
 //Numbers of images < nb training Round
 strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos, int visageNeg, int trainingRound){
     printf("starting adaboost \n");
-    strongClassifier* result = malloc(trainingRound * sizeof(strongClassifier));
+    strongClassifier* result = malloc((trainingRound + 1)* sizeof(strongClassifier));
     int nbExamples = visagePos + visageNeg;
     double* weights = malloc(nbExamples* sizeof(double));
     double beta;
@@ -332,6 +332,7 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].classifier.margin = currentDS->margin;
         result[i].classifier.toggle = currentDS->toggle;
     }
+    result[trainingRound].alpha = (double)-1;
     free(weights);
     return result;
 }

@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
         randFace(visage,pathface,pathnotface,200,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 100, 100, 10);
+        result = adaboost(finalpath, visage, 100, 100, 3);
         printf("Training Finished, Writing Classifier\n");
         writeClassifier(result,classifier);
         printf("Classifier writed\n");
