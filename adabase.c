@@ -52,8 +52,8 @@ int search(char* argv[],FILE *name) {
 }
 
 
-void writeClassifier(struct strongClassifier *strong,FILE *file) {
-    file = fopen("data.bin","wt");
+void writeClassifier(struct strongClassifier *strong) {
+    FILE *file = fopen("data","wt");
     struct strongClassifier str;
     struct weakClassifier weak;
     struct haarRecord haar;
@@ -69,16 +69,17 @@ void writeClassifier(struct strongClassifier *strong,FILE *file) {
 }
 
 
-void readClassifier(struct strongClassifier* strong,FILE *file) {
-    file = fopen("data.bin","r");
+void readClassifier(struct strongClassifier *strong) {
+    FILE * file = fopen("data","rt");
     struct strongClassifier str;
     struct weakClassifier weak;
     struct haarRecord haar;
     char ch[300];
     int i = 0;
     while(strong[i].alpha != -1) {
+        printf("Reading %d: %f\n", i, strong[i].alpha);
         fgets(ch,200,file);
-        sscanf(ch,"%d %lu %lu %d %d %d | %d %d %lf %d | %lf |\n",&(haar.haar),&(haar.i),&(haar.j),&(haar.w),&(haar.h),&(haar.value),&(weak.threshold),&(weak.toggle),&(weak.error),&(weak.margin),&(str.alpha));
+        sscanf(ch,"%d %lu %lu %d %d %d | %d %d %f %d | %f |\n",&(haar.haar),&(haar.i),&(haar.j),&(haar.w),&(haar.h),&(haar.value),&(weak.threshold),&(weak.toggle),&(weak.error),&(weak.margin),&(str.alpha));
         weak.f = haar;
         str.classifier = weak;
         strong[i] = str;
@@ -87,8 +88,8 @@ void readClassifier(struct strongClassifier* strong,FILE *file) {
     fclose(file);
 }
 
-
-/* int main(int argc, char* argv[]) {
+/*
+int main(int argc, char* argv[]) {
     FILE *file = NULL;
     
     struct haarRecord ha;
