@@ -7,7 +7,7 @@
 #include "image.h"
 #include "haar.h"
 #include "adaboost.h"
-
+#include "adabase.h"
 
 SDL_Surface* load_image(char *path) {
     SDL_Surface  *image;

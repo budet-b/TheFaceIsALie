@@ -88,7 +88,7 @@ void readClassifier(struct strongClassifier* strong,FILE *file) {
 }
 
 
-int main(int argc, char* argv[]) {
+/* int main(int argc, char* argv[]) {
     FILE *file = NULL;
     
     struct haarRecord ha;
@@ -134,4 +134,4 @@ int main(int argc, char* argv[]) {
 
 
     return 0;
-}
+}*/

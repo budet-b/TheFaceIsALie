@@ -15,6 +15,7 @@
 #include "image.h"
 #include "haar.h"
 #include "adaboost.h"
+#include "adabase.h"
 
 //TO DO : opti apply weak classifier
 
@@ -178,40 +179,6 @@ haarRecord* processSingleFeature(int*** integralImages, int nbExamples,  int nbF
     return haarFeature;
 }
 
-void write(strongClassifier *strongTab, int nbClassifier) {
-    FILE* data;
-    data = fopen("data.bin", "w+b");
-    if(data == NULL)
-        errx(2, "Couldn't open data.bin");
-    //fwrite(strongTab, sizeof(struct strongClassifier) * nbClassifier, 1, data);
-    for(int i = 0; i < nbClassifier; i++) {
-        printf("Weak Classifier nb %d\n", i);
-        printf("\t Alpha = %f\n", strongTab[i].alpha);
-        printf("\t Threshold = %d\n", strongTab[i].classifier.threshold);
-    }
-
-    fwrite(strongTab, sizeof(struct strongClassifier), nbClassifier, data);
-    fclose(data);
-}
-
-void read(int nbClassifier) {
-    FILE* data;
-    data = fopen("data.bin", "w+b");
-    if(data == NULL)
-        errx(2, "Couldn't open data.bin");
-    
-    strongClassifier* strongTab;
-    strongTab = malloc(nbClassifier * sizeof(struct strongClassifier));
-    fread(strongTab, sizeof(struct strongClassifier), nbClassifier, data);
-
-    for(int i = 0; i < nbClassifier; i++) {
-        printf("Weak Classifier nb %d\n", i);
-        printf("\t Alpha = %f\n", strongTab->alpha);
-        printf("\t Threshold = %d\n", strongTab->classifier.threshold);
-    }
-    fclose(data);
-}
-
 weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights, int nbExamples){
     //temp = current
     //notemp = previous
@@ -366,37 +333,5 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].classifier.toggle = currentDS->toggle;
     }
     free(weights);
-    write(result, trainingRound);
-    read(trainingRound);
     return result;
-}
-
-void derp(char* trainingExamples[], int nbExamples) {
-    /*haarRecord** haarTmp = processMultipleImages(trainingExamples, nbExamples, 1);
-    haarRecord** haarOutput = processMultipleImages(trainingExamples, nbExamples, 0);
-    
-    int a;
-    scanf("%d", &a);
-
-    for(int i = 0; i < nbExamples; i++)
-        free(haarTmp[i]);
-    free(haarTmp);
-    scanf("%d", &a);
-
-    for(int i = 0; i < 162336; i++)
-        free(haarOutput[i]);
-    free(haarOutput);*/
-    
-    int a;
-    int*** integralImage = getIntegralImages(trainingExamples, nbExamples);
-    printf("Got integral Image\n");
-    scanf("%d", &a);
-    for(int i = 0; i < nbExamples; i++) {
-        for(int j = 0; j < 24; i++) {
-            printf("free %d, %d\n",i,j);
-            free(integralImage[i][j]);
-        }
-    free(integralImage[i]);
-    }
-    free(integralImage);
 }

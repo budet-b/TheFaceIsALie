@@ -15,6 +15,7 @@
 #include "haar.h"
 #include "image.h"
 #include "adaboost.h"
+#include "adabase.h"
 
 int calcul_area(int x,int y,int x2,int y2,int** mat) {
     int a = mat[x][y];

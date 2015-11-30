@@ -9,6 +9,7 @@
 #include "image.h"
 #include "haar.h"
 #include "adaboost.h"
+#include "adabase.h"
 #define MAXLINES 2500
 
 char lines[MAXLINES][MAXLINES];
@@ -128,41 +129,65 @@ void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char*
 }
 
 int main(int argc, char* argv[]) {
-    int visage[MAXLINES];
-    char* pathface[MAXLINES];
-    files(visage,pathface,"./Images/BigDB/Face/");
-    char* pathnotface[MAXLINES];
-    files(visage,pathnotface,"./Images/BigDB/NotFace/");
-    /*for(size_t i = 0;i<125;i++) {
-        printf("%s\n",pathface[i]);
-        printf("%s\n",pathnotface[i]);
-    }*/
-    char* finalpath[MAXLINES];
-    randFace(visage,pathface,pathnotface,4000,finalpath);
-    /*for(size_t i = 0;i<250;i++) {
-        printf("%s ",finalpath[i]);
-        printf("%d\n",visage[i]);
-    }*/
-
-    printf("\nTHE FACE IS A LIE\n");
-	/*if (argc < 2)
-    		errx(2, "Usage:\n%s <path>", argv[0]);
-	SDL_Surface* image = load_image(argv[1]);
-	display_image(image);
-	ToGray(image);
-	display_image(image);
-    Binarize(image);
-	display_image(image); */
-    printf("ONSTART\n");
-    strongClassifier* yolo;
-    printf("yolo adaboost");
-    //derp(finalpath, 2000);
-    yolo = adaboost(finalpath, visage, 2000, 2000, 25);
     
-    //int len;
-    //haarRecord* haarOutput;
-    //haarOutput = processImage(image, &len);
-    //display_haar(haarOutput, len);
-    //SDL_SaveBMP(image, "./ToGray.bmp");
+    FILE *database = NULL;
+    FILE *classifier = NULL;
+    
+    if(argc < 1)
+        errx(2, "Insuffisant argument");
+
+    if(strcmp(argv[1], "train") == 0) {
+        int visage[MAXLINES];
+        char* pathface[MAXLINES];
+        files(visage,pathface,"./Images/BigDB/Face/");
+        char* pathnotface[MAXLINES];
+        files(visage,pathnotface,"./Images/BigDB/NotFace/");
+        char* finalpath[MAXLINES];
+        randFace(visage,pathface,pathnotface,4000,finalpath);
+        printf("Starting Training\n");
+        strongClassifier* result;
+        result = adaboost(finalpath, visage, 2000, 2000, 25);
+        writeClassifier(result,classifier);
+    }
+
+    if(argc < 2)
+        errx(2, "Insuffisant argument");
+
+    if((database = (fopen("database", "a+"))) == NULL) {
+        fprintf(stderr,"Impossible do open file in lecture");
+        fclose(database);
+    }
+
+    if(strcmp(argv[1], "add") == 0) {
+        database = fopen("database", "a+");
+        add(argc, argv, database);
+        fclose(database);
+    }
+
+    if(strcmp(argv[1], "read") == 0) {
+        database = fopen("database", "r");
+        read(database);
+        fclose(database);
+    }
+
+    if(strcmp(argv[1], "search") == 0) {
+        database = fopen("database","r");
+        read(database);
+        fclose(database);
+    }
+
+    if(strcmp(argv[1], "identify") == 0) {
+        /*int checksum = identifyImage(argv[2]);
+        if(checksum == 1) {
+            //Face Detected + Visage identified 
+        }
+        else if(checksum == -1) {
+            //Face Detected + No Visage identified
+        }
+        else {
+            // No Face
+        }*/   
+    }
+
     return 0;
 }
