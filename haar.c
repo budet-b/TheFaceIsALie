@@ -131,12 +131,13 @@ void quickSort(haarRecord* tab, int l, int h)
         quickSort(tab, p + 1, h);
     }
 }
-
+ 
 void sort(haarRecord* tab, int NbFeatures) {
     int l = 0;
     int h = NbFeatures - 1;
     quickSort(tab, l, h);
 }
+
 
 void printIntImage(int** integralImage) {
     for(int i = 0; i < 20; i++)

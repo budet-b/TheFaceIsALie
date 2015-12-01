@@ -26,9 +26,6 @@ struct strongClassifier {
 typedef struct strongClassifier strongClassifier;
 typedef struct weakClassifier weakClassifier;
 
-int min(haarRecord* haarTab, int nbFeatures);
-int max(haarRecord* haarTab, int nbFeatures);
-double sum(int* visage, double* weights, int check, int nbFeatures);
 void allocate(int* tab);
 strongClassifier* adaboost (char* trainingExample[], int* visage, int visagePos, int visageNeg, int trainingRound);
 void derp(char* trainingExamples[], int nbExamples);

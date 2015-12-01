@@ -10,45 +10,6 @@
 #include "process.h"
 #include "adabase.h"
 
-/*
-void writeClassifier(struct strongClassifier *strong) {
-    FILE *file = fopen("data","wt");
-    struct strongClassifier str;
-    struct weakClassifier weak;
-    struct haarRecord haar;
-    int i = 0;
-    while(str.alpha != -1) {
-        str = strong[i];
-        weak = str.classifier;
-        haar = weak.f;
-        fprintf(file,"%d %lu %lu %d %d %d | %d %d %f %d | %f |\r\n",haar.haar,haar.i,haar.j,haar.w,haar.h,haar.value,weak.threshold, weak.toggle, weak.error, weak.margin,str.alpha);
-        i++;
-    }
-    fclose(file);
-}
-
-
-
-void readClassifier(struct strongClassifier *strong) {
-    FILE* file = fopen("data","rt");
-    struct strongClassifier str;
-    struct weakClassifier weak;
-    struct haarRecord haar;
-    char ch[300];
-    int i = 0;
-    while(strong[i].alpha != -1) {
-        printf("Reading %d: %f\n", i, strong[i].alpha);
-        fgets(ch,200,file);
-        sscanf(ch,"%d %lu %lu %d %d %d | %d %d %lf %d | %lf |\n",&(haar.haar),&(haar.i),&(haar.j),&(haar.w),&(haar.h),&(haar.value),&(weak.threshold),&(weak.toggle),&(weak.error),&(weak.margin),&(str.alpha));
-        weak.f = haar;
-        str.classifier = weak;
-        strong[i] = str;
-        i++;
-    }
-    fclose(file);
-}
-*/
-
 int compareHaarMod(haarRecord haarTab, weakClassifier DS) {
     if(haarTab.w == DS.f.w && haarTab.h == DS.f.h && haarTab.i == DS.f.i && haarTab.j == DS.f.j && haarTab.haar == DS.f.haar)
         return 1;
@@ -59,13 +20,16 @@ int applyWeakClassifierMod(haarRecord* haarTab, weakClassifier classifier) {
     for(int i = 0; i < 162336; i++){
         if(compareHaarMod(haarTab[i], classifier)) {
             if(haarTab[i].value > classifier.threshold) {
+                printf("Classifier said ok\n");
                 return 1;
             }
             else {
+                printf("Classifier said no\n");
                 return -1;
             }
         }
     }
+    printf("Found no feature\n");
     return 1;
 }
 
@@ -74,12 +38,12 @@ double applyClassifier(haarRecord* haarTab) {
     strong = malloc(3 * sizeof(struct strongClassifier));
     double result = 0;
     printf("Reading\n");
-    readClassifier(strong);
+    strong = readClassifier();
     printf("Starting Applying\n");
 
     for(int i = 0; i < 5; i++) {
         result = result + strong[i].alpha * (double)applyWeakClassifierMod(haarTab,strong[i].classifier);
-        printf("Reading %d\n", i);
+        printf("Reading %d\n, Result: %f\n", i, result);
     }
         free(haarTab);
     return result;
@@ -90,7 +54,7 @@ int process(char* image) {
     haarRecord* haarTab = malloc(162336 * sizeof(struct haarRecord));
     processImage(integralImage, haarTab);
     double result = applyClassifier(haarTab);
-        
+    printf("RESULT: %f\n", result);
     for(int i = 0; i < 24; i++)
         free(integralImage[i]);
     free(integralImage);
