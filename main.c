@@ -141,12 +141,12 @@ int main(int argc, char* argv[]) {
         char* pathface[MAXLINES];
         files(visage,pathface,"./Images/BigDB/Face/");
         char* pathnotface[MAXLINES];
-        files(visage,pathnotface,"./Images/BigDB/NotFace/");
+        files(visage,pathnotface,"./Images/NewDB/");
         char* finalpath[MAXLINES];
-        randFace(visage,pathface,pathnotface,200,finalpath);
+        randFace(visage,pathface,pathnotface,150,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 100, 100, 8);
+        result = adaboost(finalpath, visage, 75, 75, 5);
         printf("Training Finished, Writing Classifier\n");
         writeClassifier(result);
         printf("Classifier writed\n");
@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
     if(strcmp(argv[1], "identify") == 0) {
         printf("Sending Image\n");
         double checksum = process(argv[2]);
-        printf("Processed Image: %f\n", checksum);
+        printf("Processed Image");
         if(checksum == 1) {
             printf("Face Detected\n");
             //Face Detected + Visage identified 
