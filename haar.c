@@ -104,7 +104,19 @@ void swap (haarRecord* a, haarRecord* b)
     *b = temp;
 }
 
-int partition (haarRecord* tab, int l, int h)
+void swapD(double* a, double* b) {
+    double temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void swapI(int* a, int* b) {
+    int temp = *a;
+    *a = *a;
+    *b = temp;
+}
+
+int partition (haarRecord* tab, int l, int h, int* visage, double* weights)
 {
     int x = tab[h].value;
     int i = (l - 1);
@@ -115,27 +127,31 @@ int partition (haarRecord* tab, int l, int h)
         {
             i++;
             swap (&tab[i], &tab[j]);
+            swapD(&weights[i], &weights[j]);
+            swapI(&visage[i], &visage[j]);
         }
     }
     swap (&tab[i + 1], &tab[h]);
+    swapD(&weights[i+1], &weights[h]);
+    swapI(&visage[i+1], &visage[h]);
     return (i + 1);
 }
 
 
-void quickSort(haarRecord* tab, int l, int h)
+void quickSort(haarRecord* tab, int l, int h, int* visage, double* weights)
 {
     if (l < h)
     {
-        int p = partition(tab, l, h);
-        quickSort(tab, l, p - 1);
-        quickSort(tab, p + 1, h);
+        int p = partition(tab, l, h, visage, weights);
+        quickSort(tab, l, p - 1, visage, weights);
+        quickSort(tab, p + 1, h, visage, weights);
     }
 }
  
-void sort(haarRecord* tab, int NbFeatures) {
+void sort(haarRecord* tab, int NbFeatures, int* visage, double* weights) {
     int l = 0;
     int h = NbFeatures - 1;
-    quickSort(tab, l, h);
+    quickSort(tab, l, h, visage, weights);
 }
 
 
@@ -258,7 +274,8 @@ haarRecord getSingleFeatureOpt(haarRecord blueprint, int** integralImage) {
 
 haarRecord* makeSingleFeature(haarRecord blueprint,int*** integralImages, int nbExamples) {
     haarRecord* haarOutput = malloc(nbExamples*sizeof(haarRecord));
-    for(int i = 0; i < nbExamples; i++)
+    for(int i = 0; i < nbExamples; i++) {
         haarOutput[i] = getSingleFeatureOpt(blueprint, integralImages[i]);
+    }
     return haarOutput;
 }
