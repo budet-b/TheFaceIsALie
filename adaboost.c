@@ -261,9 +261,6 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
     
     int nb_neg = nbExamples / 2;
     int nb_pos = nbExamples / 2;
-    //margin init
-    int margin = 0;
-    int marginTemp = margin;
     
     //threshold init
     int threshold = haarTab[0].value;
@@ -309,7 +306,6 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
             //printf("AZGEKJAZGEKJAGZEKJAGZKEJGAZEJGKAEGAZJEGKAZJGEKAGEZKJAGZEKJAGZEKJAGZEKJAG\n");
             error = errorTemp;
             toggle = toggleTemp;
-            margin = marginTemp;
             threshold = thresholdTemp;
             haarTmp = haarTab[j];
             //printf("new treshold found %d\n", threshold);
@@ -319,7 +315,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
         j++;
         while (1) {
             //printf("Weights[%d]: %f\n",j,weights[j]);
-            if (visage[j] == -1) { //updating weights balance with current treshold
+            if (visage[j] == -1) { //updating weights balance wih current treshold
                 //printf("UPDATE\n");
                 WNegSmall = WNegSmall + weights[j];
                 WNegBig = WNegBig - weights[j];
@@ -339,11 +335,9 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
         }
         if (j == nbExamples - 2) {
             thresholdTemp = haarTab[nbExamples - 1].value + 1;
-            marginTemp = 0;
         }
         else {
             thresholdTemp = (haarTab[j+1].value + haarTab[j].value)/2;
-            marginTemp = haarTab[j+1].value - haarTab[j].value;
         }
     }
     //printf("Error:%f\n", error);
@@ -352,7 +346,6 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
     bestWeak->threshold = threshold;
     bestWeak->toggle = toggle;
     bestWeak->error = error;
-    bestWeak->margin = margin;
     return bestWeak;
 }
 
@@ -371,7 +364,7 @@ weakClassifier* bestStump (int*** integralImages, int* visage, double* weights, 
         //printf("Working on %d\n",f);
         haarFeature = makeSingleFeature(blueprint[f], integralImages, nbExamples);
         //printf("Got Feature\n");
-        sort(haarFeature, nbExamples, weightsTemp, visageTemp);
+        sort(haarFeature, nbExamples, visageTemp, weightsTemp);
         currentDS = decisionStump(haarFeature, visageTemp, weightsTemp, nbExamples);
         /*toggle1 = sum(visage, weights, 1, nbExamples, haarFeature, currentDS->threshold);
         toggle2 = sum(visage, weights, -1, nbExamples, haarFeature, currentDS->threshold);
