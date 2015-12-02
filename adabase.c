@@ -58,12 +58,13 @@ void writeClassifier(struct strongClassifier *strong) {
     struct weakClassifier weak;
     struct haarRecord haar;
     int i = 0;
+    str = strong[i];
     while(str.alpha != -1) {
-        str = strong[i];
         weak = str.classifier;
         haar = weak.f;
-        fprintf(file,"1|%d|%lu|%lu|%d|%d|%d|%d|%d|%f|%d|%f|\r\n",haar.haar,haar.i,haar.j,haar.w,haar.h,haar.value,weak.threshold, weak.toggle, weak.error, weak.margin,str.alpha);
+        fprintf(file,"1|%d|%lu|%lu|%d|%d|%d|%d|%d|%f|%f|\r\n",haar.haar,haar.i,haar.j,haar.w,haar.h,haar.value,weak.threshold, weak.toggle, weak.error,str.alpha);
         i++;
+        str = strong[i];
     }
     fclose(file);
 }
@@ -114,9 +115,6 @@ strongClassifier* readClassifier() {
                 weak.error = d;
                 break;
             case 10 :
-                weak.margin = (int)token;
-                break;
-            case 11 :
                 sscanf(token, "%lf", &d);
                 str.alpha = d;
                 break;
@@ -135,7 +133,7 @@ strongClassifier* readClassifier() {
     return strong;
 }
 
-/*
+
 int main(int argc, char* argv[]) {    
     struct haarRecord ha;
     ha.haar = ha.w = ha.h = ha.value = 0;
@@ -143,7 +141,7 @@ int main(int argc, char* argv[]) {
     
     struct weakClassifier weak;
     weak.f = ha;
-    weak.threshold = weak.toggle = weak.margin = 1;
+    weak.threshold = weak.toggle = 1;
     weak.error = 2;
 
     struct strongClassifier s;
@@ -205,4 +203,4 @@ int main(int argc, char* argv[]) {
         readClassifier();
     }
     return 0;
-}*/
+}
