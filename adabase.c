@@ -87,28 +87,37 @@ strongClassifier* readClassifier() {
         while ((token = strsep(&chr, "|")) != NULL) {
             switch (arg) {
             case 1 :
-                haar.haar = (int)token;
+                haar.haar = atoi(token);
+                //printf("%d ",haar.haar);
                 break;
             case 2 : 
-                haar.i = (unsigned long)token;
+                haar.i = atoi(token);
+                //printf("%lu ",haar.i);
+
                 break;
             case 3 : 
-                haar.j = (unsigned long)token;
+                haar.j = atoi(token);
+                //printf("%lu ",haar.j);
                 break;
             case 4 : 
-                haar.w = (int)token;
+                haar.w = atoi(token);
+                //printf("%d ",haar.w);
                 break;
             case 5 : 
-                haar.h = (int)token;
+                haar.h = atoi(token);
+                //printf("%d ",haar.h);
                 break;
             case 6 : 
-                haar.value = (int)token;
+                haar.value = atoi(token);
+                //printf("%d ",haar.value);
                 break;
             case 7 : 
-                weak.threshold = (int)token;
+                weak.threshold = atoi(token);
+                //printf("%d ",weak.threshold);
                 break;
             case 8 : 
-                weak.toggle = (int)token;
+                weak.toggle = atoi(token);
+                //printf("%d ",weak.toggle);
                 break;
             case 9 : 
                 sscanf(token, "%lf", &d);
@@ -126,7 +135,7 @@ strongClassifier* readClassifier() {
         weak.f = haar;
         str.classifier = weak;
         strong[i] = str;
-        printf("Reading %d: %f\n", i, strong[i].alpha);
+        //printf("Reading %d: %f\n", i, strong[i].alpha);
         i++;
     }
     fclose(file);
@@ -134,7 +143,7 @@ strongClassifier* readClassifier() {
 }
 
 
-int main(int argc, char* argv[]) {    
+/*int main(int argc, char* argv[]) {    
     struct haarRecord ha;
     ha.haar = ha.w = ha.h = ha.value = 0;
     ha.i = ha.j = 2;
@@ -187,9 +196,7 @@ int main(int argc, char* argv[]) {
     str[6] = s7;
     str[7] = s8;
 
-    struct strongClassifier *str1 = malloc(8*sizeof(struct strongClassifier));
-    str1[1] = s2;
-    str1[1].alpha = 54;
+    struct strongClassifier *strong = malloc(5*sizeof(struct strongClassifier)); 
 
     if(argc < 2) 
         errx(2, "Insuffisant argument");
@@ -200,7 +207,9 @@ int main(int argc, char* argv[]) {
     }
     
     if(strcmp(argv[1], "read") == 0) {
-        readClassifier();
+        strong = readClassifier();
+        for(int i = 0; i < 5; i++)
+        printf("classifier i:%d j:%d w:%d h:%d haar:%d\n",strong[i].classifier.f.i, strong[i].classifier.f.j, strong[i].classifier.f.w, strong[i].classifier.f.h, strong[i].classifier.f.haar);
     }
     return 0;
-}
+}*/

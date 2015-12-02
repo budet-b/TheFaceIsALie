@@ -421,8 +421,8 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].classifier.threshold = currentDS->threshold;
         result[i].classifier.error = currentDS->error;
         result[i].classifier.toggle = currentDS->toggle;
-        if(i == trainingRoung - 1) {
-            result[i + 1].alpha = 0;
+        if(i == trainingRound - 1) {
+            result[i + 1].alpha = -1;
             result[i + 1].classifier.f = currentDS->f;
             result[i + 1].classifier.threshold = 0;
             result[i + 1].classifier.error = 0;

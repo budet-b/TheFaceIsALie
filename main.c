@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
     if(strcmp(argv[1], "identify") == 0) {
         printf("Sending Image\n");
         double checksum = process(argv[2]);
-        printf("Processed Image");
+        printf("Processed Image\n");
         if(checksum == 1) {
             printf("Face Detected\n");
             //Face Detected + Visage identified 
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
             //Face Detected + No Visage identified
         }
         else {
-            printf("No Face Detected");
+            printf("No Face Detected\n");
         }   
     }
 
