@@ -318,7 +318,7 @@ weakClassifier* decisionStump (haarRecord *haarTab, int* visage, double* weights
             break;
         j++;
         while (1) {
-            printf("Weights[%d]: %f\n",j,weights[j]);
+            //printf("Weights[%d]: %f\n",j,weights[j]);
             if (visage[j] == -1) { //updating weights balance with current treshold
                 //printf("UPDATE\n");
                 WNegSmall = WNegSmall + weights[j];
