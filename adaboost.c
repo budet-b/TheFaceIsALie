@@ -392,7 +392,7 @@ void displayClassifier(weakClassifier class) {
 //Numbers of images < nb training Round
 strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos, int visageNeg, int trainingRound){
     printf("starting adaboost \n");
-    strongClassifier* result = malloc((trainingRound)* sizeof(strongClassifier));
+    strongClassifier* result = malloc((trainingRound + 1)* sizeof(strongClassifier));
     int nbExamples = visagePos + visageNeg;
     double* weights = malloc(nbExamples* sizeof(double));
     double beta;
@@ -421,7 +421,13 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         result[i].classifier.threshold = currentDS->threshold;
         result[i].classifier.error = currentDS->error;
         result[i].classifier.toggle = currentDS->toggle;
-        
+        if(i == trainingRoung - 1) {
+            result[i + 1].alpha = 0;
+            result[i + 1].classifier.f = currentDS->f;
+            result[i + 1].classifier.threshold = 0;
+            result[i + 1].classifier.error = 0;
+            result[i + 1].classifier.toggle = 0;
+        } 
         printf("Strong Classifier %d\n\tAlpha: %f\n", i, result[i].alpha);
         displayClassifier(result[i].classifier);
     }
