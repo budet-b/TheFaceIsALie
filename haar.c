@@ -94,7 +94,13 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) {
         }
 }
 
-
+void swapG(void *a, void *b, size_t size) {
+    void *t = malloc(size);
+    memcpy(t, a, size);
+    memcpy(a, b, size);
+    memcpy(b, t, size);
+    free(t);
+}
 
 
 void swap (haarRecord* a, haarRecord* b)
@@ -126,14 +132,15 @@ int partition (haarRecord* tab, int l, int h, int* visage, double* weights)
         if (tab[j].value <= x)
         {
             i++;
-            swap (&tab[i], &tab[j]);
-            swapD(&weights[i], &weights[j]);
-            swapI(&visage[i], &visage[j]);
+            swapG(&tab[i], &tab[j], sizeof(haarRecord));
+            swapG(&weights[i], &weights[j],sizeof(double));
+            swapG(&visage[i], &visage[j],sizeof(int));
+            
         }
     }
-    swap (&tab[i + 1], &tab[h]);
-    swapD(&weights[i+1], &weights[h]);
-    swapI(&visage[i+1], &visage[h]);
+    swapG(&tab[i+1], &tab[h], sizeof(haarRecord));
+    swapG(&weights[i+1], &weights[h],sizeof(double));
+    swapG(&visage[i+1], &visage[h],sizeof(int));
     return (i + 1);
 }
 
