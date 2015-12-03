@@ -94,32 +94,27 @@ int haarProcess(int** integralImage, int x, int y, int w, int h, int feature) {
         }
 }
 
+int compare(const void *p1, const void *p2) {
+    const struct adaFeature *elem1 = p1;
+    const struct adaFeature *elem2 = p2;
+
+    if(elem1->f.value <= elem2->f.value) {
+        return -1;
+    }
+    else if (elem1->f.value > elem2->f.value) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
 void swapG(void *a, void *b, size_t size) {
     void *t = malloc(size);
     memcpy(t, a, size);
     memcpy(a, b, size);
     memcpy(b, t, size);
     free(t);
-}
-
-
-void swap (haarRecord* a, haarRecord* b)
-{
-    haarRecord temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-void swapD(double* a, double* b) {
-    double temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-void swapI(int* a, int* b) {
-    int temp = *a;
-    *a = *a;
-    *b = temp;
 }
 
 int partition (haarRecord* tab, int l, int h, int* visage, double* weights)
@@ -279,10 +274,12 @@ haarRecord getSingleFeatureOpt(haarRecord blueprint, int** integralImage) {
     return haarOutput;
 }
 
-haarRecord* makeSingleFeature(haarRecord blueprint,int*** integralImages, int nbExamples) {
-    haarRecord* haarOutput = malloc(nbExamples*sizeof(haarRecord));
+struct adaFeature* makeSingleFeature(haarRecord blueprint,int*** integralImages, int nbExamples, int* visage, double* weights) {
+    adaFeature* haarOutput = malloc(nbExamples*sizeof(adaFeature));
     for(int i = 0; i < nbExamples; i++) {
-        haarOutput[i] = getSingleFeatureOpt(blueprint, integralImages[i]);
+        haarOutput[i].f = getSingleFeatureOpt(blueprint, integralImages[i]);
+        haarOutput[i].visage = visage[i];
+        haarOutput[i].weight = weights[i];
     }
     return haarOutput;
 }

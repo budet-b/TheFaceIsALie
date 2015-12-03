@@ -10,7 +10,7 @@
 #include "haar.h"
 #include "adaboost.h"
 #include "adabase.h"
-#define MAXLINES 2500
+#define MAXLINES 5000
 
 char lines[MAXLINES][MAXLINES];
 
@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
         randFace(visage,pathface,pathnotface,100,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 50, 50, 5);
+        result = adaboost(finalpath, visage, 50, 50, 20);
         printf("Training Finished, Writing Classifier\n");
         writeClassifier(result);
         printf("Classifier writed\n");
