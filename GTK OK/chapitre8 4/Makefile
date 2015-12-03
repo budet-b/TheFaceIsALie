@@ -6,4 +6,5 @@ SRC = main.c error.c callback.c
 OBJ= ${SRC: .c=.o}
 main: ${OBJ}
 clean: 
+	rm -f *~ *.o
 	rm -f main
