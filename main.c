@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
     FILE *classifier = NULL;
     
     if(argc < 2)
-        errx(2, "Insuffisant argument");
+        errx(2, "Usage : \t\n train nbImage nbRound\t\n identify path\t\n add\t\n read\t\n search\t\n identify\t\n");
 
     if(strcmp(argv[1], "train") == 0) {
         int visage[MAXLINES];
@@ -143,10 +143,10 @@ int main(int argc, char* argv[]) {
         char* pathnotface[MAXLINES];
         files(visage,pathnotface,"./Images/NewDB/");
         char* finalpath[MAXLINES];
-        randFace(visage,pathface,pathnotface,100,finalpath);
+        randFace(visage,pathface,pathnotface,200,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 50, 50, 20);
+        result = adaboost(finalpath, visage, 100, 100, 10);
         printf("Training Finished, Writing Classifier\n");
         writeClassifier(result);
         printf("Classifier writed\n");

@@ -39,7 +39,7 @@ double applyClassifier(haarRecord* haarTab) {
     strong = readClassifier();
     printf("Starting Applying\n");
 
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < 10; i++) {
         result = result + strong[i].alpha * applyWeakClassifierMod(haarTab,strong[i].classifier);
         printf("Reading %d ==> Result: %f\n", i, result);
     }

@@ -15,8 +15,8 @@ typedef struct haarRecord haarRecord;
 struct adaFeature
 {
     struct haarRecord f;
-    int visage;
-    double weight;
+    int *visage;
+    double *weight;
 };
 
 typedef struct adaFeature adaFeature;
