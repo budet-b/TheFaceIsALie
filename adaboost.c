@@ -349,6 +349,7 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
     double beta;
     double weightedError;
     struct weakClassifier *currentDS;
+    double temp;
     weights = weightInit(weights, visage, visagePos, visageNeg);
     int*** integralImages = getIntegralImages(trainingExamples, nbExamples);
     haarRecord* blueprint = malloc(162336 * sizeof(haarRecord));
@@ -367,7 +368,11 @@ strongClassifier* adaboost (char* trainingExamples[], int* visage, int visagePos
         printf("\tWeights update\n");
         updateWeights(integralImages, currentDS, visage, weights, nbExamples, weightedError);
         printf("\tAdding weak classifier\n");
-        result[i].alpha = log(1/beta);
+        temp = log(1/beta);
+        if(isfinite(temp))
+            result[i].alpha = temp;
+        else
+            result[i].alpha = (double)50;
         result[i].classifier.f = currentDS->f;
         result[i].classifier.threshold = currentDS->threshold;
         result[i].classifier.error = currentDS->error;
