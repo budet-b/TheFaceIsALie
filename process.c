@@ -16,18 +16,21 @@ int compareHaarMod(haarRecord haarTab, weakClassifier DS) {
     return 0;
 }
 
-double applyWeakClassifierMod(haarRecord* haarTab, weakClassifier classifier) {
+int applyWeakClassifierMod(haarRecord* haarTab, weakClassifier classifier) {
         //printf("classifier i:%d j:%d w:%d h:%d haar:%d\n",classifier.f.i, classifier.f.j, classifier.f.w, classifier.f.h, classifier.f.haar);
-        for(int i = 0; i < 162336; i++) {
+    for(int i = 0; i < 162336; i++) {
         if(compareHaarMod(haarTab[i], classifier)) {
-            if(haarTab[i].value > classifier.threshold) {
-                return (double)1;
+            if(classifier.toggle == 1) {
+                printf("Said %d >= %d\n", haarTab[i].value, classifier.threshold);
+                return (haarTab[i].value >= classifier.threshold)?1:-1;
             }
             else {
-                return (double)-1;
+                printf("Said %d <= %d\n", haarTab[i].value, classifier.threshold);
+                return (haarTab[i].value <= classifier.threshold)?1:-1;
             }
         }
     }
+    printf("SAID ADADADA\n");
     return 1;
 }
 
@@ -40,7 +43,7 @@ double applyClassifier(haarRecord* haarTab) {
     printf("Starting Applying\n");
 
     for(int i = 0; i < 10; i++) {
-        result = result + strong[i].alpha * applyWeakClassifierMod(haarTab,strong[i].classifier);
+        result = result + strong[i].alpha * (double)applyWeakClassifierMod(haarTab,strong[i].classifier);
         printf("Reading %d ==> Result: %f\n", i, result);
     }
         free(haarTab);
