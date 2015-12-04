@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <err.h>
 
@@ -96,9 +96,9 @@ void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
             //putpixel(ecran, haar.i - l, haar.j + haar.h, pixel);
             printf("pixel4");
         }*/
-       SDL_SetRenderDrawColor(ecran, 0, 255, 0, 255);
+       /*SDL_SetRenderDrawColor(ecran, 0, 255, 0, 255);
        SDL_Rect pos = {haar.i-haar.w, haar.j-haar.h, haar.w, haar.h};
-       SDL_RenderDrawRect(ecran, &pos);/*, SDL_MapRGBA(ecran->format, 0, 255, 0,50));*/
+       SDL_RenderDrawRect(ecran, &pos);, SDL_MapRGBA(ecran->format, 0, 255, 0,50));*/
     }
 }
 

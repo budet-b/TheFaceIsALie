@@ -92,7 +92,7 @@ double* normalizeWeights(double* weights, int nbExamples) {
 
 double* weightInit(double* weights, int* visage, int nbExamplesNeg, int nbExamplesPos) {
     for(int i = 0; i < (nbExamplesPos + nbExamplesNeg); i++) {
-        printf("assigning weight to example %d\n",i);
+        //printf("assigning weight to example %d\n",i);
         if(visage[i] == -1)
             weights[i] = (0.5*(double)nbExamplesNeg);
         else
