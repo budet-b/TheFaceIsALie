@@ -143,10 +143,10 @@ int main(int argc, char* argv[]) {
         char* pathnotface[MAXLINES];
         files(visage,pathnotface,"./Images/NewDB/");
         char* finalpath[MAXLINES];
-        randFace(visage,pathface,pathnotface,200,finalpath);
+        randFace(visage,pathface,pathnotface,1000,finalpath);
         printf("Starting Training\n");
         strongClassifier* result;
-        result = adaboost(finalpath, visage, 100, 100, 10);
+        result = adaboost(finalpath, visage, 500, 500, 20);
         printf("Training Finished, Writing Classifier\n");
         writeClassifier(result);
         printf("Classifier writed\n");
