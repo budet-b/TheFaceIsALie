@@ -112,11 +112,11 @@ int applyWeakClassifier(haarRecord* haarTab, weakClassifier* DS) {
     for(int i = 0; i < 162336; i++){
         if(compareHaar(haarTab[i], *DS)) {
             //printf("Comparison %d > %d\n",haarTab[i].value, DS->threshold);
-            if(DS->toggle) {
-                return (haarTab[i].value < DS->threshold)?1:-1;
+            if(DS->toggle == 1) {
+                return (haarTab[i].value >= DS->threshold)?1:-1;
             }
             else {
-                return (haarTab[i].value > DS->threshold)?1:-1;
+                return (haarTab[i].value >= DS->threshold)?-1:1;
             }
         }
     }

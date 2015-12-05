@@ -42,40 +42,7 @@ int copy_file(char* old_filename, char *new_filename) {
 	return  0;
 }
 
-
-/*void drawRect(haarRecord* haarTab, char* image) {
-    char* imagecopy = copy_filename(image);
-    printf("New file = %s\n",imagecopy);
-    copy_file(image,imagecopy);
-    SDL_Surface *img = load_image(imagecopy);
-    SDL_LockSurface(img);
-    Uint32 pixel = SDL_MapRGBA(img->format, 127, 255, 0, 255);
-    printf("%d\n",(int)sizeof(haarTab));
-    for(size_t i = 0;i<3;i++) {
-        haarRecord haar = haarTab[i];
-        printf("i: %zu\n",i);
-        for(int l = 0;l<haar.w;l++) {
-            putpixel(img, haar.i - l, haar.j, pixel);
-            printf("pixel1");
-        }
-        for(int l = 0;l<haar.h;l++) {
-            putpixel(img, haar.i, haar.j - l, pixel);
-            printf("pixel2");
-        }
-        for(int l = 0;l<haar.h;l++) {
-            putpixel(img, haar.i + haar.w, haar.j - l, pixel);
-            printf("pixel3");
-        }
-       for(int l = 0;l<haar.w;l++) {
-            putpixel(img, haar.i - l, haar.j + haar.h, pixel);
-            printf("pixel4");
-        }
-    }
-    SDL_UnlockSurface(img);
-}*/
-
-
-void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
+void drawRect(haarRecord* haarTab, SDL_Surface *ecran) { //ADD -1 
     for(size_t j = 0; haarTab[j].haar != -1;j++) {
         haarRecord haar = haarTab[j];
         printf("i: %zu\n",j);
@@ -91,7 +58,7 @@ void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
 }
 
 
-int main() {
+/*int main() {
     haarRecord h1; h1.haar = 0; h1.i = h1.j = 110; h1.w = h1.h = 20; h1.value = 0;
     haarRecord h2; h2.haar = 0; h2.i = h2.j = 40; h2.w = h2.h = 40; h2.value = 0;
     haarRecord h3; h3.haar = -1; h3.i = h3.j = 50; h3.w = h3.h = 40; h3.value = 0;
@@ -113,5 +80,5 @@ int main() {
     getchar();
     SDL_Quit();
     return 0;
-}
+}*/
 
