@@ -16,7 +16,7 @@
 #include "process.h"
 #define MAXLINES 5000
 
-gchar* file_name = NULL;
+char* file_name = NULL;
 char lines[MAXLINES][MAXLINES];
 docs_t docs = {NULL, NULL};
 
@@ -135,10 +135,9 @@ void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char*
 }
 
 void transformImage(haarRecord* haarTab, char* path) {
-    char* imagecopy = copy_filename(path);
-    printf("tkt frere \n");        
-    printf("New file = %s\n",imagecopy);
-    copy_file(path,imagecopy);
+    //char* imagecopy = copy_filename(path);
+    printf("New file = %s\n",path);
+    //copy_file(path,imagecopy);
     SDL_Rect positionFond;
     positionFond.x = 0;
     positionFond.y = 0;
@@ -152,7 +151,7 @@ void transformImage(haarRecord* haarTab, char* path) {
     SDL_Quit();
 }
 
-void process_interface(char* file_name){
+void process_interface(){
     printf("Sending Image\n");
     printf("IMAGE PATH IS : %s \n",file_name);
     haarRecord* haartab = process(file_name);
@@ -236,9 +235,10 @@ int main(int argc, char* argv[]) {
     /* Creation du bouton "APPLY" */
     {
         GtkWidget *p_button = NULL;
-        printf("Process interface filename is : %s \n",file_name);
+        char* pathimage = file_name;
+        printf("Process interface filename is : %s \n",pathimage);
         p_button = gtk_button_new_from_stock (GTK_STOCK_APPLY);
-        g_signal_connect (G_OBJECT (p_button), "clicked", G_CALLBACK (process_interface), file_name);
+        g_signal_connect (G_OBJECT (p_button), "clicked", G_CALLBACK(process_interface), NULL);
         gtk_box_pack_start (GTK_BOX (p_button_box), p_button, FALSE, FALSE, 0);
     }
     
@@ -273,8 +273,8 @@ int main(int argc, char* argv[]) {
     FILE *database = NULL;
     FILE *classifier = NULL;
     
-    if(argc < 2)
-        errx(2, "Usage : \t\n train nbImage nbRound\t\n identify path\t\n add\t\n read\t\n search\t\n identify\t\n");
+    /*if(argc < 2)
+        errx(2, "Usage : \t\n train nbImage nbRound\t\n identify path\t\n add\t\n read\t\n search\t\n identify\t\n");*/
 
     if(strcmp(argv[1], "train") == 0) {
         int visage[MAXLINES];
