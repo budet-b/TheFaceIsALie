@@ -42,8 +42,12 @@ int copy_file(char* old_filename, char *new_filename) {
 	return  0;
 }
 
+<<<<<<< HEAD
 
 void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
+=======
+void drawRect(haarRecord* haarTab, SDL_Surface *ecran) { //ADD -1 
+>>>>>>> ac49190e113e7f7f357e01c8657d81eac600c819
     for(size_t j = 0; haarTab[j].haar != -1;j++) {
         haarRecord haar = haarTab[j];
         printf("i: %zu\n",j);
@@ -59,7 +63,7 @@ void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
 }
 
 
-int main() {
+/*int main() {
     haarRecord h1; h1.haar = 0; h1.i = h1.j = 110; h1.w = h1.h = 20; h1.value = 0;
     haarRecord h2; h2.haar = 0; h2.i = h2.j = 40; h2.w = h2.h = 40; h2.value = 0;
     haarRecord h3; h3.haar = -1; h3.i = h3.j = 50; h3.w = h3.h = 40; h3.value = 0;
@@ -81,5 +85,5 @@ int main() {
     getchar();
     SDL_Quit();
     return 0;
-}
+}*/
 
