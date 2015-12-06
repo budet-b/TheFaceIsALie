@@ -43,38 +43,6 @@ int copy_file(char* old_filename, char *new_filename) {
 }
 
 
-/*void drawRect(haarRecord* haarTab, char* image) {
-    char* imagecopy = copy_filename(image);
-    printf("New file = %s\n",imagecopy);
-    copy_file(image,imagecopy);
-    SDL_Surface *img = load_image(imagecopy);
-    SDL_LockSurface(img);
-    Uint32 pixel = SDL_MapRGBA(img->format, 127, 255, 0, 255);
-    printf("%d\n",(int)sizeof(haarTab));
-    for(size_t i = 0;i<3;i++) {
-        haarRecord haar = haarTab[i];
-        printf("i: %zu\n",i);
-        for(int l = 0;l<haar.w;l++) {
-            putpixel(img, haar.i - l, haar.j, pixel);
-            printf("pixel1");
-        }
-        for(int l = 0;l<haar.h;l++) {
-            putpixel(img, haar.i, haar.j - l, pixel);
-            printf("pixel2");
-        }
-        for(int l = 0;l<haar.h;l++) {
-            putpixel(img, haar.i + haar.w, haar.j - l, pixel);
-            printf("pixel3");
-        }
-       for(int l = 0;l<haar.w;l++) {
-            putpixel(img, haar.i - l, haar.j + haar.h, pixel);
-            printf("pixel4");
-        }
-    }
-    SDL_UnlockSurface(img);
-}*/
-
-
 void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
     for(size_t j = 0; haarTab[j].haar != -1;j++) {
         haarRecord haar = haarTab[j];
@@ -98,13 +66,13 @@ int main() {
 
     haarRecord* h = malloc(3*sizeof(haarRecord)); h[0] = h1; h[1] = h2;; h[2] = h3;
 
-    char* imagecopy = copy_filename("./Images/billy.png");
+    char* imagecopy = copy_filename("./Images/billy.jpg");
     printf("New file = %s\n",imagecopy);
-    //copy_file("./Images/billy.png",imagecopy);
+    copy_file("./Images/billy.png",imagecopy);
     SDL_Rect positionFond;
     positionFond.x = 0;
     positionFond.y = 0;
-    SDL_Surface *img = load_image("./Images/billy.jpg");
+    SDL_Surface *img = load_image("./Images/billyCopy.jpg");
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Surface *ecran = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
     drawRect(h,img);

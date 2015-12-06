@@ -5,7 +5,7 @@
 
 
 
-int process(char* image);
+struct haarRecord* process(char* image);
 
 
 #endif

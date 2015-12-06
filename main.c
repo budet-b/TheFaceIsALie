@@ -10,6 +10,7 @@
 #include "haar.h"
 #include "adaboost.h"
 #include "adabase.h"
+#include "process.h"
 #define MAXLINES 5000
 
 char lines[MAXLINES][MAXLINES];
@@ -128,6 +129,24 @@ void randFace(int visage[], char* pathFace[], char* pathNotFace[],int size,char*
     }
 }
 
+void transformImage(haarRecord* haarTab, char* path) {
+    char* imagecopy = copy_filename(path);
+    printf("tkt frere \n");        
+    printf("New file = %s\n",imagecopy);
+    copy_file(path,imagecopy);
+    SDL_Rect positionFond;
+    positionFond.x = 0;
+    positionFond.y = 0;
+    SDL_Surface *img = load_image(path);
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Surface *ecran = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
+    drawRect(haarTab,img);
+    SDL_BlitSurface(img, NULL, ecran, &positionFond);
+    SDL_Flip(ecran);
+    getchar();
+    SDL_Quit();
+}
+
 int main(int argc, char* argv[]) {
     
     FILE *database = NULL;
@@ -178,18 +197,9 @@ int main(int argc, char* argv[]) {
 
     if(strcmp(argv[1], "identify") == 0) {
         printf("Sending Image\n");
-        double checksum = process(argv[2]);
+        haarRecord* haartab = process(argv[2]);
+        transformImage(haartab, argv[2]);
         printf("Processed Image\n");
-        if(checksum == 1) {
-            printf("Face Detected\n");
-            //Face Detected + Visage identified 
-        }
-        else if(checksum == -1) {
-            //Face Detected + No Visage identified
-        }
-        else {
-            printf("No Face Detected\n");
-        }   
     }
 
     return 0;
