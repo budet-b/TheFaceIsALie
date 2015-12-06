@@ -41,24 +41,27 @@ double applyClassifier(haarRecord* haarTab) {
     strong = readClassifier();
     printf("Starting Applying\n");
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 100; i++) {
         result = result + strong[i].alpha * (double)applyWeakClassifierMod(haarTab,strong[i].classifier);
         printf("Reading %d ==> Result: %f\n", i, result);
     }
-        free(haarTab);
     return result;
 }
 
-haarRecord* haarReturn() {
+haarRecord* haarReturn(haarRecord* haarInput) {
+    
     struct strongClassifier *strong = readClassifier();
     haarRecord* haarTab = malloc(200*sizeof(haarRecord));
-    for(int i = 0; i<10;i++) {
-        haarTab[i] = strong[i].classifier.f;
-        if(i == 9)
-            haarTab[i+1].haar = -1;
-        printf("ada{%d}",i);
+    int count = 0;
+    
+    for(int i = 0; i<100;i++) {
+        if(applyWeakClassifierMod(haarInput, strong[i].classifier) == 1) {
+            haarTab[i] = strong[i].classifier.f;
+            count++;
+        }
     }
-    free(strong);
+    haarTab[count+1].haar = -1;
+    printf("DERP AKJZEHKAJ %d\n",count);
     return haarTab;
 }
 
@@ -71,13 +74,15 @@ struct haarRecord* process(char* image) {
     for(int i = 0; i < 24; i++)
         free(integralImage[i]);
     free(integralImage);
-    haarRecord* haarOutput = haarReturn();
+    haarRecord* haarOutput = haarReturn(haarTab);
     if(result > 0) {
         printf("Face detected \n");
+        free(haarTab);
         return haarOutput; //FACE
     }
     else {
         printf("No Face detected \n");
+        free(haarTab);
         return haarOutput; //NO FACE
     }
 }

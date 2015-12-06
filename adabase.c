@@ -53,7 +53,7 @@ int search(char* argv[],FILE *name) {
 
 
 void writeClassifier(struct strongClassifier *strong) {
-    FILE *file = fopen("data","wt");
+    FILE *file = fopen("dataSoutenance","wt");
     struct strongClassifier str;
     struct weakClassifier weak;
     struct haarRecord haar;

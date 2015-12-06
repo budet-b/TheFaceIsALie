@@ -105,6 +105,7 @@ void files(int *visage, char* path[], char *paths) {
 
     for (size_t j = 0; j<(size_t)i; j++) {
         char *temp = lines[j];
+        
         char *temp2 = (char *) malloc(1 + strlen(folder)+ strlen(temp));
         strcat(temp2,folder);
         strcat(temp2,temp);
@@ -147,8 +148,27 @@ void transformImage(haarRecord* haarTab, char* path) {
     drawRect(haarTab,img);
     SDL_BlitSurface(img, NULL, ecran, &positionFond);
     SDL_Flip(ecran);
-    getchar();
+    wait_for_keypressed();
     SDL_Quit();
+}
+
+void trainingbutton(){
+    int rounds = 10;
+    int nombrevisages = 10;
+    int visage[MAXLINES];
+    char* pathface[MAXLINES];
+    files(visage,pathface,"./Images/BigDB/Face/");
+    char* pathnotface[MAXLINES];
+    files(visage,pathnotface,"./Images/NewDB/");
+    char* finalpath[MAXLINES];
+    randFace(visage, pathface, pathnotface, nombrevisages, finalpath);
+    printf("Starting Training\n");
+    strongClassifier* result;
+    result = adaboost(finalpath, visage, nombrevisages/2, nombrevisages/2, rounds);
+    printf("Training Finished, Writing Classifier\n");
+    writeClassifier(result);
+    printf("Classifier writed\n");
+
 }
 
 void process_interface(){
@@ -182,13 +202,7 @@ int main(int argc, char* argv[]) {
     
     /* Creation de la zone de texte */
     {
-        //GtkTextBuffer *p_text_buffer = NULL;
-        
-        
-        
-        
         // TEST
-        
         GtkWidget *p_dialog = NULL;
         GtkWidget *foto = NULL;
         p_dialog = gtk_file_chooser_dialog_new ("Ouvrir un fichier", NULL,
@@ -199,9 +213,9 @@ int main(int argc, char* argv[]) {
         if (gtk_dialog_run (GTK_DIALOG (p_dialog)) == GTK_RESPONSE_ACCEPT)
         {
             //gchar *file_name = NULL;
-            printf("Nous allons ouvrir");
+            printf("Nous allons ouvrir \n");
             file_name = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (p_dialog));
-            printf(" CHEMIN DANS LE CALLBACK : %s ",file_name);
+            printf(" CHEMIN DANS LE CALLBACK : %s \n",file_name);
             //open_file (file_name, GTK_TEXT_VIEW (user_data));
             // gtk_image_set_from_file(GTK_IMAGE(pImage), file_name);
             foto = gtk_image_new_from_file(file_name);
@@ -214,7 +228,7 @@ int main(int argc, char* argv[]) {
         p_text_view = gtk_image_new_from_file(file_name);
         printf("le chemin obtenu est : %s \n", file_name);
         test = gtk_image_new_from_file(file_name);
-        g_signal_connect (G_OBJECT (test), "changed", G_CALLBACK (cb_modifie), NULL);
+        g_signal_connect (G_OBJECT (test), "clicked", G_CALLBACK (cb_modifie), NULL);
         gtk_box_pack_start (GTK_BOX (p_main_box), p_text_view, TRUE, TRUE, 0);
     }
     
@@ -237,7 +251,8 @@ int main(int argc, char* argv[]) {
         GtkWidget *p_button = NULL;
         char* pathimage = file_name;
         printf("Process interface filename is : %s \n",pathimage);
-        p_button = gtk_button_new_from_stock (GTK_STOCK_APPLY);
+        //p_button = gtk_button_new_from_stock (GTK_STOCK_APPLY);
+        p_button = gtk_button_new_with_label ("identification");
         g_signal_connect (G_OBJECT (p_button), "clicked", G_CALLBACK(process_interface), NULL);
         gtk_box_pack_start (GTK_BOX (p_button_box), p_button, FALSE, FALSE, 0);
     }
@@ -245,9 +260,8 @@ int main(int argc, char* argv[]) {
     /* Creation du bouton "Sauvegarder sous" */
     {
         GtkWidget *p_button = NULL;
-        
-        p_button = gtk_button_new_from_stock (GTK_STOCK_SAVE_AS);
-        g_signal_connect (G_OBJECT (p_button), "clicked", G_CALLBACK (cb_saveas), NULL);
+        p_button = gtk_button_new_with_label ("Learning");
+        g_signal_connect (G_OBJECT (p_button), "clicked", G_CALLBACK (trainingbutton), NULL);
         gtk_box_pack_start (GTK_BOX (p_button_box), p_button, FALSE, FALSE, 0);
     }
     
@@ -264,7 +278,7 @@ int main(int argc, char* argv[]) {
     gtk_widget_show_all (p_window);
     /* Lancement de la boucle principale */
     gtk_main ();
-    
+
     
     //TEST
 
@@ -273,8 +287,8 @@ int main(int argc, char* argv[]) {
     FILE *database = NULL;
     FILE *classifier = NULL;
     
-    /*if(argc < 2)
-        errx(2, "Usage : \t\n train nbImage nbRound\t\n identify path\t\n add\t\n read\t\n search\t\n identify\t\n");*/
+    if(argc < 2)
+        errx(2, "Usage : \t\n train nbImage nbRound\t\n identify path\t\n add\t\n read\t\n search\t\n identify\t\n");
 
     if(strcmp(argv[1], "train") == 0) {
         int visage[MAXLINES];
@@ -322,6 +336,8 @@ int main(int argc, char* argv[]) {
         transformImage(haartab, argv[2]);
         printf("Processed Image\n");
     }
+
+    
 
     return EXIT_SUCCESS;
 }
