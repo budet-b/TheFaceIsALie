@@ -2,6 +2,7 @@
 
 #ifndef _image_h_
 #define _image_h_
+#include <gtk/gtk.h>
 #include "adaboost.h"
 #include "haar.h"
 
