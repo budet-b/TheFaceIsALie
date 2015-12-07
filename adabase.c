@@ -16,7 +16,7 @@ void add(int argc,char* argv[],FILE *name){
     else
         fprintf(name,"%s %s %s\n",argv[2],argv[3],argv[4]);
 }
-void read(FILE *name) {
+void readDB(FILE *name) {
     int ch;
     while((ch = fgetc(name)) != EOF)
         printf("%c", (char)ch);
@@ -53,7 +53,7 @@ int search(char* argv[],FILE *name) {
 
 
 void writeClassifier(struct strongClassifier *strong) {
-    FILE *file = fopen("data","wt");
+    FILE *file = fopen("dataSoutenance","wt");
     struct strongClassifier str;
     struct weakClassifier weak;
     struct haarRecord haar;

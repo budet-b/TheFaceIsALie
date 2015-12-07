@@ -2,6 +2,7 @@
 
 #ifndef _image_h_
 #define _image_h_
+#include <gtk/gtk.h>
 #include "adaboost.h"
 #include "haar.h"
 
@@ -26,6 +27,9 @@ int** build_matrix_image(SDL_Surface *image);
 int** matrix_integralImageL(int** mat, SDL_Surface *image);
 int** matrix_integralImageC(int** mat, SDL_Surface *image);
 int** matrix_integralImage(SDL_Surface *image);
+char* copy_filename(char* image);
+int copy_file(char* old_filename, char *new_filename);
+void drawRect(haarRecord* haarTab, SDL_Surface *ecran);
 
 #endif
 

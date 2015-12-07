@@ -42,7 +42,12 @@ int copy_file(char* old_filename, char *new_filename) {
 	return  0;
 }
 
+<<<<<<< HEAD
+
+void drawRect(haarRecord* haarTab, SDL_Surface *ecran) {
+=======
 void drawRect(haarRecord* haarTab, SDL_Surface *ecran) { //ADD -1 
+>>>>>>> ac49190e113e7f7f357e01c8657d81eac600c819
     for(size_t j = 0; haarTab[j].haar != -1;j++) {
         haarRecord haar = haarTab[j];
         printf("i: %zu\n",j);
@@ -65,13 +70,13 @@ void drawRect(haarRecord* haarTab, SDL_Surface *ecran) { //ADD -1
 
     haarRecord* h = malloc(3*sizeof(haarRecord)); h[0] = h1; h[1] = h2;; h[2] = h3;
 
-    char* imagecopy = copy_filename("./Images/billy.png");
+    char* imagecopy = copy_filename("./Images/billy.jpg");
     printf("New file = %s\n",imagecopy);
-    //copy_file("./Images/billy.png",imagecopy);
+    copy_file("./Images/billy.png",imagecopy);
     SDL_Rect positionFond;
     positionFond.x = 0;
     positionFond.y = 0;
-    SDL_Surface *img = load_image("./Images/billy.jpg");
+    SDL_Surface *img = load_image("./Images/billyCopy.jpg");
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Surface *ecran = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE);
     drawRect(h,img);

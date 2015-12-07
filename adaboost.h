@@ -9,6 +9,7 @@
 #define adaboost_h
 #include "image.h"
 #include "haar.h"
+#include <gtk/gtk.h>
 
 struct weakClassifier {
     struct haarRecord f;

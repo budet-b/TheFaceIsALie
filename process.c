@@ -36,7 +36,6 @@ int applyWeakClassifierMod(haarRecord* haarTab, weakClassifier classifier) {
 
 double applyClassifier(haarRecord* haarTab) {
     struct strongClassifier *strong; 
-    strong = malloc(3 * sizeof(struct strongClassifier));
     double result = 0;
     printf("Reading...\n");
     strong = readClassifier();
@@ -46,23 +45,51 @@ double applyClassifier(haarRecord* haarTab) {
         result = result + strong[i].alpha * (double)applyWeakClassifierMod(haarTab,strong[i].classifier);
         printf("Reading %d ==> Result: %f\n", i, result);
     }
-        free(haarTab);
     return result;
 }
 
+<<<<<<< HEAD
 int process(char* image) {
     SDL_Surface* imageSDL = load_image(image);
     ToGray(imageSDL);
     int** integralImage = matrix_integralImage(imageSDL);
+=======
+haarRecord* haarReturn(haarRecord* haarInput) {
+    
+    struct strongClassifier *strong = readClassifier();
+    haarRecord* haarTab = malloc(200*sizeof(haarRecord));
+    int count = 0;
+    
+    for(int i = 0; i<100;i++) {
+        if(applyWeakClassifierMod(haarInput, strong[i].classifier) == 1) {
+            haarTab[i] = strong[i].classifier.f;
+            count++;
+        }
+    }
+    haarTab[count+1].haar = -1;
+    printf("DERP AKJZEHKAJ %d\n",count);
+    return haarTab;
+}
+
+
+struct haarRecord* process(char* image) {
+    int** integralImage = matrix_integralImage(load_image(image));
+>>>>>>> d0727e4c666db245114cb8637c4f6d52aebc41f4
     haarRecord* haarTab = malloc(162336 * sizeof(struct haarRecord));
     processImage(integralImage, haarTab);
     double result = applyClassifier(haarTab);
     for(int i = 0; i < 24; i++)
         free(integralImage[i]);
     free(integralImage);
-
-    if(result > 0)
-        return 1; //FACE
-    else
-        return 0; //NO FACE
+    haarRecord* haarOutput = haarReturn(haarTab);
+    if(result > 0) {
+        printf("Face detected \n");
+        free(haarTab);
+        return haarOutput; //FACE
+    }
+    else {
+        printf("No Face detected \n");
+        free(haarTab);
+        return haarOutput; //NO FACE
+    }
 }
