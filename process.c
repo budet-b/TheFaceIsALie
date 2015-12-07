@@ -42,7 +42,7 @@ double applyClassifier(haarRecord* haarTab) {
     strong = readClassifier();
     printf("Starting Applying\n");
 
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < 100; i++) {
         result = result + strong[i].alpha * (double)applyWeakClassifierMod(haarTab,strong[i].classifier);
         printf("Reading %d ==> Result: %f\n", i, result);
     }
@@ -51,7 +51,9 @@ double applyClassifier(haarRecord* haarTab) {
 }
 
 int process(char* image) {
-    int** integralImage = matrix_integralImage(load_image(image));
+    SDL_Surface* imageSDL = load_image(image);
+    ToGray(imageSDL);
+    int** integralImage = matrix_integralImage(imageSDL);
     haarRecord* haarTab = malloc(162336 * sizeof(struct haarRecord));
     processImage(integralImage, haarTab);
     double result = applyClassifier(haarTab);
